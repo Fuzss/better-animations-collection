@@ -2,4 +2,4 @@
 Changing the in-game models to allow for better animations and subtle effects.
 
 ## Downloads
-Check this project out on [Curse](https://minecraft.curseforge.com/projects/better-animations-collection-2).
+Check this project out on [Curse](https://www.curseforge.com/minecraft/mc-mods/better-animations-collection-2).
