@@ -1,5 +1,5 @@
-# Better Animations Collection 2
-Changing the in-game models to allow for better animations and subtle effects.
+# Better Animations Collection
 
-## Downloads
-Check this project out on [Curse](https://www.curseforge.com/minecraft/mc-mods/better-animations-collection-2).
+A Minecraft mod. Downloads can be found on CurseForge.
+
+![](https://i.imgur.com/nLy1uGC.png)
