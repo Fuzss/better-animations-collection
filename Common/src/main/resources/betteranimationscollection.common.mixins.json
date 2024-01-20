@@ -1,0 +1,26 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_17",
+  "package": "fuzs.betteranimationscollection.mixin",
+  "refmap": "betteranimationscollection.refmap.json",
+  "plugin": "fuzs.betteranimationscollection.mixin.ModMixinConfigPlugin",
+  "mixins": [
+  ],
+  "client": [
+    "client.accessor.AgeableListModelAccessor",
+    "client.accessor.CatCollarLayerAccessor",
+    "client.accessor.DrownedOuterLayerAccessor",
+    "client.accessor.EntityRenderDispatcherAccessor",
+    "client.accessor.HorseArmorLayerAccessor",
+    "client.accessor.LayerDefinitionAccessor",
+    "client.accessor.LivingEntityRendererAccessor",
+    "client.accessor.LlamaDecorLayerAccessor",
+    "client.accessor.SaddleLayerAccessor",
+    "client.accessor.SheepFurLayerAccessor",
+    "client.accessor.SlimeOuterLayerAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
