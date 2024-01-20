@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.entity.layers.SaddleLayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Pig;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -58,7 +58,7 @@ public class OinkyPigElement extends SoundDetectionElement {
     }
 
     @Override
-    public void setupModelConfig(ForgeConfigSpec.Builder builder, ValueCallback callback) {
+    public void setupModelConfig(ModConfigSpec.Builder builder, ValueCallback callback) {
         super.setupModelConfig(builder, callback);
         callback.accept(builder.comment("Fancy ears for pigs, just like piglins have them.").define("floaty_ears", true), v -> floatyEars = v);
         callback.accept(builder.comment("Animation swing speed for ear floatiness.").defineInRange("ear_animation_speed", 10, 1, 20), v -> earAnimationSpeed = v);

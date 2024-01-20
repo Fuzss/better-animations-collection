@@ -1,5 +1,6 @@
-package fuzs.betteranimationscollection;
+package fuzs.betteranimationscollection.forge;
 
+import fuzs.betteranimationscollection.BetterAnimationsCollection;
 import fuzs.puzzleslib.api.core.v1.ModConstructor;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

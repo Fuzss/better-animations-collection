@@ -7,7 +7,7 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -40,7 +40,7 @@ public class OcelotTailElement extends ModelElement {
     }
 
     @Override
-    public void setupModelConfig(ForgeConfigSpec.Builder builder, ValueCallback callback) {
+    public void setupModelConfig(ModConfigSpec.Builder builder, ValueCallback callback) {
         callback.accept(builder.comment("Define tail length.").defineInRange("tail_length", OcelotTailModel.OCELOT_TAIL_LENGTH, 1, OcelotTailModel.OCELOT_TAIL_LENGTH), v -> tailLength = v);
         callback.accept(builder.comment("Animation swing speed for tail.").defineInRange("animation_speed", 7, 1, 20), v -> animationSpeed = v);
     }

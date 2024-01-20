@@ -6,7 +6,6 @@ import fuzs.betteranimationscollection.config.ClientConfig;
 import fuzs.betteranimationscollection.mixin.client.accessor.EntityRenderDispatcherAccessor;
 import fuzs.betteranimationscollection.mixin.client.accessor.LivingEntityRendererAccessor;
 import fuzs.puzzleslib.api.client.init.v1.ModelLayerFactory;
-import fuzs.puzzleslib.api.core.v1.ModLoaderEnvironment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;

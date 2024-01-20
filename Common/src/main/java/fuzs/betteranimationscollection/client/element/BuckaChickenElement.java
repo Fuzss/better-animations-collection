@@ -8,7 +8,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Chicken;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -47,7 +47,7 @@ public class BuckaChickenElement extends SoundDetectionElement {
     }
 
     @Override
-    public void setupModelConfig(ForgeConfigSpec.Builder builder, ValueCallback callback) {
+    public void setupModelConfig(ModConfigSpec.Builder builder, ValueCallback callback) {
         super.setupModelConfig(builder, callback);
         callback.accept(builder.comment("Make bill a lot slimmer so chickens look less like ducks.").define("slim_bill", true), v -> slimBill = v);
         callback.accept(builder.comment("Move head back and forth when chicken is walking.").define("move_head", true), v -> moveHead = v);

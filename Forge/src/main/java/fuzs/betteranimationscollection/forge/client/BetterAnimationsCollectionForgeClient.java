@@ -1,6 +1,7 @@
-package fuzs.betteranimationscollection.client;
+package fuzs.betteranimationscollection.forge.client;
 
 import fuzs.betteranimationscollection.BetterAnimationsCollection;
+import fuzs.betteranimationscollection.client.BetterAnimationsCollectionClient;
 import fuzs.puzzleslib.api.client.core.v1.ClientModConstructor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

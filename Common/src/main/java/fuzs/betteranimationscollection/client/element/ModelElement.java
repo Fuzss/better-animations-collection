@@ -9,7 +9,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -43,7 +43,7 @@ public abstract class ModelElement {
 
     public abstract void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context);
 
-    public void setupModelConfig(ForgeConfigSpec.Builder builder, ValueCallback callback) {
+    public void setupModelConfig(ModConfigSpec.Builder builder, ValueCallback callback) {
 
     }
 

@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.layers.SlimeOuterLayer;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -52,7 +52,7 @@ public class JigglySlimeElement extends ModelElement {
     }
 
     @Override
-    public void setupModelConfig(ForgeConfigSpec.Builder builder, ValueCallback callback) {
+    public void setupModelConfig(ModConfigSpec.Builder builder, ValueCallback callback) {
         callback.accept(builder.comment("Animation swing speed of inner slime parts.").defineInRange("animation_speed", 5, 1, 20), v -> animationSpeed = v);
     }
 }

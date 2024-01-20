@@ -9,7 +9,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Mob;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -27,7 +27,7 @@ public abstract class SoundDetectionElement extends ModelElement {
     }
 
     @Override
-    public void setupModelConfig(ForgeConfigSpec.Builder builder, ValueCallback callback) {
+    public void setupModelConfig(ModConfigSpec.Builder builder, ValueCallback callback) {
         callback.accept(builder.comment("Mob sounds to play a unique animation for.", "Useful for adding support for modded mob variants which have different sounds from their vanilla counterparts.", ConfigDataSet.CONFIG_DESCRIPTION).define("mob_sounds", Stream.of(this.sounds).map(BuiltInRegistries.SOUND_EVENT::getKey)
                 .filter(Objects::nonNull)
                 .map(ResourceLocation::toString)

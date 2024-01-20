@@ -6,7 +6,7 @@ import net.minecraft.client.model.WolfModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.world.entity.animal.Wolf;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -41,7 +41,7 @@ public class PlayfulDoggyElement extends ModelElement {
     }
 
     @Override
-    public void setupModelConfig(ForgeConfigSpec.Builder builder, ValueCallback callback) {
+    public void setupModelConfig(ModConfigSpec.Builder builder, ValueCallback callback) {
         callback.accept(builder.comment("Define tail length.").defineInRange("tail_length", PlayfulDoggyModel.WOLF_TAIL_LENGTH, 1, PlayfulDoggyModel.WOLF_TAIL_LENGTH), v -> tailLength = v);
         callback.accept(builder.comment("Make wolf tail fluffy.").define("fluffy_tail", true), v -> fluffyTail = v);
         callback.accept(builder.comment("Animation swing speed for tail.").defineInRange("animation_speed", 5, 1, 20), v -> animationSpeed = v);

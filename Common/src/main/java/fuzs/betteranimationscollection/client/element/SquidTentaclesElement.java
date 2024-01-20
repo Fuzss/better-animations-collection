@@ -6,7 +6,7 @@ import net.minecraft.client.model.SquidModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -37,7 +37,7 @@ public class SquidTentaclesElement extends ModelElement {
     }
 
     @Override
-    public void setupModelConfig(ForgeConfigSpec.Builder builder, ValueCallback callback) {
+    public void setupModelConfig(ModConfigSpec.Builder builder, ValueCallback callback) {
         callback.accept(builder.comment("Define length for squid tentacles.").defineInRange("tentacles_length", SquidTentaclesModel.SQUID_TENTACLES_LENGTH, 1, SquidTentaclesModel.SQUID_TENTACLES_LENGTH), v -> tentaclesLength = v);
     }
 }

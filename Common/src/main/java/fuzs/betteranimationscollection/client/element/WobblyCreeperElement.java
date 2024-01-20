@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.CreeperPowerLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.monster.Creeper;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -59,7 +59,7 @@ public class WobblyCreeperElement extends ModelElement {
     }
 
     @Override
-    public void setupModelConfig(ForgeConfigSpec.Builder builder, ValueCallback callback) {
+    public void setupModelConfig(ModConfigSpec.Builder builder, ValueCallback callback) {
         callback.accept(builder.comment("Different directional behaviour modes for the walking animation.").defineEnum("wobble_direction", WobbleDirection.SIDE), v -> wobbleDirection = v);
     }
 

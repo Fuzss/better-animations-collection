@@ -6,7 +6,7 @@ import net.minecraft.client.model.GhastModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -39,7 +39,7 @@ public class GhastTentaclesElement extends ModelElement {
     }
 
     @Override
-    public void setupModelConfig(ForgeConfigSpec.Builder builder, ValueCallback callback) {
+    public void setupModelConfig(ModConfigSpec.Builder builder, ValueCallback callback) {
         callback.accept(builder.comment("Define the max length of tentacles.").defineInRange("max_tentacles_length", GhastTentaclesModel.GHAST_MAX_TENTACLES_LENGTH, 2, GhastTentaclesModel.GHAST_MAX_TENTACLES_LENGTH), v -> maxTentaclesLength = v);
         callback.accept(builder.comment("Animation swing speed of tentacles.").defineInRange("animation_speed", 5, 1, 20), v -> animationSpeed = v);
     }

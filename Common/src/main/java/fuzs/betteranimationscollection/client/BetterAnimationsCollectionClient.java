@@ -7,8 +7,7 @@ import fuzs.betteranimationscollection.config.ClientConfig;
 import fuzs.puzzleslib.api.client.core.v1.ClientModConstructor;
 import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import fuzs.puzzleslib.api.core.v1.context.AddReloadListenersContext;
-import fuzs.puzzleslib.api.core.v1.context.ModLifecycleContext;
-import fuzs.puzzleslib.api.event.v1.entity.living.LivingEvents;
+import fuzs.puzzleslib.api.event.v1.entity.living.LivingTickCallback;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.Unit;
@@ -24,11 +23,11 @@ public class BetterAnimationsCollectionClient implements ClientModConstructor {
     }
 
     private static void registerHandlers() {
-        LivingEvents.TICK.register(RemoteSoundHandler.INSTANCE::onLivingTick);
+        LivingTickCallback.EVENT.register(RemoteSoundHandler.INSTANCE::onLivingTick);
     }
 
     @Override
-    public void onClientSetup(ModLifecycleContext context) {
+    public void onClientSetup() {
         ModelElements.buildAnimatedModels(false, false);
         // add this listener later, so it doesn't interfere with initial config loading
         BetterAnimationsCollection.CONFIG.getHolder(ClientConfig.class).accept(() -> ModelElements.buildAnimatedModels(true, true));

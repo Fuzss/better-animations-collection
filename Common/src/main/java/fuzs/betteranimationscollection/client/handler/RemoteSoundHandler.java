@@ -98,7 +98,7 @@ public class RemoteSoundHandler {
         }
 
         @Override
-        public void onPlaySound(SoundInstance soundIn, WeighedSoundEvents accessor) {
+        public void onPlaySound(SoundInstance soundIn, WeighedSoundEvents accessor, float range) {
             Level level = Minecraft.getInstance().level;
             // check is actually necessary here, as sounds might be played in some menu when no world has been loaded yet
             if (level == null) return;
