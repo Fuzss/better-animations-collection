@@ -62,12 +62,13 @@ public class WobblyCreeperModel<T extends Entity> extends CreeperModel<T> {
     }
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int i, int j, float f, float g, float h, float k) {
-        ImmutableList.of(this.body, this.rightHindLeg, this.leftHindLeg, this.rightFrontLeg, this.leftFrontLeg).forEach(modelPart -> {
-            modelPart.render(poseStack, vertexConsumer, i, j, f, g, h, k);
-        });
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color) {
+        ImmutableList.of(this.body, this.rightHindLeg, this.leftHindLeg, this.rightFrontLeg, this.leftFrontLeg).forEach(
+                (ModelPart modelPart) -> {
+                    modelPart.render(poseStack, buffer, packedLight, packedOverlay, color);
+                });
     }
-    
+
     @Override
     public void setupAnim(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.head.yRot = netHeadYaw * ((float)Math.PI / 180F);

@@ -4,14 +4,13 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import fuzs.betteranimationscollection.BetterAnimationsCollection;
 import fuzs.betteranimationscollection.config.ClientConfig;
-import fuzs.puzzleslib.api.event.v1.core.EventResult;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.sounds.SoundEventListener;
 import net.minecraft.client.sounds.WeighedSoundEvents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -35,9 +34,9 @@ public class RemoteSoundHandler {
      */
     private final Map<ResourceLocation, Class<? extends Mob>> ambientSounds = Maps.newConcurrentMap();
     /**
-     * set of entities whose model should do something when they make a noise
-     * this is separate from {@link #ambientSounds} to make sure even when no sound is registered
-     * (the user probably wants to disable the animation) no animation is played from the client updating the sound time value
+     * set of entities whose model should do something when they make a noise this is separate from
+     * {@link #ambientSounds} to make sure even when no sound is registered (the user probably wants to disable the
+     * animation) no animation is played from the client updating the sound time value
      */
     private final Set<Class<? extends Mob>> noisyEntities = Sets.newConcurrentHashSet();
     /**
@@ -46,9 +45,9 @@ public class RemoteSoundHandler {
     private final Set<Class<? extends Mob>> attackableEntities = Sets.newHashSet();
     private final SoundDetectionListener soundListener = new SoundDetectionListener();
 
-    public EventResult onLivingTick(LivingEntity entity) {
+    public void onEndEntityTick(Entity entity) {
         this.soundListener.ensureInitialized();
-        if (!entity.level().isClientSide || !(entity instanceof Mob mob)) return EventResult.PASS;
+        if (!entity.level().isClientSide || !(entity instanceof Mob mob)) return;
         Stream.concat(this.noisyEntities.stream(), this.attackableEntities.stream()).forEach(clazz -> {
             if (clazz.isAssignableFrom(entity.getClass())) {
                 if (mob.ambientSoundTime >= 0) {
@@ -69,7 +68,6 @@ public class RemoteSoundHandler {
                 }
             }
         }
-        return EventResult.PASS;
     }
 
     public void addAmbientSounds(Class<? extends Mob> entityClazz, Collection<SoundEvent> soundEvents) {
@@ -106,10 +104,14 @@ public class RemoteSoundHandler {
             if (entityClazz != null) {
                 // accuracy is 1/8, so we center this and then apply #soundRange
                 Vec3 center = new Vec3(soundIn.getX() + 0.0625, soundIn.getY() + 0.0625, soundIn.getZ() + 0.0625);
-                final double soundDetectionRange = BetterAnimationsCollection.CONFIG.get(ClientConfig.class).soundDetectionRange;
+                final double soundDetectionRange = BetterAnimationsCollection.CONFIG.get(
+                        ClientConfig.class).soundDetectionRange;
                 AABB axisAlignedBB = new AABB(center, center).inflate(soundDetectionRange + 0.0625);
                 List<? extends Mob> entities = level.getEntitiesOfClass(entityClazz, axisAlignedBB);
-                entities.stream().min((o1, o2) -> (int) Math.signum(o1.position().distanceTo(center) - o2.position().distanceTo(center))).ifPresent(entity -> entity.ambientSoundTime = -entity.getAmbientSoundInterval());
+                entities.stream()
+                        .min((o1, o2) -> (int) Math.signum(
+                                o1.position().distanceTo(center) - o2.position().distanceTo(center)))
+                        .ifPresent(entity -> entity.ambientSoundTime = -entity.getAmbientSoundInterval());
             }
         }
     }

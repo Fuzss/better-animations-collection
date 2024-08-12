@@ -47,8 +47,9 @@ public class WobblyCreeperElement extends ModelElement {
                         return this.model;
                     }
                 });
+            } else {
+                return Optional.empty();
             }
-            return Optional.empty();
         });
     }
 

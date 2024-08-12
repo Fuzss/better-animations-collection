@@ -4,10 +4,15 @@ import fuzs.betteranimationscollection.client.model.PlayfulDoggyModel;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
 import net.minecraft.client.model.WolfModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.renderer.entity.layers.WolfArmorLayer;
 import net.minecraft.world.entity.animal.Wolf;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -19,9 +24,11 @@ public class PlayfulDoggyElement extends ModelElement {
     public static SittingBehaviour sittingBehaviour;
 
     private final ModelLayerLocation animatedWolf;
+    private final ModelLayerLocation animatedWolfArmor;
 
     public PlayfulDoggyElement(BiFunction<String, String, ModelLayerLocation> factory) {
         this.animatedWolf = factory.apply("animated_wolf", "main");
+        this.animatedWolfArmor = factory.apply("animated_wolf", "armor");
     }
 
     @Override
@@ -32,12 +39,18 @@ public class PlayfulDoggyElement extends ModelElement {
 
     @Override
     void onRegisterAnimatedModels(AnimatedModelsContext context, EntityModelBakery bakery) {
-        context.<Wolf, WolfModel<Wolf>>registerAnimatedModel(WolfModel.class, () -> new PlayfulDoggyModel<>(bakery.bakeLayer(this.animatedWolf)));
+        context.<Wolf, WolfModel<Wolf>>registerAnimatedModel(WolfModel.class, () -> new PlayfulDoggyModel<>(bakery.bakeLayer(this.animatedWolf)), (RenderLayerParent<Wolf, WolfModel<Wolf>> renderLayerParent, RenderLayer<Wolf, WolfModel<Wolf>> renderLayer) -> {
+            if (renderLayer instanceof WolfArmorLayer wolfArmorLayer) {
+                wolfArmorLayer.model = new PlayfulDoggyModel<>(bakery.bakeLayer(this.animatedWolfArmor));
+            }
+            return Optional.empty();
+        });
     }
 
     @Override
     public void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context) {
-        context.accept(this.animatedWolf, PlayfulDoggyModel::createAnimatedBodyLayer);
+        context.accept(this.animatedWolf, () -> LayerDefinition.create(PlayfulDoggyModel.createAnimatedBodyLayer(CubeDeformation.NONE), 64, 32));
+        context.accept(this.animatedWolfArmor, () -> LayerDefinition.create(PlayfulDoggyModel.createAnimatedBodyLayer(new CubeDeformation(0.2F)), 64, 32));
     }
 
     @Override

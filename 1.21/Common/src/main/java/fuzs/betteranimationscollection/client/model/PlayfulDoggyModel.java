@@ -5,11 +5,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import fuzs.betteranimationscollection.client.element.PlayfulDoggyElement;
-import fuzs.betteranimationscollection.mixin.client.accessor.LayerDefinitionAccessor;
 import net.minecraft.client.model.WolfModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.animal.Wolf;
 
@@ -62,26 +64,32 @@ public class PlayfulDoggyModel<T extends Wolf> extends WolfModel<T> {
         }
     }
 
-    public static LayerDefinition createAnimatedBodyLayer() {
-        LayerDefinition layerDefinition = WolfModel.createBodyLayer();
-        MeshDefinition meshDefinition = ((LayerDefinitionAccessor) layerDefinition).getMesh();
+    public static MeshDefinition createAnimatedBodyLayer(CubeDeformation cubeDeformation) {
+        MeshDefinition meshDefinition = WolfModel.createMeshDefinition(cubeDeformation);
         PartDefinition partDefinition = meshDefinition.getRoot();
         PartDefinition partDefinition1 = partDefinition.getChild("tail");
         PartDefinition partDefinition3 = partDefinition.addOrReplaceChild("fluffy_tail", CubeListBuilder.create(), PartPose.offsetAndRotation(-1.0F, 12.0F, 8.0F, 0.62831855F, 0.0F, 0.0F));
-        CubeListBuilder cubeListBuilder = CubeListBuilder.create().texOffs(9, 18).addBox(0.0F, 0.0F, -1.0F, 2.0F, 1.0F, 2.0F);
+        CubeListBuilder cubeListBuilder = CubeListBuilder.create().texOffs(9, 18).addBox(0.0F, 0.0F, -1.0F, 2.0F, 1.0F, 2.0F, cubeDeformation);
         PartDefinition partDefinition2 = partDefinition1.addOrReplaceChild("real_tail", cubeListBuilder, PartPose.ZERO);
         PartDefinition partDefinition4 = partDefinition3.addOrReplaceChild("real_fluffy_tail", cubeListBuilder, PartPose.ZERO);
         for (int i = 0; i < WOLF_TAIL_LENGTH; i++) {
-            partDefinition2 = partDefinition2.addOrReplaceChild("real_tail" + i, CubeListBuilder.create().texOffs(9, Math.min(19 + i, 25)).addBox(0.0F, 0.0F, -1.0F, 2.0F, 1.0F, 2.0F), PartPose.offset(0.0F, 1.0F, 0.0F));
-            partDefinition4 = partDefinition4.addOrReplaceChild("real_fluffy_tail" + i, CubeListBuilder.create().texOffs(9, Math.min(19 + i, 25)).addBox(0.0F, 0.0F, -1.0F, 2.0F, 1.0F, 2.0F, new CubeDeformation(getTailFluffiness(i))), PartPose.offset(0.0F, 1.0F + getTailFluffiness(i), 0.0F));
+            partDefinition2 = partDefinition2.addOrReplaceChild("real_tail" + i, CubeListBuilder.create().texOffs(9, Math.min(19 + i, 25)).addBox(0.0F, 0.0F, -1.0F, 2.0F, 1.0F, 2.0F, cubeDeformation), PartPose.offset(0.0F, 1.0F, 0.0F));
+            CubeDeformation cubeDeformation1 = cubeDeformation.extend(getTailFluffiness(i));
+            partDefinition4 = partDefinition4.addOrReplaceChild("real_fluffy_tail" + i, CubeListBuilder.create().texOffs(9, Math.min(19 + i, 25)).addBox(0.0F, 0.0F, -1.0F, 2.0F, 1.0F, 2.0F,
+                    cubeDeformation1
+            ), PartPose.offset(0.0F, 1.0F + getTailFluffiness(i), 0.0F));
         }
-        return layerDefinition;
+        return meshDefinition;
     }
 
     private static float getTailFluffiness(int index) {
-        if (index < 5) return 0.1F + 0.1F * index;
-        if (index == 5) return 0.4F;
-        return  0.15F;
+        if (index < 5) {
+            return 0.1F + 0.1F * index;
+        } else if (index == 5) {
+            return 0.4F;
+        } else {
+            return  0.15F;
+        }
     }
 
     @Override
@@ -90,36 +98,36 @@ public class PlayfulDoggyModel<T extends Wolf> extends WolfModel<T> {
     }
 
     @Override
-    public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color) {
         if (!this.isInSittingPose || !PlayfulDoggyElement.sittingBehaviour.rollOver() || PlayfulDoggyElement.sittingBehaviour.begForMeat() && this.rollOverAmount < 1E-4) {
-            super.renderToBuffer(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+            super.renderToBuffer(poseStack, buffer, packedLight, packedOverlay, color);
             return;
+        } else {
+            // max amount from head and body roll angles
+            float rollOverAmount = PlayfulDoggyElement.sittingBehaviour.begForMeat() ? this.rollOverAmount : 0.47123888F;
+            poseStack.pushPose();
+            poseStack.translate(0.0F, 1.25F, 0.0F);
+            poseStack.mulPose(Axis.ZP.rotationDegrees(180.0F * rollOverAmount));
+            poseStack.translate(0.0F, -1.25F, 0.0F);
+            this.rightHindLeg.xRot += rollOverAmount * 1.5F;
+            this.leftHindLeg.xRot += rollOverAmount * 1.5F;
+            this.rightFrontLeg.xRot += rollOverAmount * 1.5F;
+            this.leftFrontLeg.xRot += rollOverAmount * 1.5F;
+            this.rightHindLeg.y -= rollOverAmount * 1.75F;
+            this.leftHindLeg.y -= rollOverAmount * 1.75F;
+            this.rightFrontLeg.y -= rollOverAmount * 1.75F;
+            this.leftFrontLeg.y -= rollOverAmount * 1.75F;
+            this.realHead.zRot = -rollOverAmount * 1.5F;
+            super.renderToBuffer(poseStack, buffer, packedLight, packedOverlay, color);
+            poseStack.popPose();
         }
-
-        // max amount from head and body roll angles
-        float rollOverAmount = PlayfulDoggyElement.sittingBehaviour.begForMeat() ? this.rollOverAmount : 0.47123888F;
-        matrixStackIn.pushPose();
-        matrixStackIn.translate(0.0F, 1.25F, 0.0F);
-        matrixStackIn.mulPose(Axis.ZP.rotationDegrees(180.0F * rollOverAmount));
-        matrixStackIn.translate(0.0F, -1.25F, 0.0F);
-        this.rightHindLeg.xRot += rollOverAmount * 1.5F;
-        this.leftHindLeg.xRot += rollOverAmount * 1.5F;
-        this.rightFrontLeg.xRot += rollOverAmount * 1.5F;
-        this.leftFrontLeg.xRot += rollOverAmount * 1.5F;
-        this.rightHindLeg.y -= rollOverAmount * 1.75F;
-        this.leftHindLeg.y -= rollOverAmount * 1.75F;
-        this.rightFrontLeg.y -= rollOverAmount * 1.75F;
-        this.leftFrontLeg.y -= rollOverAmount * 1.75F;
-        this.realHead.zRot = -rollOverAmount * 1.5F;
-        super.renderToBuffer(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        matrixStackIn.popPose();
     }
 
     @Override
-    public void prepareMobModel(T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTickTime) {
-        this.tickDelta = partialTickTime;
-        super.prepareMobModel(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTickTime);
-        if (entitylivingbaseIn.isInSittingPose()) {
+    public void prepareMobModel(T entity, float limbSwing, float limbSwingAmount, float partialTick) {
+        this.tickDelta = partialTick;
+        super.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTick);
+        if (entity.isInSittingPose()) {
             if (PlayfulDoggyElement.sittingBehaviour.lieDown()) {
                 this.upperBody.setPos(-1.0F, 17.5F, -3.0F);
                 this.upperBody.xRot = ((float) Math.PI / 2F);
@@ -153,8 +161,8 @@ public class PlayfulDoggyModel<T extends Wolf> extends WolfModel<T> {
             this.head.y = 13.5F;
             this.rightHindLeg.yRot = this.leftHindLeg.yRot = this.rightFrontLeg.yRot = this.leftFrontLeg.yRot = 0.0F;
         }
-        this.upperBody.zRot = entitylivingbaseIn.getBodyRollAngle(partialTickTime, -0.08F);
-        this.realTail.zRot = entitylivingbaseIn.getBodyRollAngle(partialTickTime, -0.2F);
+        this.upperBody.zRot = entity.getBodyRollAngle(partialTick, -0.08F);
+        this.realTail.zRot = entity.getBodyRollAngle(partialTick, -0.2F);
     }
 
     @Override

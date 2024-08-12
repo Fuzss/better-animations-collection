@@ -3,7 +3,6 @@ package fuzs.betteranimationscollection.client.element;
 import com.google.common.collect.Maps;
 import fuzs.betteranimationscollection.BetterAnimationsCollection;
 import fuzs.betteranimationscollection.config.ClientConfig;
-import fuzs.betteranimationscollection.mixin.client.accessor.EntityRenderDispatcherAccessor;
 import fuzs.betteranimationscollection.mixin.client.accessor.LivingEntityRendererAccessor;
 import fuzs.puzzleslib.api.client.init.v1.ModelLayerFactory;
 import net.minecraft.client.Minecraft;
@@ -25,7 +24,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public final class ModelElements {
-    private static final ModelLayerFactory MODEL_LAYER_REGISTRY = ModelLayerFactory.from(BetterAnimationsCollection.MOD_ID);
+    private static final ModelLayerFactory MODEL_LAYER_REGISTRY = ModelLayerFactory.from(
+            BetterAnimationsCollection.MOD_ID);
     public static final Map<ResourceLocation, ModelElement> MODEL_ELEMENTS = Maps.newHashMap();
     private static final Map<Class<? extends EntityModel<?>>, ModelElement.AnimatedModelData<?, ?>> ANIMATED_MODEL_DATA = Maps.newIdentityHashMap();
 
@@ -55,7 +55,7 @@ public final class ModelElements {
     }
 
     private static void register(String identifier, Function<BiFunction<String, String, ModelLayerLocation>, ModelElement> factory) {
-        MODEL_ELEMENTS.put(new ResourceLocation(BetterAnimationsCollection.MOD_ID, identifier), factory.apply(MODEL_LAYER_REGISTRY::register));
+        MODEL_ELEMENTS.put(BetterAnimationsCollection.id(identifier), factory.apply(MODEL_LAYER_REGISTRY::register));
     }
 
     public static Collection<ModelElement> elements() {
@@ -70,11 +70,15 @@ public final class ModelElements {
                 @SuppressWarnings("unchecked")
                 @Override
                 public <T extends LivingEntity, M extends EntityModel<T>> void registerAnimatedModel(Class<? super M> vanillaModelClazz, Supplier<? extends M> animatedModel, ModelElement.LayerTransformer<T, M> layerTransformer) {
-                    ANIMATED_MODEL_DATA.put((Class<? extends EntityModel<?>>) vanillaModelClazz, new ModelElement.AnimatedModelData<>(vanillaModelClazz, animatedModel, layerTransformer));
+                    ANIMATED_MODEL_DATA.put((Class<? extends EntityModel<?>>) vanillaModelClazz,
+                            new ModelElement.AnimatedModelData<>(vanillaModelClazz, animatedModel, layerTransformer)
+                    );
                 }
             };
             MODEL_ELEMENTS.values().forEach(element -> {
-                element.registerAnimatedModels(context, ModelElement.EntityModelBakery.of(Minecraft.getInstance()::getEntityModels));
+                element.registerAnimatedModels(context,
+                        ModelElement.EntityModelBakery.of(Minecraft.getInstance()::getEntityModels)
+                );
             });
             if (reloadResourcePacks && allowResourceReloading) {
                 Minecraft.getInstance().reloadResourcePacks();
@@ -84,17 +88,25 @@ public final class ModelElements {
 
     @SuppressWarnings("unchecked")
     public static <T extends LivingEntity, M extends EntityModel<T>> void applyAnimatedModels() {
-        for (Map.Entry<EntityType<?>, EntityRenderer<?>> entry : ((EntityRenderDispatcherAccessor) Minecraft.getInstance().getEntityRenderDispatcher()).getRenderers().entrySet()) {
-            if (!BetterAnimationsCollection.CONFIG.get(ClientConfig.class).mobBlacklist.contains(entry.getKey()) && entry.getValue() instanceof LivingEntityRenderer<?,?>) {
+        Minecraft minecraft = Minecraft.getInstance();
+        for (Map.Entry<EntityType<?>, EntityRenderer<?>> entry : minecraft
+                .getEntityRenderDispatcher().renderers.entrySet()) {
+            if (!BetterAnimationsCollection.CONFIG.get(ClientConfig.class).mobBlacklist.contains(entry.getKey()) &&
+                    entry.getValue() instanceof LivingEntityRenderer<?, ?>) {
                 RenderLayerParent<T, M> livingRenderer = (LivingEntityRenderer<T, M>) entry.getValue();
                 // this shouldn't be null, but some mods do it anyway...
                 if (livingRenderer.getModel() == null) continue;
-                ModelElement.AnimatedModelData<T, M> animatedModelData = (ModelElement.AnimatedModelData<T, M>) ANIMATED_MODEL_DATA.get(livingRenderer.getModel().getClass());
+                ModelElement.AnimatedModelData<T, M> animatedModelData = (ModelElement.AnimatedModelData<T, M>) ANIMATED_MODEL_DATA.get(
+                        livingRenderer.getModel().getClass());
                 if (animatedModelData != null) {
-                    ((LivingEntityRendererAccessor<T, M>) livingRenderer).setModel(animatedModelData.animatedModel().get());
-                    ListIterator<RenderLayer<T, M>> iterator = ((LivingEntityRendererAccessor<T, M>) livingRenderer).getLayers().listIterator();
+                    ((LivingEntityRendererAccessor<T, M>) livingRenderer).setModel(
+                            animatedModelData.animatedModel().get());
+                    ListIterator<RenderLayer<T, M>> iterator = ((LivingEntityRendererAccessor<T, M>) livingRenderer).getLayers()
+                            .listIterator();
                     while (iterator.hasNext()) {
-                        animatedModelData.layerTransformer().apply(livingRenderer, iterator.next()).ifPresent(iterator::set);
+                        animatedModelData.layerTransformer()
+                                .apply(livingRenderer, iterator.next())
+                                .ifPresent(iterator::set);
                     }
                 }
             }

@@ -9,7 +9,6 @@
     "client.accessor.AgeableListModelAccessor",
     "client.accessor.CatCollarLayerAccessor",
     "client.accessor.DrownedOuterLayerAccessor",
-    "client.accessor.EntityRenderDispatcherAccessor",
     "client.accessor.HorseArmorLayerAccessor",
     "client.accessor.LayerDefinitionAccessor",
     "client.accessor.LivingEntityRendererAccessor",

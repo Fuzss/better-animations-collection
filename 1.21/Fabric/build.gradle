@@ -1,4 +1,4 @@
-apply from: "https://raw.githubusercontent.com/Fuzss/modresources/main/gradle/v2/fabric.gradle"
+apply from: "https://raw.githubusercontent.com/Fuzss/modresources/main/gradle/${libs.versions.minecraft.get()}/fabric.gradle"
 
 dependencies {
     // Fabric Api
@@ -6,14 +6,4 @@ dependencies {
 
     // Puzzles Lib
     modApi libs.puzzleslib.fabric
-
-    // Cardinal Components
-//    modApi(include(libs.cardinalcomponentsbase.fabric.get()))
-//    modApi(include(libs.cardinalcomponentsentity.fabric.get()))
-//    modApi(include(libs.cardinalcomponentsblock.fabric.get()))
-//    modApi(include(libs.cardinalcomponentschunk.fabric.get()))
-//    modApi(include(libs.cardinalcomponentsworld.fabric.get()))
-
-    // Extensible Enums
-//    modApi(include(libs.extensibleenums.fabric.get()))
 }
