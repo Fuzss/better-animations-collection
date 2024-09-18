@@ -1,3 +1,0 @@
-accessWidener   v2  named
-accessible  field   net/minecraft/client/renderer/entity/layers/WolfArmorLayer  model   Lnet/minecraft/client/model/WolfModel;
-mutable field   net/minecraft/client/renderer/entity/layers/WolfArmorLayer  model   Lnet/minecraft/client/model/WolfModel;
