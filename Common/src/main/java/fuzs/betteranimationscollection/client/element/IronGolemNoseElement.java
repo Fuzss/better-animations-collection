@@ -12,13 +12,12 @@ import net.minecraft.client.renderer.entity.state.IronGolemRenderState;
 import net.minecraft.world.entity.animal.IronGolem;
 
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-public class IronGolemNoseElement extends ModelElement<IronGolem, IronGolemRenderState, IronGolemModel> {
+public class IronGolemNoseElement extends SingletonModelElement<IronGolem, IronGolemRenderState, IronGolemModel> {
     private final ModelLayerLocation animatedIronGolem;
 
-    public IronGolemNoseElement(BiFunction<String, String, ModelLayerLocation> factory) {
+    public IronGolemNoseElement() {
         super(IronGolem.class, IronGolemRenderState.class, IronGolemModel.class);
         this.animatedIronGolem = this.registerModelLayer("animated_iron_golem");
         RemoteSoundHandler.INSTANCE.addAttackableEntity(this.entityClazz);
@@ -43,7 +42,7 @@ public class IronGolemNoseElement extends ModelElement<IronGolem, IronGolemRende
         // this only works because MobEntity#ambientSoundTime is manually being synced to the client
         RenderPropertyKey.setRenderProperty(renderState,
                 SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY,
-                entity.ambientSoundTime + entity.getAmbientSoundInterval());
+                entity.ambientSoundTime + entity.getAmbientSoundInterval() + partialTick);
     }
 
     @Override

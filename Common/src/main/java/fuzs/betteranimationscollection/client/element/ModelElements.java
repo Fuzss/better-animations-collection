@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public final class ModelElements {
-    public static final Map<ResourceLocation, ModelElement<?, ?, ?>> MODEL_ELEMENTS = Maps.newHashMap();
+    public static final Map<ResourceLocation, ModelElement> MODEL_ELEMENTS = Maps.newHashMap();
 
     static {
         registerModelElement("oinky_pig", OinkyPigElement::new);
@@ -45,17 +45,16 @@ public final class ModelElements {
         // NO-OP
     }
 
-    private static void registerModelElement(String path, Supplier<ModelElement<?, ?, ?>> factory) {
+    private static void registerModelElement(String path, Supplier<ModelElement> factory) {
         MODEL_ELEMENTS.put(BetterAnimationsCollection.id(path), factory.get());
     }
 
-    public static void forEach(Consumer<ModelElement<?, ?, ?>> consumer) {
+    public static void forEach(Consumer<ModelElement> consumer) {
         MODEL_ELEMENTS.values().forEach(consumer);
     }
 
-    public static void buildAnimatedModels(boolean mustBeChanged, boolean reloadResourcePacks) {
-        if (reloadResourcePacks &&
-                (!mustBeChanged || MODEL_ELEMENTS.values().stream().anyMatch(ModelElement::markedChanged))) {
+    public static void buildAnimatedModels(boolean mustBeChanged) {
+        if (!mustBeChanged || MODEL_ELEMENTS.values().stream().anyMatch(ModelElement::markedChanged)) {
             Minecraft.getInstance().reloadResourcePacks();
         }
     }
@@ -75,7 +74,7 @@ public final class ModelElements {
                         minecraft.getEntityModels(),
                         minecraft.getEquipmentModels(),
                         minecraft.font);
-                for (Map.Entry<ResourceLocation, ModelElement<?, ?, ?>> modelElementEntry : MODEL_ELEMENTS.entrySet()) {
+                for (Map.Entry<ResourceLocation, ModelElement> modelElementEntry : MODEL_ELEMENTS.entrySet()) {
                     try {
                         modelElementEntry.getValue().onApplyModelAnimations(entityRenderer, context);
                     } catch (Exception exception) {

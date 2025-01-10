@@ -13,7 +13,6 @@ import net.minecraft.world.entity.animal.Chicken;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 public class BuckaChickenElement extends SoundBasedElement<Chicken, ChickenRenderState, ChickenModel> {
@@ -28,7 +27,7 @@ public class BuckaChickenElement extends SoundBasedElement<Chicken, ChickenRende
     private final ModelLayerLocation animatedChicken;
     private final ModelLayerLocation animatedChickenBaby;
 
-    public BuckaChickenElement(BiFunction<String, String, ModelLayerLocation> factory) {
+    public BuckaChickenElement() {
         super(Chicken.class, ChickenRenderState.class, ChickenModel.class, SoundEvents.CHICKEN_AMBIENT);
         this.animatedChicken = this.registerModelLayer("animated_chicken");
         this.animatedChickenBaby = this.registerModelLayer("animated_chicken_baby");

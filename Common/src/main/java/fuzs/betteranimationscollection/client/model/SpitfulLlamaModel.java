@@ -43,9 +43,10 @@ public class SpitfulLlamaModel extends LlamaModel {
     @Override
     public void setupAnim(LlamaRenderState renderState) {
         super.setupAnim(renderState);
-        int soundTime = RenderPropertyKey.getRenderProperty(renderState, SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY);
-        if (0 < soundTime && soundTime < 5) {
-            float rotation = Math.abs(Mth.sin((float) soundTime * (float) Math.PI / 5.0F));
+        float soundTime = RenderPropertyKey.getRenderProperty(renderState,
+                SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY);
+        if (0.0F < soundTime && soundTime < 5.0F) {
+            float rotation = Math.abs(Mth.sin(soundTime * Mth.PI / 5.0F));
             this.mouth.xRot = rotation * 0.75F;
         } else {
             this.mouth.xRot = 0.0F;

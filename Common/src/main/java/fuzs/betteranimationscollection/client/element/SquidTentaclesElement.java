@@ -16,7 +16,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-public class SquidTentaclesElement extends ModelElement<Squid, SquidRenderState, SquidModel> {
+public class SquidTentaclesElement extends SingletonModelElement<Squid, SquidRenderState, SquidModel> {
     public static final RenderPropertyKey<Vec3> DELTA_MOVEMENT_PROPERTY = key("delta_movement");
 
     public static int tentaclesLength;

@@ -14,7 +14,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-public class CowUdderElement extends ModelElement<Cow, LivingEntityRenderState, CowModel> {
+public class CowUdderElement extends SingletonModelElement<Cow, LivingEntityRenderState, CowModel> {
     public static int animationSpeed;
     public static boolean showNipples;
     public static boolean calfUtter;

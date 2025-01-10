@@ -20,16 +20,17 @@ public class SnowGolemStickModel extends SnowGolemModel {
     @Override
     public void setupAnim(LivingEntityRenderState renderState) {
         super.setupAnim(renderState);
-        int soundTime = RenderPropertyKey.getRenderProperty(renderState, SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY);
+        float soundTime = RenderPropertyKey.getRenderProperty(renderState,
+                SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY);
         boolean isLeftHanded = RenderPropertyKey.getRenderProperty(renderState,
                 SnowGolemStickElement.IS_LEFT_HANDED_PROPERTY);
-        if (0 < soundTime && soundTime < 8) {
+        if (0.0F < soundTime && soundTime < 8.0F) {
             if (isLeftHanded) {
-                this.leftArm.xRot = 1.5F - (float) soundTime * 1.5F / 8.0F;
-                this.leftArm.yRot += (1.0F - (float) soundTime / 8.0F) * 2.0F;
+                this.leftArm.xRot = 1.5F - soundTime * 1.5F / 8.0F;
+                this.leftArm.yRot += (1.0F - soundTime / 8.0F) * 2.0F;
             } else {
-                this.rightArm.xRot = 1.5F - (float) soundTime * 1.5F / 8.0F;
-                this.rightArm.yRot -= (1.0F - (float) soundTime / 8.0F) * 2.0F;
+                this.rightArm.xRot = 1.5F - soundTime * 1.5F / 8.0F;
+                this.rightArm.yRot -= (1.0F - soundTime / 8.0F) * 2.0F;
             }
         } else {
             this.leftArm.xRot = 0.0F;

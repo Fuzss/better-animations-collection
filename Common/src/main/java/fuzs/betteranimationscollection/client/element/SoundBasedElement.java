@@ -1,25 +1,23 @@
 package fuzs.betteranimationscollection.client.element;
 
+import com.google.common.base.Predicates;
 import fuzs.betteranimationscollection.client.handler.RemoteSoundHandler;
 import fuzs.puzzleslib.api.client.util.v1.RenderPropertyKey;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
 import fuzs.puzzleslib.api.config.v3.serialization.ConfigDataSet;
+import fuzs.puzzleslib.api.config.v3.serialization.KeyedValueProvider;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Mob;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.Arrays;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.List;
 
-public abstract class SoundBasedElement<T extends Mob, S extends LivingEntityRenderState, M extends EntityModel<? super S>> extends ModelElement<T, S, M> {
-    public static final RenderPropertyKey<Integer> AMBIENT_SOUND_TIME_PROPERTY = key("ambient_sound_time");
+public abstract class SoundBasedElement<T extends Mob, S extends LivingEntityRenderState, M extends EntityModel<? super S>> extends SingletonModelElement<T, S, M> {
+    public static final RenderPropertyKey<Float> AMBIENT_SOUND_TIME_PROPERTY = key("ambient_sound_time");
 
     private final SoundEvent[] sounds;
 
@@ -34,17 +32,22 @@ public abstract class SoundBasedElement<T extends Mob, S extends LivingEntityRen
     protected void extractRenderState(T entity, S renderState, float partialTick) {
         super.extractRenderState(entity, renderState, partialTick);
         // this only works because MobEntity#ambientSoundTime is manually being synced to the client
-        RenderPropertyKey.setRenderProperty(renderState, AMBIENT_SOUND_TIME_PROPERTY, entity.ambientSoundTime + entity.getAmbientSoundInterval());
+        RenderPropertyKey.setRenderProperty(renderState,
+                AMBIENT_SOUND_TIME_PROPERTY,
+                entity.ambientSoundTime + entity.getAmbientSoundInterval() + partialTick);
     }
 
     @Override
     public void setupModelConfig(ModConfigSpec.Builder builder, ValueCallback callback) {
-        callback.accept(builder.comment("Mob sounds to play a unique animation for.", "Useful for adding support for modded mob variants which have different sounds from their vanilla counterparts.", ConfigDataSet.CONFIG_DESCRIPTION).define("mob_sounds", Stream.of(this.sounds).map(BuiltInRegistries.SOUND_EVENT::getKey)
-                .filter(Objects::nonNull)
-                .map(ResourceLocation::toString)
-                .collect(Collectors.toList())), v -> {
+        callback.accept(builder.comment("Mob sounds to play a unique animation for.",
+                        "Useful for adding support for modded mob variants which have different sounds from their vanilla counterparts.",
+                        ConfigDataSet.CONFIG_DESCRIPTION)
+                .defineList("mob_sounds",
+                        KeyedValueProvider.tagAppender(Registries.SOUND_EVENT).add(this.sounds).asStringList(),
+                        () -> "",
+                        Predicates.alwaysTrue()), v -> {
             RemoteSoundHandler.INSTANCE.removeAmbientSounds(this.entityClazz);
-            ConfigDataSet<SoundEvent> soundEvents = ConfigDataSet.from(Registries.SOUND_EVENT, v);
+            ConfigDataSet<SoundEvent> soundEvents = ConfigDataSet.from(Registries.SOUND_EVENT, (List<String>) v);
             RemoteSoundHandler.INSTANCE.addAmbientSounds(this.entityClazz, soundEvents);
         });
     }

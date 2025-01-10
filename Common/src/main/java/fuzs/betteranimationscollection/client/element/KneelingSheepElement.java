@@ -14,16 +14,15 @@ import net.minecraft.world.entity.animal.Sheep;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-public class KneelingSheepElement extends ModelElement<Sheep, SheepRenderState, SheepModel> {
+public class KneelingSheepElement extends SingletonModelElement<Sheep, SheepRenderState, SheepModel> {
     private final ModelLayerLocation animatedSheep;
     private final ModelLayerLocation animatedSheepFur;
     private final ModelLayerLocation animatedSheepBaby;
     private final ModelLayerLocation animatedSheepBabyFur;
 
-    public KneelingSheepElement(BiFunction<String, String, ModelLayerLocation> factory) {
+    public KneelingSheepElement() {
         super(Sheep.class, SheepRenderState.class, SheepModel.class);
         this.animatedSheep = this.registerModelLayer("animated_sheep");
         this.animatedSheepFur = this.registerModelLayer("animated_sheep", "fur");

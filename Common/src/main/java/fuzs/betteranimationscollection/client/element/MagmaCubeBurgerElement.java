@@ -12,7 +12,7 @@ import net.minecraft.world.entity.monster.MagmaCube;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-public class MagmaCubeBurgerElement extends ModelElement<MagmaCube, SlimeRenderState, LavaSlimeModel> {
+public class MagmaCubeBurgerElement extends SingletonModelElement<MagmaCube, SlimeRenderState, LavaSlimeModel> {
     private final ModelLayerLocation animatedMagmaCube;
 
     public MagmaCubeBurgerElement() {

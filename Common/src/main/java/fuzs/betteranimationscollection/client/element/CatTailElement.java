@@ -17,10 +17,9 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-public class CatTailElement extends ModelElement<Cat, CatRenderState, CatModel> {
+public class CatTailElement extends SingletonModelElement<Cat, CatRenderState, CatModel> {
     public static int tailLength;
     public static int animationSpeed;
 
@@ -29,7 +28,7 @@ public class CatTailElement extends ModelElement<Cat, CatRenderState, CatModel> 
     private final ModelLayerLocation animatedCatBaby;
     private final ModelLayerLocation animatedCatBabyCollar;
 
-    public CatTailElement(BiFunction<String, String, ModelLayerLocation> factory) {
+    public CatTailElement() {
         super(Cat.class, CatRenderState.class, CatModel.class);
         this.animatedCat = this.registerModelLayer("animated_cat");
         this.animatedCatCollar = this.registerModelLayer("animated_cat", "collar");

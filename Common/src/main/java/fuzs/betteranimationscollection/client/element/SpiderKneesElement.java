@@ -12,7 +12,7 @@ import net.minecraft.world.entity.monster.Spider;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-public class SpiderKneesElement extends ModelElement<Spider, LivingEntityRenderState, SpiderModel> {
+public class SpiderKneesElement extends SingletonModelElement<Spider, LivingEntityRenderState, SpiderModel> {
     private final ModelLayerLocation animatedSpider;
 
     public SpiderKneesElement() {

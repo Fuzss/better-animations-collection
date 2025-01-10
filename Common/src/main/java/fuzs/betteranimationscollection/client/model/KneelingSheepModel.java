@@ -1,12 +1,24 @@
 package fuzs.betteranimationscollection.client.model;
 
+import net.minecraft.client.model.BabyModelTransform;
 import net.minecraft.client.model.SheepModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.renderer.entity.state.SheepRenderState;
+import net.minecraft.util.Mth;
+
+import java.util.Set;
 
 public class KneelingSheepModel extends SheepModel {
+    public static final MeshTransformer BABY_TRANSFORMER = new BabyModelTransform(false,
+            8.0F,
+            4.0F,
+            2.0F,
+            2.0F,
+            16.0F,
+            Set.of("head"));
+
     private final ModelPart rightFrontLowerLeg;
     private final ModelPart leftFrontLowerLeg;
 
@@ -24,7 +36,7 @@ public class KneelingSheepModel extends SheepModel {
         PartDefinition partDefinition = meshDefinition.getRoot();
         partDefinition.addOrReplaceChild("body",
                 CubeListBuilder.create().texOffs(28, 8).addBox(-4.0F, -15.0F, 0.0F, 8.0F, 16.0F, 6.0F),
-                PartPose.offset(0.0F, 12.0F, 7.0F));
+                PartPose.offsetAndRotation(0.0F, 12.0F, 7.0F, Mth.HALF_PI, 0.0F, 0.0F));
         PartDefinition partDefinition1 = partDefinition.addOrReplaceChild("right_front_leg",
                 CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F),
                 PartPose.offset(-3.0F, 12.0F, -5.0F));
@@ -45,11 +57,16 @@ public class KneelingSheepModel extends SheepModel {
     @Override
     public void setupAnim(SheepRenderState renderState) {
         super.setupAnim(renderState);
+        setupAnim(renderState, this.body, this.rightFrontLeg, this.leftFrontLeg);
+        this.rightFrontLowerLeg.xRot = this.leftFrontLowerLeg.xRot = renderState.headEatPositionScale * 2.0F;
+    }
+
+    static void setupAnim(SheepRenderState renderState, ModelPart body, ModelPart rightFrontLeg, ModelPart leftFrontLeg) {
         float rotation = renderState.headEatPositionScale;
-        this.body.xRot += rotation * 0.4F;
-        this.rightFrontLeg.y = this.leftFrontLeg.y = 12.0F + rotation * 4.0F;
-        this.rightFrontLeg.xRot -= rotation;
-        this.leftFrontLeg.xRot -= rotation;
-        this.rightFrontLowerLeg.xRot = this.leftFrontLowerLeg.xRot = rotation * 2.0F;
+        body.xRot += rotation * 0.4F;
+        rightFrontLeg.y += rotation * 4.0F * renderState.ageScale;
+        leftFrontLeg.y += rotation * 4.0F * renderState.ageScale;
+        rightFrontLeg.xRot -= rotation;
+        leftFrontLeg.xRot -= rotation;
     }
 }

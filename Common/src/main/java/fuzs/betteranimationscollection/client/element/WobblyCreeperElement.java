@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-public class WobblyCreeperElement extends ModelElement<Creeper, CreeperRenderState, CreeperModel> {
+public class WobblyCreeperElement extends SingletonModelElement<Creeper, CreeperRenderState, CreeperModel> {
     public static final RenderPropertyKey<WobbleDirection> WOBBLE_DIRECTION_PROPERTY = key("wobble_direction");
 
     public static WobbleDirection wobbleDirection;

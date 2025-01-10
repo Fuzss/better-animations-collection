@@ -14,7 +14,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-public class GhastTentaclesElement extends ModelElement<Ghast, GhastRenderState, GhastModel> {
+public class GhastTentaclesElement extends SingletonModelElement<Ghast, GhastRenderState, GhastModel> {
     public static int maxTentaclesLength;
     public static int animationSpeed;
 

@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-public class FlailingEndermanElement extends ModelElement<EnderMan, EndermanRenderState, EndermanModel<EndermanRenderState>> {
+public class FlailingEndermanElement extends SingletonModelElement<EnderMan, EndermanRenderState, EndermanModel<EndermanRenderState>> {
     public static int animationSpeed;
     public static boolean whileCarrying;
 

@@ -13,25 +13,16 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
-public abstract class ModelElement<T extends LivingEntity, S extends LivingEntityRenderState, M extends EntityModel<? super S>> implements ModelLayerFactory {
-    protected final Class<T> entityClazz;
-    private final Class<S> renderStateClazz;
-    private final Class<M> modelClazz;
+public abstract class ModelElement implements ModelLayerFactory {
     private boolean isEnabled = true;
     private boolean markedChanged = true;
-
-    protected ModelElement(Class<T> entityClazz, Class<S> renderStateClazz, Class<M> modelClazz) {
-        this.entityClazz = entityClazz;
-        this.renderStateClazz = renderStateClazz;
-        this.modelClazz = modelClazz;
-    }
 
     protected static <T> RenderPropertyKey<T> key(String path) {
         return new RenderPropertyKey<>(BetterAnimationsCollection.id(path));
@@ -50,30 +41,24 @@ public abstract class ModelElement<T extends LivingEntity, S extends LivingEntit
 
     public abstract String[] getDescriptionComponent();
 
-    @SuppressWarnings("unchecked")
     public final void onApplyModelAnimations(LivingEntityRenderer<?, ?, ?> entityRenderer, EntityRendererProvider.Context context) {
         this.markedChanged = false;
-        if (this.isEnabled && entityRenderer.getModel().getClass() == this.modelClazz) {
-            this.setAnimatedModel((LivingEntityRenderer<?, S, M>) entityRenderer, context);
-            if (entityRenderer instanceof AgeableMobRenderer<?, ?, ?> ageableMobRenderer) {
-                if (ageableMobRenderer.model.getClass() == this.modelClazz ||
-                        ageableMobRenderer.adultModel.getClass() == this.modelClazz ||
-                        ageableMobRenderer.babyModel.getClass() == this.modelClazz) {
-                    throw new IllegalStateException("AgeableMobRenderer has invalid models");
-                }
-            }
-            for (int i = 0; i < entityRenderer.layers.size(); i++) {
-                RenderLayer<S, M> animatedRenderLayer = this.getAnimatedLayer(((LivingEntityRenderer<?, S, M>) entityRenderer).layers.get(
-                        i), (LivingEntityRenderer<?, S, M>) entityRenderer, context);
-                if (animatedRenderLayer != null) {
-                    ((LivingEntityRenderer<?, S, M>) entityRenderer).layers.set(i, animatedRenderLayer);
-                    break;
-                }
-            }
+        if (this.isEnabled) {
+            this.applyModelAnimations(entityRenderer, context);
         }
     }
 
-    protected abstract void setAnimatedModel(LivingEntityRenderer<?, S, M> entityRenderer, EntityRendererProvider.Context context);
+    protected abstract void applyModelAnimations(LivingEntityRenderer<?, ?, ?> entityRenderer, EntityRendererProvider.Context context);
+
+    protected static <S extends LivingEntityRenderState, M extends EntityModel<? super S>> void applyLayerAnimation(LivingEntityRenderer<?, S, M> entityRenderer, EntityRendererProvider.Context context, LayerMutator<S, M> mutator) {
+        for (int i = 0; i < entityRenderer.layers.size(); i++) {
+            RenderLayer<S, M> animatedRenderLayer = mutator.apply(entityRenderer.layers.get(i));
+            if (animatedRenderLayer != null) {
+                entityRenderer.layers.set(i, animatedRenderLayer);
+                break;
+            }
+        }
+    }
 
     protected static <S extends LivingEntityRenderState, M extends EntityModel<? super S>> void setAnimatedAgeableModel(LivingEntityRenderer<?, S, M> entityRenderer, M adultModel, M childModel) {
         AgeableMobRenderer<?, S, M> ageableRenderer = (AgeableMobRenderer<?, S, M>) entityRenderer;
@@ -81,20 +66,9 @@ public abstract class ModelElement<T extends LivingEntity, S extends LivingEntit
         ageableRenderer.babyModel = childModel;
     }
 
-    @Nullable
-    protected RenderLayer<S, M> getAnimatedLayer(RenderLayer<S, M> renderLayer, LivingEntityRenderer<?, S, M> entityRenderer, EntityRendererProvider.Context context) {
-        return null;
-    }
-
     public abstract void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context);
 
-    public final void onExtractRenderState(Entity entity, EntityRenderState renderState, float partialTick) {
-        if (this.entityClazz.isInstance(entity) && this.renderStateClazz.isInstance(renderState)) {
-            this.extractRenderState((T) entity, (S) renderState, partialTick);
-        }
-    }
-
-    protected void extractRenderState(T entity, S renderState, float partialTick) {
+    public void onExtractRenderState(Entity entity, EntityRenderState renderState, float partialTick) {
         // NO-OP
     }
 
@@ -105,5 +79,10 @@ public abstract class ModelElement<T extends LivingEntity, S extends LivingEntit
     @Override
     public String modId() {
         return BetterAnimationsCollection.MOD_ID;
+    }
+
+    @FunctionalInterface
+    protected interface LayerMutator<S extends LivingEntityRenderState, M extends EntityModel<? super S>> extends Function<RenderLayer<S, M>, @Nullable RenderLayer<S, M>> {
+
     }
 }

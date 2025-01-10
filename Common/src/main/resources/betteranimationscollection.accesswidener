@@ -19,3 +19,12 @@ accessible  field   net/minecraft/client/renderer/entity/layers/WolfArmorLayer  
 mutable field   net/minecraft/client/renderer/entity/layers/WolfArmorLayer  adultModel  Lnet/minecraft/client/model/WolfModel;
 accessible  field   net/minecraft/client/renderer/entity/layers/WolfArmorLayer  babyModel   Lnet/minecraft/client/model/WolfModel;
 mutable field   net/minecraft/client/renderer/entity/layers/WolfArmorLayer  babyModel   Lnet/minecraft/client/model/WolfModel;
+extendable  method  net/minecraft/client/model/Model    renderToBuffer  (Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V
+accessible  field   net/minecraft/client/renderer/entity/layers/HorseArmorLayer adultModel  Lnet/minecraft/client/model/HorseModel;
+mutable field   net/minecraft/client/renderer/entity/layers/HorseArmorLayer adultModel  Lnet/minecraft/client/model/HorseModel;
+accessible  field   net/minecraft/client/renderer/entity/layers/HorseArmorLayer babyModel   Lnet/minecraft/client/model/HorseModel;
+mutable field   net/minecraft/client/renderer/entity/layers/HorseArmorLayer babyModel   Lnet/minecraft/client/model/HorseModel;
+accessible  field   net/minecraft/client/renderer/entity/layers/DrownedOuterLayer   model   Lnet/minecraft/client/model/DrownedModel;
+mutable field   net/minecraft/client/renderer/entity/layers/DrownedOuterLayer   model   Lnet/minecraft/client/model/DrownedModel;
+accessible  field   net/minecraft/client/renderer/entity/layers/DrownedOuterLayer   babyModel   Lnet/minecraft/client/model/DrownedModel;
+mutable field   net/minecraft/client/renderer/entity/layers/DrownedOuterLayer   babyModel   Lnet/minecraft/client/model/DrownedModel;

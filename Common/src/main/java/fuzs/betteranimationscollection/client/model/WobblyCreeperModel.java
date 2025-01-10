@@ -10,32 +10,22 @@ import net.minecraft.client.renderer.entity.state.CreeperRenderState;
 import net.minecraft.util.Mth;
 
 public class WobblyCreeperModel extends CreeperModel {
-    private final ModelPart body;
     private final ModelPart[] bodyParts;
     private final ModelPart head;
-    private final ModelPart rightHindLeg;
-    private final ModelPart leftHindLeg;
-    private final ModelPart rightFrontLeg;
-    private final ModelPart leftFrontLeg;
     private final boolean chargedModel;
 
     public WobblyCreeperModel(ModelPart modelPart, boolean chargedModel) {
         super(modelPart);
-        this.body = modelPart.getChild("body");
         // fewer parts for charge layer as it looks silly with too much overlap inside the model
         this.bodyParts = new ModelPart[chargedModel ? 4 : 11];
         for (int i = 0; i < this.bodyParts.length; i++) {
             if (i == 0) {
-                this.bodyParts[i] = this.body.getChild("body" + i);
+                this.bodyParts[i] = modelPart.getChild("body").getChild("body" + i);
             } else {
                 this.bodyParts[i] = this.bodyParts[i - 1].getChild("body" + i);
             }
         }
         this.head = this.bodyParts[this.bodyParts.length - 1].getChild("head");
-        this.leftHindLeg = modelPart.getChild("right_hind_leg");
-        this.rightHindLeg = modelPart.getChild("left_hind_leg");
-        this.leftFrontLeg = modelPart.getChild("right_front_leg");
-        this.rightFrontLeg = modelPart.getChild("left_front_leg");
         this.chargedModel = chargedModel;
     }
 
@@ -45,19 +35,20 @@ public class WobblyCreeperModel extends CreeperModel {
         LayerDefinition layerDefinition = CreeperModel.createBodyLayer(cubeDeformation);
         MeshDefinition meshDefinition = layerDefinition.mesh;
         PartDefinition partDefinition = meshDefinition.getRoot();
-        PartDefinition lastBodyPart = partDefinition.addOrReplaceChild("body",
+        partDefinition.clearChild("head");
+        PartDefinition partDefinition1 = partDefinition.addOrReplaceChild("body",
                 CubeListBuilder.create()
                         .texOffs(16, 27)
                         .addBox(-4.0F, 12.0F - partHeight, -2.0F, 8.0F, partHeight, 4.0F, cubeDeformation),
                 PartPose.offset(0.0F, 6.0F, 0.0F));
         for (int i = 0; i < (chargedModel ? 4 : 11); i++) {
-            lastBodyPart = lastBodyPart.addOrReplaceChild("body" + i,
+            partDefinition1 = partDefinition1.addOrReplaceChild("body" + i,
                     CubeListBuilder.create()
                             .texOffs(16, 27 - partHeight - i * partHeight)
                             .addBox(-4.0F, partHeight, -2.0F, 8.0F, partHeight, 4.0F, cubeDeformation),
                     PartPose.offset(0.0F, i == 0 ? 9.0F : -partHeight, 0.0F));
         }
-        lastBodyPart.addOrReplaceChild("head",
+        partDefinition1.addOrReplaceChild("head",
                 CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, cubeDeformation),
                 PartPose.offset(0.0F, 1.0F, 0.0F));
         // basically sets rotation points to be at body, fixes a vanilla issue, has nothing to do with any animations
@@ -80,19 +71,11 @@ public class WobblyCreeperModel extends CreeperModel {
     public void setupAnim(CreeperRenderState renderState) {
         super.setupAnim(renderState);
 
-        // TODO potentially remove this block as it is also present in super?
+        // copied from super, our head is a different model part
         this.head.yRot = renderState.yRot * ((float) Math.PI / 180F);
         this.head.xRot = renderState.xRot * ((float) Math.PI / 180F);
-        this.rightHindLeg.xRot =
-                Mth.cos(renderState.walkAnimationPos * 0.6662F) * 1.4F * renderState.walkAnimationSpeed;
-        this.leftHindLeg.xRot = Mth.cos(renderState.walkAnimationPos * 0.6662F + (float) Math.PI) * 1.4F *
-                renderState.walkAnimationSpeed;
-        this.rightFrontLeg.xRot = Mth.cos(renderState.walkAnimationPos * 0.6662F + (float) Math.PI) * 1.4F *
-                renderState.walkAnimationSpeed;
-        this.leftFrontLeg.xRot =
-                Mth.cos(renderState.walkAnimationPos * 0.6662F) * 1.4F * renderState.walkAnimationSpeed;
 
-        final float magnitude = this.resolveMagnitude(renderState.walkAnimationSpeed * 3.5F);
+        float magnitude = this.resolveMagnitude(renderState.walkAnimationSpeed * 3.5F);
         float cosSwing = magnitude * Mth.cos(renderState.walkAnimationPos * 0.6662F) * (this.chargedModel ? 3 : 1);
         float sinSwing = magnitude * Mth.sin(renderState.walkAnimationPos * 0.6662F) * (this.chargedModel ? 3 : 1);
         WobblyCreeperElement.WobbleDirection wobbleDirection = RenderPropertyKey.getRenderProperty(renderState,

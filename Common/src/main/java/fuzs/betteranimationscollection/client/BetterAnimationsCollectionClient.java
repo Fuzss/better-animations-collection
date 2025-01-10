@@ -28,7 +28,7 @@ public class BetterAnimationsCollectionClient implements ClientModConstructor {
     private static void registerEventHandlers() {
         EntityTickEvents.END.register(RemoteSoundHandler.INSTANCE::onEndEntityTick);
         ExtractRenderStateCallbackV2.EVENT.register((Entity entity, EntityRenderState renderState, float partialTick) -> {
-            ModelElements.forEach((ModelElement<?, ?, ?> modelElement) -> {
+            ModelElements.forEach((ModelElement modelElement) -> {
                 modelElement.onExtractRenderState(entity, renderState, partialTick);
             });
         });
@@ -40,15 +40,14 @@ public class BetterAnimationsCollectionClient implements ClientModConstructor {
 
     @Override
     public void onClientSetup() {
-        ModelElements.buildAnimatedModels(false, false);
         // add this listener later, so it doesn't interfere with initial config loading
         BetterAnimationsCollection.CONFIG.getHolder(ClientConfig.class)
-                .addCallback(() -> ModelElements.buildAnimatedModels(true, true));
+                .addCallback(() -> ModelElements.buildAnimatedModels(true));
     }
 
     @Override
     public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
-        ModelElements.forEach((ModelElement<?, ?, ?> modelElement) -> {
+        ModelElements.forEach((ModelElement modelElement) -> {
             modelElement.onRegisterLayerDefinitions(context::registerLayerDefinition);
         });
     }

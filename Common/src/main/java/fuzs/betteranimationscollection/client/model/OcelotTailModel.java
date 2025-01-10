@@ -26,7 +26,7 @@ public class OcelotTailModel extends OcelotModel {
         PartDefinition partDefinition1 = partDefinition.addOrReplaceChild("tail1",
                 CubeListBuilder.create().texOffs(0, 15).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 1.0F, 1.0F, cubeDeformation),
                 PartPose.offsetAndRotation(0.0F, 15.0F, 8.0F, 0.9F, 0.0F, 0.0F));
-        partDefinition.addOrReplaceChild("tail2", CubeListBuilder.create(), PartPose.ZERO);
+        partDefinition.clearChild("tail2");
         for (int i = 0; i < OCELOT_TAIL_LENGTH; ++i) {
             if (i < OCELOT_TAIL_LENGTH / 2) {
                 partDefinition1 = partDefinition1.addOrReplaceChild("tail" + (i + 2),

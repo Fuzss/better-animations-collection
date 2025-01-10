@@ -11,7 +11,7 @@ import net.minecraft.util.Mth;
 /**
  * everything copied from {@link FamiliarHorseModel}
  */
-public class FamiliarChestedHorseModel extends DonkeyModel {
+public class FamiliarDonkeyModel extends DonkeyModel {
     private final ModelPart headParts;
     private final ModelPart upperMouth;
     private final ModelPart lowerMouth;
@@ -38,7 +38,7 @@ public class FamiliarChestedHorseModel extends DonkeyModel {
 //    private final ModelPart[] saddleParts;
 //    private final ModelPart[] ridingParts;
 
-    public FamiliarChestedHorseModel(ModelPart modelPart) {
+    public FamiliarDonkeyModel(ModelPart modelPart) {
         super(modelPart);
         this.headParts = modelPart.getChild("head_parts");
         this.upperMouth = this.headParts.getChild("upper_mouth");

@@ -44,20 +44,19 @@ public class OinkyPigModel extends PigModel {
     @Override
     public void setupAnim(LivingEntityRenderState renderState) {
         super.setupAnim(renderState);
-        int soundTime = RenderPropertyKey.getRenderProperty(renderState, SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY);
-        if (0 < soundTime && soundTime < 8) {
-            float rotation = Mth.sin((float) soundTime * (float) (Math.PI / 8.0F));
-            this.snout.y = 3.0F - rotation;
-        } else {
-            this.snout.y = 3.0F;
+        float soundTime = RenderPropertyKey.getRenderProperty(renderState,
+                SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY);
+        if (0.0F < soundTime && soundTime < 8.0F) {
+            this.snout.y -= Mth.sin(soundTime * (Mth.PI / 8.0F));
         }
         this.rightEar.visible = OinkyPigElement.floatyEars;
         this.leftEar.visible = OinkyPigElement.floatyEars;
         if (OinkyPigElement.floatyEars) {
-            float f1 = renderState.ageInTicks * 0.1F + renderState.walkAnimationPos * 0.5F;
-            float f2 = 0.08F + renderState.walkAnimationSpeed * OinkyPigElement.earAnimationSpeed * 0.04F;
-            this.rightEar.zRot = (-(float) Math.PI / 6.0F) - Mth.cos(f1 * 1.2F) * f2;
-            this.leftEar.zRot = ((float) Math.PI / 6.0F) + Mth.cos(f1) * f2;
+            float flapAnimationPos = renderState.ageInTicks * 0.1F + renderState.walkAnimationPos * 0.5F;
+            float flapAnimationSpeed =
+                    0.08F + renderState.walkAnimationSpeed * OinkyPigElement.earAnimationSpeed * 0.04F;
+            this.rightEar.zRot = (-(float) Math.PI / 6.0F) - Mth.cos(flapAnimationPos * 1.2F) * flapAnimationSpeed;
+            this.leftEar.zRot = ((float) Math.PI / 6.0F) + Mth.cos(flapAnimationPos) * flapAnimationSpeed;
         }
     }
 }

@@ -16,10 +16,9 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-public class JigglySlimeElement extends ModelElement<Slime, SlimeRenderState, SlimeModel> {
+public class JigglySlimeElement extends SingletonModelElement<Slime, SlimeRenderState, SlimeModel> {
     public static final RenderPropertyKey<Float> WALK_ANIMATION_POS_PROPERTY = key("walk_animation_pos");
     public static final RenderPropertyKey<Float> TARGET_SQUISH_PROPERTY = key("target_squish");
 
@@ -28,7 +27,7 @@ public class JigglySlimeElement extends ModelElement<Slime, SlimeRenderState, Sl
     private final ModelLayerLocation animatedSlime;
     private final ModelLayerLocation animatedSlimeOuter;
 
-    public JigglySlimeElement(BiFunction<String, String, ModelLayerLocation> factory) {
+    public JigglySlimeElement() {
         super(Slime.class, SlimeRenderState.class, SlimeModel.class);
         this.animatedSlime = this.registerModelLayer("animated_slime");
         this.animatedSlimeOuter = this.registerModelLayer("animated_slime", "outer");

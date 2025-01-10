@@ -9,7 +9,7 @@ import java.util.Arrays;
 public class MagmaCubeBurgerModel extends LavaSlimeModel {
     private final ModelPart insideCube;
     private final ModelPart[] bodyCubes = new ModelPart[8];
-    
+
     public MagmaCubeBurgerModel(ModelPart modelPart) {
         super(modelPart);
         this.insideCube = modelPart.getChild("inside_cube");
@@ -20,15 +20,12 @@ public class MagmaCubeBurgerModel extends LavaSlimeModel {
 
     @Override
     public void setupAnim(SlimeRenderState renderState) {
-        // TODO check if super call interferes, potentially just call reset for all model parts manually
         super.setupAnim(renderState);
         float deathTime = Math.min(10.0F, renderState.deathTime);
         this.insideCube.visible = deathTime <= 0.0F;
-        float squishFactor = Math.max(0.0F, renderState.squish);
         for (int i = 0; i < this.bodyCubes.length; i++) {
-            this.bodyCubes[i].y = (float) (-(4 - i)) * squishFactor * 1.7F;
             this.bodyCubes[i].y += (float) (10 - i) * deathTime * 0.325F;
-            this.bodyCubes[i].x = deathTime * 2.0F - (deathTime <= 0.0F ? 0.0F : (float) (7 - i) * 0.675F);
+            this.bodyCubes[i].x += deathTime * 2.0F - (deathTime <= 0.0F ? 0.0F : (float) (7 - i) * 0.675F);
             this.bodyCubes[i].zRot = deathTime * 0.195F;
             this.bodyCubes[i].yRot = (float) (5 * i % 7 - 3) * deathTime * 0.05F;
         }

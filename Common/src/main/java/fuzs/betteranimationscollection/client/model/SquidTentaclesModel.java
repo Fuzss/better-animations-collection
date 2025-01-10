@@ -56,19 +56,19 @@ public class SquidTentaclesModel extends SquidModel {
     @Override
     public void setupAnim(SquidRenderState renderState) {
         super.setupAnim(renderState);
-        float progress = renderState.ageInTicks / 1.75F;
+        float progress = renderState.tentacleAngle / 1.75F;
         Vec3 deltaMovement = RenderPropertyKey.getRenderProperty(renderState,
                 SquidTentaclesElement.DELTA_MOVEMENT_PROPERTY);
         float magnitude = (float) (Math.sqrt(Math.abs(deltaMovement.x) + Math.abs(deltaMovement.y) + Math.abs(deltaMovement.z)) - 0.075F);
         magnitude *= 0.375F;
         if (magnitude < 0.0F || !renderState.isInWater) magnitude = 0.0F;
         for (ModelPart modelPart : this.tentacles) {
-            modelPart.xRot = renderState.ageInTicks * 2.0F;
+            modelPart.xRot = renderState.tentacleAngle * 2.0F;
         }
         for (int i = 0; i < this.tentacles.length; i++) {
             this.tentacles[i].xRot += (float) Math.sin(progress) * magnitude;
             for (int j = 0; j < this.tentacleParts[i].length; j++) {
-                this.tentacleParts[i][j].xRot = -renderState.ageInTicks * 0.375F + (float) Math.sin(progress + (float) (j + 1)) * magnitude;
+                this.tentacleParts[i][j].xRot = -renderState.tentacleAngle * 0.375F + (float) Math.sin(progress + (float) (j + 1)) * magnitude;
                 this.tentacleParts[i][j].visible = i < SquidTentaclesElement.tentaclesLength;
             }
         }

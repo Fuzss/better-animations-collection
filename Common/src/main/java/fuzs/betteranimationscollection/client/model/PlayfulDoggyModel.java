@@ -1,6 +1,5 @@
 package fuzs.betteranimationscollection.client.model;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -14,10 +13,6 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.entity.state.WolfRenderState;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.animal.Wolf;
-
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 public class PlayfulDoggyModel extends WolfModel {
     public static final int WOLF_TAIL_LENGTH = 7;
@@ -39,7 +34,6 @@ public class PlayfulDoggyModel extends WolfModel {
 
     private boolean isInSittingPose;
     private float rollOverAmount;
-    private float tickDelta;
 
     public PlayfulDoggyModel(ModelPart modelPart) {
         super(modelPart);
@@ -94,9 +88,9 @@ public class PlayfulDoggyModel extends WolfModel {
     }
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color) {
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
         if (!this.isInSittingPose || !PlayfulDoggyElement.sittingBehaviour.rollOver() || PlayfulDoggyElement.sittingBehaviour.begForMeat() && this.rollOverAmount < 1.0E-4F) {
-            super.renderToBuffer(poseStack, buffer, packedLight, packedOverlay, color);
+            super.renderToBuffer(poseStack, vertexConsumer, packedLight, packedOverlay, color);
             return;
         } else {
             // max amount from head and body roll angles
@@ -114,16 +108,15 @@ public class PlayfulDoggyModel extends WolfModel {
             this.rightFrontLeg.y -= rollOverAmount * 1.75F;
             this.leftFrontLeg.y -= rollOverAmount * 1.75F;
             this.realHead.zRot = -rollOverAmount * 1.5F;
-            super.renderToBuffer(poseStack, buffer, packedLight, packedOverlay, color);
+            super.renderToBuffer(poseStack, vertexConsumer, packedLight, packedOverlay, color);
             poseStack.popPose();
         }
     }
 
     @Override
-    public void prepareMobModel(T entity, float limbSwing, float limbSwingAmount, float partialTick) {
-        this.tickDelta = partialTick;
-        super.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTick);
-        if (entity.isInSittingPose()) {
+    public void setupAnim(WolfRenderState renderState) {
+        super.setupAnim(renderState);
+        if (renderState.isSitting) {
             if (PlayfulDoggyElement.sittingBehaviour.lieDown()) {
                 this.upperBody.setPos(-1.0F, 17.5F, -3.0F);
                 this.upperBody.xRot = ((float) Math.PI / 2F);
@@ -143,7 +136,7 @@ public class PlayfulDoggyModel extends WolfModel {
                 this.leftFrontLeg.xRot = ((float) Math.PI * 3F / 2F);
                 this.leftFrontLeg.setPos(0.51F, 21.5F, -2.0F);
                 this.leftFrontLeg.yRot = -0.15F;
-                this.head.y = this.young ? 15.5F : 17.0F;
+                this.head.y = renderState.isBaby ? 15.5F : 17.0F;
             } else {
                 this.upperBody.setPos(-1.0F, 16.0F, -3.0F);
                 this.upperBody.xRot = ((float) Math.PI * 2F / 5F);
@@ -157,17 +150,12 @@ public class PlayfulDoggyModel extends WolfModel {
             this.head.y = 13.5F;
             this.rightHindLeg.yRot = this.leftHindLeg.yRot = this.rightFrontLeg.yRot = this.leftFrontLeg.yRot = 0.0F;
         }
-        this.upperBody.zRot = entity.getBodyRollAngle(partialTick, -0.08F);
-        this.realTail.zRot = entity.getBodyRollAngle(partialTick, -0.2F);
-    }
-
-    @Override
-    public void setupAnim(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        this.isInSittingPose = entityIn.isInSittingPose();
-        this.rollOverAmount = entityIn.getHeadRollAngle(1.0F) + entityIn.getBodyRollAngle(1.0F, 0.0F);
+        this.upperBody.zRot = renderState.getBodyRollAngle(-0.08F);
+        this.realTail.zRot = renderState.getBodyRollAngle(-0.2F);
+        this.isInSittingPose = renderState.isSitting;
+        this.rollOverAmount = renderState.headRollAngle + renderState.getBodyRollAngle(0.0F);
         // needs to run after tail xRot has been set in super.setupAnim
-        this.setupAnimTail(entityIn, limbSwing, limbSwingAmount, this.tickDelta);
+        this.setupAnimTail(renderState);
     }
 
     private void setupAnimTail(WolfRenderState renderState) {

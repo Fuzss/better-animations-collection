@@ -13,17 +13,16 @@ import net.minecraft.world.entity.animal.Ocelot;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-public class OcelotTailElement extends ModelElement<Ocelot, FelineRenderState, OcelotModel> {
+public class OcelotTailElement extends SingletonModelElement<Ocelot, FelineRenderState, OcelotModel> {
     public static int tailLength;
     public static int animationSpeed;
 
     private final ModelLayerLocation animatedOcelot;
     private final ModelLayerLocation animatedOcelotBaby;
 
-    public OcelotTailElement(BiFunction<String, String, ModelLayerLocation> factory) {
+    public OcelotTailElement() {
         super(Ocelot.class, FelineRenderState.class, OcelotModel.class);
         this.animatedOcelot = this.registerModelLayer("animated_ocelot");
         this.animatedOcelotBaby = this.registerModelLayer("animated_ocelot_baby");

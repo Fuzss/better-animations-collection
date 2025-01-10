@@ -3,17 +3,19 @@ package fuzs.betteranimationscollection.client.model;
 import fuzs.betteranimationscollection.client.element.BuckaChickenElement;
 import fuzs.betteranimationscollection.client.element.SoundBasedElement;
 import fuzs.puzzleslib.api.client.util.v1.RenderPropertyKey;
+import net.minecraft.client.model.BabyModelTransform;
 import net.minecraft.client.model.ChickenModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.renderer.entity.state.ChickenRenderState;
 import net.minecraft.util.Mth;
 
+import java.util.Set;
+
 public class BuckaChickenModel extends ChickenModel {
+    public static final MeshTransformer BABY_TRANSFORMER = new BabyModelTransform(Set.of("head"));
+
     private final ModelPart head;
     private final ModelPart rightWing;
     private final ModelPart leftWing;
@@ -44,8 +46,8 @@ public class BuckaChickenModel extends ChickenModel {
         PartDefinition partDefinition1 = partDefinition.addOrReplaceChild("head",
                 CubeListBuilder.create().texOffs(0, 0).addBox(-2.0F, -6.0F, -2.0F, 4.0F, 6.0F, 3.0F),
                 PartPose.offset(0.0F, 15.0F, -4.0F));
-        partDefinition.addOrReplaceChild("beak", CubeListBuilder.create(), PartPose.ZERO);
-        partDefinition.addOrReplaceChild("red_thing", CubeListBuilder.create(), PartPose.ZERO);
+        partDefinition.clearChild("beak");
+        partDefinition.clearChild("red_thing");
         PartDefinition partDefinition2 = partDefinition1.addOrReplaceChild("bill_top",
                 CubeListBuilder.create().texOffs(14, 0).addBox(-2.0F, -4.0F, -4.0F, 4.0F, 1.0F, 2.0F),
                 PartPose.ZERO);
@@ -77,9 +79,10 @@ public class BuckaChickenModel extends ChickenModel {
     @Override
     public void setupAnim(ChickenRenderState renderState) {
         super.setupAnim(renderState);
-        int soundTime = RenderPropertyKey.getRenderProperty(renderState, SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY);
-        if (0 < soundTime && soundTime < 8) {
-            float rotation = Math.abs(Mth.sin((float) soundTime * (float) Math.PI / 5.0F));
+        float soundTime = RenderPropertyKey.getRenderProperty(renderState,
+                SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY);
+        if (0.0F < soundTime && soundTime < 8.0F) {
+            float rotation = Math.abs(Mth.sin(soundTime * Mth.PI / 5.0F));
             this.billBottom.xRot = rotation * 0.75F;
         } else {
             this.billBottom.xRot = 0.0F;
@@ -95,9 +98,8 @@ public class BuckaChickenModel extends ChickenModel {
             this.leftWing.zRot = renderState.flapSpeed;
         }
         if (BuckaChickenElement.moveHead) {
-            this.head.z = -4.0F +
-                    Mth.cos(renderState.walkAnimationPos) * BuckaChickenElement.headAnimationSpeed * 0.5F *
-                            renderState.walkAnimationSpeed;
+            this.head.z += Mth.cos(renderState.walkAnimationPos) * BuckaChickenElement.headAnimationSpeed * 0.5F *
+                    renderState.walkAnimationSpeed * renderState.ageScale;
         }
         if (BuckaChickenElement.moveWattles) {
             this.redThing.zRot =

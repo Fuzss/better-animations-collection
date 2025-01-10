@@ -18,10 +18,11 @@ public class VillagerNoseModel extends VillagerModel {
     @Override
     public void setupAnim(VillagerRenderState renderState) {
         super.setupAnim(renderState);
-        int soundTime = RenderPropertyKey.getRenderProperty(renderState, SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY);
-        int maxSoundTime = 20;
-        if (0 < soundTime && soundTime < maxSoundTime) {
-            float rotation = Mth.sin((float) soundTime * (float) ((3.0F * Math.PI) / 20.0F));
+        float soundTime = RenderPropertyKey.getRenderProperty(renderState,
+                SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY);
+        float maxSoundTime = 20.0F;
+        if (0.0F < soundTime && soundTime < maxSoundTime) {
+            float rotation = Mth.sin(soundTime * ((3.0F * Mth.PI) / 20.0F));
             this.nose.zRot = rotation * 0.75F * ((maxSoundTime - soundTime) / 20.0F);
         } else {
             this.nose.zRot = 0.0F;
