@@ -3,28 +3,26 @@ package fuzs.betteranimationscollection.client.model;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.ZombieModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.client.renderer.entity.state.ZombieRenderState;
 
-public class ZombieKneesModel<T extends Zombie> extends ZombieModel<T> implements KneesModel {
+public class ZombieKneesModel extends ZombieModel<ZombieRenderState> implements KneesModel {
     private final ModelPart rightShin;
     private final ModelPart leftShin;
-    
+
     public ZombieKneesModel(ModelPart modelPart) {
         super(modelPart);
-        ModelPart rightLeg = modelPart.getChild("right_leg");
-        this.rightShin = rightLeg.getChild("right_shin");
-        ModelPart leftLeg = modelPart.getChild("left_leg");
-        this.leftShin = leftLeg.getChild("left_shin");
+        this.rightShin = modelPart.getChild("right_leg").getChild("right_shin");
+        this.leftShin = modelPart.getChild("left_leg").getChild("left_shin");
     }
 
     @Override
-    public void setupAnim(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        KneesModel.setupAnim(this, entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+    public void setupAnim(ZombieRenderState renderState) {
+        super.setupAnim(renderState);
+        KneesModel.setupAnim(this, renderState);
     }
 
     @Override
-    public void copyPropertiesTo(HumanoidModel<T> model) {
+    public void copyPropertiesTo(HumanoidModel<ZombieRenderState> model) {
         super.copyPropertiesTo(model);
         KneesModel.copyPropertiesTo(this, model);
     }

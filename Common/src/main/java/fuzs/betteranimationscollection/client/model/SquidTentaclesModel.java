@@ -1,7 +1,7 @@
 package fuzs.betteranimationscollection.client.model;
 
 import fuzs.betteranimationscollection.client.element.SquidTentaclesElement;
-import fuzs.betteranimationscollection.mixin.client.accessor.LayerDefinitionAccessor;
+import fuzs.puzzleslib.api.client.util.v1.RenderPropertyKey;
 import net.minecraft.client.model.SquidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -9,10 +9,10 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.client.renderer.entity.state.SquidRenderState;
+import net.minecraft.world.phys.Vec3;
 
-public class SquidTentaclesModel<T extends Entity> extends SquidModel<T> {
+public class SquidTentaclesModel extends SquidModel {
     public static final int SQUID_TENTACLES_LENGTH = 8;
 
     private final ModelPart[] tentacles = new ModelPart[8];
@@ -36,7 +36,7 @@ public class SquidTentaclesModel<T extends Entity> extends SquidModel<T> {
 
     public static LayerDefinition createAnimatedBodyLayer() {
         LayerDefinition layerDefinition = SquidModel.createBodyLayer();
-        MeshDefinition meshDefinition = ((LayerDefinitionAccessor) layerDefinition).getMesh();
+        MeshDefinition meshDefinition = layerDefinition.mesh;
         PartDefinition partDefinition = meshDefinition.getRoot();
         CubeListBuilder cubeListBuilder = CubeListBuilder.create().texOffs(48, 0).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 2.0F, 2.0F);
         for (int i = 0; i < SQUID_TENTACLES_LENGTH; ++i) {
@@ -54,20 +54,21 @@ public class SquidTentaclesModel<T extends Entity> extends SquidModel<T> {
     }
 
     @Override
-    public void setupAnim(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        // always holds for squids, but other mods might use this model weirdly
-        if (!(entityIn instanceof Mob mob)) return;
-        float progress = ageInTicks / 1.75F;
-        float magnitude = (float) (Math.sqrt(Math.abs(mob.getDeltaMovement().x) + Math.abs(mob.getDeltaMovement().y) + Math.abs(mob.getDeltaMovement().z)) - 0.075F);
+    public void setupAnim(SquidRenderState renderState) {
+        super.setupAnim(renderState);
+        float progress = renderState.ageInTicks / 1.75F;
+        Vec3 deltaMovement = RenderPropertyKey.getRenderProperty(renderState,
+                SquidTentaclesElement.DELTA_MOVEMENT_PROPERTY);
+        float magnitude = (float) (Math.sqrt(Math.abs(deltaMovement.x) + Math.abs(deltaMovement.y) + Math.abs(deltaMovement.z)) - 0.075F);
         magnitude *= 0.375F;
-        if (magnitude < 0.0F || !mob.isInWater()) magnitude = 0.0F;
+        if (magnitude < 0.0F || !renderState.isInWater) magnitude = 0.0F;
         for (ModelPart modelPart : this.tentacles) {
-            modelPart.xRot = ageInTicks * 2.0F;
+            modelPart.xRot = renderState.ageInTicks * 2.0F;
         }
         for (int i = 0; i < this.tentacles.length; i++) {
             this.tentacles[i].xRot += (float) Math.sin(progress) * magnitude;
             for (int j = 0; j < this.tentacleParts[i].length; j++) {
-                this.tentacleParts[i][j].xRot = -ageInTicks * 0.375F + (float) Math.sin(progress + (float) (j + 1)) * magnitude;
+                this.tentacleParts[i][j].xRot = -renderState.ageInTicks * 0.375F + (float) Math.sin(progress + (float) (j + 1)) * magnitude;
                 this.tentacleParts[i][j].visible = i < SquidTentaclesElement.tentaclesLength;
             }
         }

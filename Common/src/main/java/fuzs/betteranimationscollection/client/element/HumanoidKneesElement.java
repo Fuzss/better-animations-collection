@@ -37,6 +37,7 @@ public class HumanoidKneesElement extends ModelElement {
     private final ModelLayerLocation animatedPiglinOuterArmor;
 
     public HumanoidKneesElement(BiFunction<String, String, ModelLayerLocation> factory) {
+        super(, );
         this.animatedZombie = factory.apply("animated_zombie", "main");
         this.animatedZombieInnerArmor = factory.apply("animated_zombie", "inner_armor");
         this.animatedZombieOuterArmor = factory.apply("animated_zombie", "outer_armor");
@@ -50,13 +51,13 @@ public class HumanoidKneesElement extends ModelElement {
     }
 
     @Override
-    public String[] modelDescription() {
+    public String[] getDescriptionComponent() {
         return new String[]{"This one makes the knees of zombie-like and piglin-like mobs bend when they walk around.",
                 "Looks pretty fluid and nice. You'll like it, trust me."};
     }
 
     @Override
-    void onRegisterAnimatedModels(AnimatedModelsContext context, EntityModelBakery bakery) {
+    protected void onRegisterAnimatedModels(AnimatedModelsContext context, EntityModelBakery bakery) {
         context.<Zombie, ZombieModel<Zombie>>registerAnimatedModel(ZombieModel.class, () -> new ZombieKneesModel<>(bakery.bakeLayer(this.animatedZombie)), (RenderLayerParent<Zombie, ZombieModel<Zombie>> renderLayerParent, RenderLayer<Zombie, ZombieModel<Zombie>> renderLayer) -> {
             if (renderLayer instanceof HumanoidArmorLayer) {
                 return Optional.of(new HumanoidArmorLayer<>(renderLayerParent, new ZombieKneesModel<>(bakery.bakeLayer(this.animatedZombieInnerArmor)), new ZombieKneesModel<>(bakery.bakeLayer(this.animatedZombieOuterArmor)), Minecraft.getInstance().getModelManager()));

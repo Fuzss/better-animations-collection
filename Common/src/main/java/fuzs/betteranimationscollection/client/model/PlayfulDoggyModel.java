@@ -12,13 +12,14 @@ import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.entity.state.WolfRenderState;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.animal.Wolf;
 
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public class PlayfulDoggyModel<T extends Wolf> extends WolfModel<T> {
+public class PlayfulDoggyModel extends WolfModel {
     public static final int WOLF_TAIL_LENGTH = 7;
 
     private final ModelPart head;
@@ -93,13 +94,8 @@ public class PlayfulDoggyModel<T extends Wolf> extends WolfModel<T> {
     }
 
     @Override
-    protected Iterable<ModelPart> bodyParts() {
-        return Stream.concat(StreamSupport.stream(super.bodyParts().spliterator(), false), Stream.of(this.fluffyTail)).collect(ImmutableList.toImmutableList());
-    }
-
-    @Override
     public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color) {
-        if (!this.isInSittingPose || !PlayfulDoggyElement.sittingBehaviour.rollOver() || PlayfulDoggyElement.sittingBehaviour.begForMeat() && this.rollOverAmount < 1E-4) {
+        if (!this.isInSittingPose || !PlayfulDoggyElement.sittingBehaviour.rollOver() || PlayfulDoggyElement.sittingBehaviour.begForMeat() && this.rollOverAmount < 1.0E-4F) {
             super.renderToBuffer(poseStack, buffer, packedLight, packedOverlay, color);
             return;
         } else {
@@ -174,12 +170,11 @@ public class PlayfulDoggyModel<T extends Wolf> extends WolfModel<T> {
         this.setupAnimTail(entityIn, limbSwing, limbSwingAmount, this.tickDelta);
     }
 
-    private void setupAnimTail(T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTickTime) {
-        // what ageInTicks would normally be which we don't have here
-        float progress = ((float) entitylivingbaseIn.tickCount + partialTickTime) / 3.978873F;
-        float magnitude = (0.5F + Math.max(limbSwingAmount, entitylivingbaseIn.getHeadRollAngle(partialTickTime) * 1.5F)) * 0.25F;
-        float amplitude = limbSwing * 0.6662F + progress * 0.6662F;
-        if (!entitylivingbaseIn.isTame()) {
+    private void setupAnimTail(WolfRenderState renderState) {
+        float progress = renderState.ageInTicks / 3.978873F;
+        float magnitude = (0.5F + Math.max(renderState.walkAnimationSpeed, renderState.headRollAngle * 1.5F)) * 0.25F;
+        float amplitude = renderState.walkAnimationPos * 0.6662F + progress * 0.6662F;
+        if (renderState.collarColor == null) {
             this.tail.xRot += Mth.sin(amplitude) * magnitude;
             this.tail.yRot = 0.0F;
             for (int i = 0; i < this.realTailParts.length; i++) {

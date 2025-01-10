@@ -1,13 +1,12 @@
 package fuzs.betteranimationscollection.client.model;
 
-import fuzs.betteranimationscollection.mixin.client.accessor.LayerDefinitionAccessor;
 import net.minecraft.client.model.SpiderModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 
-public class SpiderKneesModel<T extends Entity> extends SpiderModel<T> {
+public class SpiderKneesModel extends SpiderModel {
     private final ModelPart rightHindLeg;
     private final ModelPart leftHindLeg;
     private final ModelPart rightMiddleHindLeg;
@@ -16,7 +15,7 @@ public class SpiderKneesModel<T extends Entity> extends SpiderModel<T> {
     private final ModelPart leftMiddleFrontLeg;
     private final ModelPart rightFrontLeg;
     private final ModelPart leftFrontLeg;
-    
+
     public SpiderKneesModel(ModelPart modelPart) {
         super(modelPart);
         this.rightHindLeg = modelPart.getChild("right_hind_leg");
@@ -31,7 +30,7 @@ public class SpiderKneesModel<T extends Entity> extends SpiderModel<T> {
 
     public static LayerDefinition createAnimatedSpiderBodyLayer() {
         LayerDefinition layerDefinition = SpiderModel.createSpiderBodyLayer();
-        MeshDefinition meshDefinition = ((LayerDefinitionAccessor) layerDefinition).getMesh();
+        MeshDefinition meshDefinition = layerDefinition.mesh;
         PartDefinition partDefinition = meshDefinition.getRoot();
         CubeListBuilder rightLegBuilder = CubeListBuilder.create().texOffs(18, 0).addBox(-7.0F, -1.0F, -1.0F, 8.0F, 2.0F, 2.0F);
         CubeListBuilder leftLegBuilder = CubeListBuilder.create().texOffs(18, 0).mirror().addBox(-1.0F, -1.0F, -1.0F, 8.0F, 2.0F, 2.0F);
@@ -47,10 +46,10 @@ public class SpiderKneesModel<T extends Entity> extends SpiderModel<T> {
         partDefinition.addOrReplaceChild("left_front_leg", leftLegBuilder, PartPose.offset(4.0F, 15.0F, -1.0F)).addOrReplaceChild("lower_left_front_leg", lowerLeftLegBuilder, PartPose.offsetAndRotation(7.0F, 0.5F, 0.0F, 0.0F, 0.0F, 1.05F));
         return layerDefinition;
     }
-    
+
     @Override
-    public void setupAnim(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+    public void setupAnim(LivingEntityRenderState renderState) {
+        super.setupAnim(renderState);
         this.rightHindLeg.zRot += 0.675F;
         this.leftHindLeg.zRot -= 0.675F;
         this.rightMiddleHindLeg.zRot += 0.675F;

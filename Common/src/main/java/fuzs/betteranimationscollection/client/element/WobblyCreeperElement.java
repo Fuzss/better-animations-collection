@@ -1,70 +1,109 @@
 package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.client.model.WobblyCreeperModel;
+import fuzs.puzzleslib.api.client.util.v1.RenderPropertyKey;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
 import net.minecraft.client.model.CreeperModel;
-import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.CreeperPowerLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.renderer.entity.state.CreeperRenderState;
 import net.minecraft.world.entity.monster.Creeper;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-public class WobblyCreeperElement extends ModelElement {
+public class WobblyCreeperElement extends ModelElement<Creeper, CreeperRenderState, CreeperModel> {
+    public static final RenderPropertyKey<WobbleDirection> WOBBLE_DIRECTION_PROPERTY = key("wobble_direction");
+
     public static WobbleDirection wobbleDirection;
 
     private final ModelLayerLocation animatedCreeper;
     private final ModelLayerLocation animatedCreeperArmor;
 
-    public WobblyCreeperElement(BiFunction<String, String, ModelLayerLocation> factory) {
-        this.animatedCreeper = factory.apply("animated_creeper", "main");
-        this.animatedCreeperArmor = factory.apply("animated_creeper", "armor");
+    public WobblyCreeperElement() {
+        super(Creeper.class, CreeperRenderState.class, CreeperModel.class);
+        this.animatedCreeper = this.registerModelLayer("animated_creeper");
+        this.animatedCreeperArmor = this.registerModelLayer("animated_creeper", "armor");
     }
 
     @Override
-    public String[] modelDescription() {
-        return new String[]{"Remember that one very popular \"TNT\" music video by CaptainSparklez with the really cute wobbly Creeper?",
-                "Well, it's in the game now. The full thing, the real deal, exactly like the video."};
+    public String[] getDescriptionComponent() {
+        return new String[]{
+                "Remember that one very popular \"TNT\" music video by CaptainSparklez with the really cute wobbly Creeper?",
+                "Well, it's in the game now. The full thing, the real deal, exactly like the video."
+        };
     }
 
     @Override
-    void onRegisterAnimatedModels(AnimatedModelsContext context, EntityModelBakery bakery) {
-        context.<Creeper, CreeperModel<Creeper>>registerAnimatedModel(CreeperModel.class, () -> new WobblyCreeperModel<>(bakery.bakeLayer(this.animatedCreeper), false), (RenderLayerParent<Creeper, CreeperModel<Creeper>> renderLayerParent, RenderLayer<Creeper, CreeperModel<Creeper>> renderLayer) -> {
-            if (renderLayer instanceof CreeperPowerLayer) {
-                return Optional.of(new CreeperPowerLayer(renderLayerParent, bakery.get()) {
-                    private final WobblyCreeperModel<Creeper> model = new WobblyCreeperModel<>(bakery.bakeLayer(WobblyCreeperElement.this.animatedCreeperArmor), true);
-
-                    @Override
-                    protected EntityModel<Creeper> model() {
-                        return this.model;
-                    }
-                });
-            } else {
-                return Optional.empty();
+    protected void setAnimatedModel(LivingEntityRenderer<?, CreeperRenderState, CreeperModel> entityRenderer, EntityRendererProvider.Context context) {
+        entityRenderer.model = new WobblyCreeperModel(context.bakeLayer(this.animatedCreeper), false);
+        for (int i = 0; i < entityRenderer.layers.size(); i++) {
+            RenderLayer<CreeperRenderState, CreeperModel> renderLayer = entityRenderer.layers.get(i);
+            RenderLayer<CreeperRenderState, CreeperModel> animatedRenderLayer = this.getAnimatedLayer(renderLayer,
+                    entityRenderer,
+                    context);
+            if (animatedRenderLayer != null) {
+                entityRenderer.layers.set(i, animatedRenderLayer);
+                break;
             }
-        });
+        }
+    }
+
+    @Nullable
+    @Override
+    protected RenderLayer<CreeperRenderState, CreeperModel> getAnimatedLayer(RenderLayer<CreeperRenderState, CreeperModel> renderLayer, LivingEntityRenderer<?, CreeperRenderState, CreeperModel> entityRenderer, EntityRendererProvider.Context context) {
+        if (renderLayer instanceof CreeperPowerLayer) {
+            return new CreeperPowerLayer(entityRenderer, context.getModelSet()) {
+                private final WobblyCreeperModel model = new WobblyCreeperModel(context.bakeLayer(WobblyCreeperElement.this.animatedCreeperArmor),
+                        true);
+
+                @Override
+                protected CreeperModel model() {
+                    return this.model;
+                }
+            };
+        } else {
+            return super.getAnimatedLayer(renderLayer, entityRenderer, context);
+        }
     }
 
     @Override
     public void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context) {
-        context.accept(this.animatedCreeper, () -> WobblyCreeperModel.createAnimatedBodyLayer(CubeDeformation.NONE, false));
-        context.accept(this.animatedCreeperArmor, () -> WobblyCreeperModel.createAnimatedBodyLayer(new CubeDeformation(2.0F), true));
+        context.accept(this.animatedCreeper,
+                () -> WobblyCreeperModel.createAnimatedBodyLayer(CubeDeformation.NONE, false));
+        context.accept(this.animatedCreeperArmor,
+                () -> WobblyCreeperModel.createAnimatedBodyLayer(new CubeDeformation(2.0F), true));
+    }
+
+    @Override
+    protected void extractRenderState(Creeper entity, CreeperRenderState renderState, float partialTick) {
+        super.extractRenderState(entity, renderState, partialTick);
+        WobblyCreeperElement.WobbleDirection wobbleDirection = WobblyCreeperElement.wobbleDirection;
+        if (wobbleDirection == WobblyCreeperElement.WobbleDirection.RANDOM) {
+            wobbleDirection = WobblyCreeperElement.WobbleDirection.values()[(int) Math.abs(
+                    entity.getUUID().getLeastSignificantBits() %
+                            (WobblyCreeperElement.WobbleDirection.values().length - 1))];
+        }
+        RenderPropertyKey.setRenderProperty(renderState, WOBBLE_DIRECTION_PROPERTY, wobbleDirection);
     }
 
     @Override
     public void setupModelConfig(ModConfigSpec.Builder builder, ValueCallback callback) {
-        callback.accept(builder.comment("Different directional behaviour modes for the walking animation.").defineEnum("wobble_direction", WobbleDirection.SIDE), v -> wobbleDirection = v);
+        callback.accept(builder.comment("Different directional behaviour modes for the walking animation.")
+                .defineEnum("wobble_direction", WobbleDirection.SIDE), v -> wobbleDirection = v);
     }
 
     public enum WobbleDirection {
-        SIDE, FRONT, CIRCLE, RANDOM
+        SIDE,
+        FRONT,
+        CIRCLE,
+        RANDOM
     }
 }

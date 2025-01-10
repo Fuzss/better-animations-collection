@@ -8,18 +8,16 @@ import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 
-public class HumanoidKneesModel<T extends LivingEntity> extends HumanoidModel<T> implements KneesModel {
+public class HumanoidKneesModel extends HumanoidModel<HumanoidRenderState> implements KneesModel {
     private final ModelPart rightShin;
     private final ModelPart leftShin;
 
     public HumanoidKneesModel(ModelPart modelPart) {
         super(modelPart);
-        ModelPart rightLeg = modelPart.getChild("right_leg");
-        this.rightShin = rightLeg.getChild("right_shin");
-        ModelPart leftLeg = modelPart.getChild("left_leg");
-        this.leftShin = leftLeg.getChild("left_shin");
+        this.rightShin = modelPart.getChild("right_leg").getChild("right_shin");
+        this.leftShin = modelPart.getChild("left_leg").getChild("left_shin");
     }
 
     public static MeshDefinition createAnimatedMesh(CubeDeformation cubeDeformation, float offsetY) {
@@ -44,13 +42,13 @@ public class HumanoidKneesModel<T extends LivingEntity> extends HumanoidModel<T>
     }
 
     @Override
-    public void setupAnim(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        KneesModel.setupAnim(this, entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+    public void setupAnim(HumanoidRenderState renderState) {
+        super.setupAnim(renderState);
+        KneesModel.setupAnim(this, renderState);
     }
 
     @Override
-    public void copyPropertiesTo(HumanoidModel<T> model) {
+    public void copyPropertiesTo(HumanoidModel<HumanoidRenderState> model) {
         super.copyPropertiesTo(model);
         KneesModel.copyPropertiesTo(this, model);
     }

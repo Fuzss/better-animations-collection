@@ -1,20 +1,17 @@
 package fuzs.betteranimationscollection.client.model;
 
-import com.google.common.collect.ImmutableList;
-import net.minecraft.client.model.ChestedHorseModel;
+import net.minecraft.client.model.DonkeyModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.renderer.entity.state.DonkeyRenderState;
+import net.minecraft.client.renderer.entity.state.EquineRenderState;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.animal.horse.AbstractChestedHorse;
-
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 /**
  * everything copied from {@link FamiliarHorseModel}
  */
-public class FamiliarChestedHorseModel<T extends AbstractChestedHorse> extends ChestedHorseModel<T> {
+public class FamiliarChestedHorseModel extends DonkeyModel {
     private final ModelPart headParts;
     private final ModelPart upperMouth;
     private final ModelPart lowerMouth;
@@ -89,44 +86,29 @@ public class FamiliarChestedHorseModel<T extends AbstractChestedHorse> extends C
     }
 
     @Override
-    protected Iterable<ModelPart> bodyParts() {
-        return Stream.concat(StreamSupport.stream(super.bodyParts().spliterator(), false), Stream.of(this.leftHindShin, this.rightHindShin, this.leftFrontShin, this.rightFrontShin, this.leftHindBabyShin, this.rightHindBabyShin, this.leftFrontBabyShin, this.rightFrontBabyShin)).collect(ImmutableList.toImmutableList());
-    }
+    public void setupAnim(DonkeyRenderState renderState) {
+        super.setupAnim(renderState);
 
-    @Override
-    public void setupAnim(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        this.lowerMouthSaddleWrap.visible = entityIn.isSaddled();
-    }
+        float f4 = renderState.xRot * ((float) Math.PI / 180F);
+        float f3 = Mth.clamp(renderState.yRot, -20.0F, 20.0F);
+        if (renderState.walkAnimationSpeed > 0.2F) {
 
-    @Override
-    public void prepareMobModel(T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTickTime) {
-        super.prepareMobModel(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTickTime);
-
-        float f = Mth.rotLerp(entitylivingbaseIn.yBodyRotO, entitylivingbaseIn.yBodyRot, partialTickTime);
-        float f1 = Mth.rotLerp(entitylivingbaseIn.yHeadRotO, entitylivingbaseIn.yHeadRot, partialTickTime);
-        float f2 = Mth.lerp(partialTickTime, entitylivingbaseIn.xRotO, entitylivingbaseIn.getXRot());
-        float f3 = f1 - f;
-        float f4 = f2 * ((float) Math.PI / 180F);
-        f3 = Mth.clamp(f3, -20.0F, 20.0F);
-        if (limbSwingAmount > 0.2F) {
-
-            f4 += Mth.cos(limbSwing * 0.4F) * 0.15F * limbSwingAmount;
+            f4 += Mth.cos(renderState.walkAnimationPos * 0.4F) * 0.15F * renderState.walkAnimationSpeed;
         }
 
-        float f5 = entitylivingbaseIn.getEatAnim(partialTickTime);
-        float f6 = entitylivingbaseIn.getStandAnim(partialTickTime);
+        float f5 = renderState.eatAnimation;
+        float f6 = renderState.standAnimation;
         float f7 = 1.0F - f6;
-        float f8 = entitylivingbaseIn.getMouthAnim(partialTickTime);
-        float f9 = (float) entitylivingbaseIn.tickCount + partialTickTime;
+        float f8 = renderState.feedingAnimation;
+        float f9 = renderState.ageInTicks;
         this.headParts.y = 4.0F;
         this.headParts.z = -12.0F;
         this.headParts.xRot = ((float) Math.PI / 6F) + f4;
         this.headParts.yRot = f3 * ((float) Math.PI / 180F);
-        float f10 = entitylivingbaseIn.isInWater() ? 0.2F : 1.0F;
-        float f11 = Mth.cos(f10 * limbSwing * 0.6662F + (float) Math.PI);
-        float f12 = f11 * 1.8F * limbSwingAmount;
-        float f13 = f11 * 1.4F * limbSwingAmount;
+        float f10 = renderState.isInWater ? 0.2F : 1.0F;
+        float f11 = Mth.cos(f10 * renderState.walkAnimationPos * 0.6662F + (float) Math.PI);
+        float f12 = f11 * 1.8F * renderState.walkAnimationSpeed;
+        float f13 = f11 * 1.4F * renderState.walkAnimationSpeed;
         this.headParts.xRot = f6 * (0.2617994F + f4) + f5 * 2.1816616F + (1.0F - Math.max(f6, f5)) * this.headParts.xRot;
         this.headParts.yRot = f6 * f3 * 0.017453292F + (1.0F - Math.max(f6, f5)) * this.headParts.yRot;
         this.headParts.y = f6 * -4.0F + f5 * 11.0F + (1.0F - Math.max(f6, f5)) * this.headParts.y;
@@ -165,8 +147,10 @@ public class FamiliarChestedHorseModel<T extends AbstractChestedHorse> extends C
         this.rightFrontShin.xRot = (this.rightFrontLeg.xRot + (float) Math.PI * Math.max(0.0F, 0.2F + f15 * 0.2F)) * f6 + (f13 + Math.max(0.0F, f13)) * f7;
         this.leftFrontLeg.xRot = f17;
         this.leftFrontShin.xRot = (this.leftFrontLeg.xRot + (float) Math.PI * Math.max(0.0F, 0.2F - f15 * 0.2F)) * f6 + (-f13 + Math.max(0.0F, -f13)) * f7;
+
         this.copyBabyModelAngles();
-        this.setBabyModelVisibility();
+        this.setBabyModelVisibility(renderState);
+        this.lowerMouthSaddleWrap.visible = renderState.isSaddled;
     }
 
     private void copyBabyModelAngles() {
@@ -196,22 +180,22 @@ public class FamiliarChestedHorseModel<T extends AbstractChestedHorse> extends C
         this.leftFrontBabyShin.xRot = this.leftFrontShin.xRot;
     }
 
-    private void setBabyModelVisibility() {
-        this.rightHindLeg.visible = !this.young;
-        this.leftHindLeg.visible = !this.young;
-        this.rightFrontLeg.visible = !this.young;
-        this.leftFrontLeg.visible = !this.young;
-        this.rightHindShin.visible = !this.young;
-        this.leftHindShin.visible = !this.young;
-        this.rightFrontShin.visible = !this.young;
-        this.leftFrontShin.visible = !this.young;
-        this.rightHindBabyLeg.visible = this.young;
-        this.leftHindBabyLeg.visible = this.young;
-        this.rightFrontBabyLeg.visible = this.young;
-        this.leftFrontBabyLeg.visible = this.young;
-        this.rightHindBabyShin.visible = this.young;
-        this.leftHindBabyShin.visible = this.young;
-        this.rightFrontBabyShin.visible = this.young;
-        this.leftFrontBabyShin.visible = this.young;
+    private void setBabyModelVisibility(EquineRenderState renderState) {
+        this.rightHindLeg.visible = !renderState.isBaby;
+        this.leftHindLeg.visible = !renderState.isBaby;
+        this.rightFrontLeg.visible = !renderState.isBaby;
+        this.leftFrontLeg.visible = !renderState.isBaby;
+        this.rightHindShin.visible = !renderState.isBaby;
+        this.leftHindShin.visible = !renderState.isBaby;
+        this.rightFrontShin.visible = !renderState.isBaby;
+        this.leftFrontShin.visible = !renderState.isBaby;
+        this.rightHindBabyLeg.visible = renderState.isBaby;
+        this.leftHindBabyLeg.visible = renderState.isBaby;
+        this.rightFrontBabyLeg.visible = renderState.isBaby;
+        this.leftFrontBabyLeg.visible = renderState.isBaby;
+        this.rightHindBabyShin.visible = renderState.isBaby;
+        this.leftHindBabyShin.visible = renderState.isBaby;
+        this.rightFrontBabyShin.visible = renderState.isBaby;
+        this.leftFrontBabyShin.visible = renderState.isBaby;
     }
 }

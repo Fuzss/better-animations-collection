@@ -1,29 +1,30 @@
 package fuzs.betteranimationscollection.client.model;
 
+import fuzs.betteranimationscollection.client.element.SoundBasedElement;
+import fuzs.puzzleslib.api.client.util.v1.RenderPropertyKey;
 import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.entity.state.VillagerRenderState;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.Mob;
 
-public class VillagerNoseModel<T extends Entity> extends VillagerModel<T> {
+public class VillagerNoseModel extends VillagerModel {
+    private final ModelPart nose;
 
     public VillagerNoseModel(ModelPart modelPart) {
         super(modelPart);
+        this.nose = modelPart.getChild("head").getChild("nose");
     }
 
     @Override
-    public void prepareMobModel(T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTickTime) {
-        if (entitylivingbaseIn instanceof Mob mob) {
-            // this only works because MobEntity#ambientSoundTime is manually being synced to the client in {@link fuzs.betteranimationscollection.client.element.SyncSoundElement}
-            int soundTime = mob.ambientSoundTime + mob.getAmbientSoundInterval();
-            final int maxSoundTime = 20;
-            if (0 < soundTime && soundTime < maxSoundTime) {
-                float rotation = Mth.sin((float) soundTime * (float) ((3.0F * Math.PI) / 20.0F));
-                this.nose.zRot = rotation * 0.75F * ((float) (maxSoundTime - soundTime) / 20.0F);
-            } else {
-                this.nose.zRot = 0.0F;
-            }
+    public void setupAnim(VillagerRenderState renderState) {
+        super.setupAnim(renderState);
+        int soundTime = RenderPropertyKey.getRenderProperty(renderState, SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY);
+        int maxSoundTime = 20;
+        if (0 < soundTime && soundTime < maxSoundTime) {
+            float rotation = Mth.sin((float) soundTime * (float) ((3.0F * Math.PI) / 20.0F));
+            this.nose.zRot = rotation * 0.75F * ((maxSoundTime - soundTime) / 20.0F);
+        } else {
+            this.nose.zRot = 0.0F;
         }
     }
 }

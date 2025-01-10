@@ -1,16 +1,14 @@
 package fuzs.betteranimationscollection.client.model;
 
-import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.Pair;
-import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PiglinModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.client.renderer.entity.state.PiglinRenderState;
 
-public class PiglinKneesModel<T extends Mob> extends PiglinModel<T> implements KneesModel {
+public class PiglinKneesModel extends PiglinModel implements KneesModel {
     private final ModelPart rightShin;
     private final ModelPart leftShin;
     private final ModelPart rightPants;
@@ -20,10 +18,8 @@ public class PiglinKneesModel<T extends Mob> extends PiglinModel<T> implements K
 
     public PiglinKneesModel(ModelPart modelPart) {
         super(modelPart);
-        ModelPart rightLeg = modelPart.getChild("right_leg");
-        this.rightShin = rightLeg.getChild("right_shin");
-        ModelPart leftLeg = modelPart.getChild("left_leg");
-        this.leftShin = leftLeg.getChild("left_shin");
+        this.rightShin = modelPart.getChild("right_leg").getChild("right_shin");
+        this.leftShin = modelPart.getChild("left_leg").getChild("left_shin");
         this.rightPants = modelPart.getChild("right_pants");
         this.rightLowerPants = this.rightPants.getChild("right_lower_pants");
         this.leftPants = modelPart.getChild("left_pants");
@@ -54,14 +50,9 @@ public class PiglinKneesModel<T extends Mob> extends PiglinModel<T> implements K
     }
 
     @Override
-    protected Iterable<ModelPart> bodyParts() {
-        return ImmutableList.of(this.body, this.rightArm, this.leftArm, this.rightLeg, this.leftLeg, this.hat, this.leftPants, this.rightPants, this.leftSleeve, this.rightSleeve, this.jacket);
-    }
-
-    @Override
-    public void setupAnim(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        KneesModel.setupAnim(this, entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+    public void setupAnim(PiglinRenderState renderState) {
+        super.setupAnim(renderState);
+        KneesModel.setupAnim(this, renderState);
         this.rightPants.copyFrom(this.rightLeg);
         this.leftPants.copyFrom(this.leftLeg);
         this.rightLowerPants.copyFrom(this.rightShin);
@@ -69,7 +60,7 @@ public class PiglinKneesModel<T extends Mob> extends PiglinModel<T> implements K
     }
 
     @Override
-    public void copyPropertiesTo(HumanoidModel<T> model) {
+    public void copyPropertiesTo(HumanoidModel<PiglinRenderState> model) {
         super.copyPropertiesTo(model);
         KneesModel.copyPropertiesTo(this, model);
     }

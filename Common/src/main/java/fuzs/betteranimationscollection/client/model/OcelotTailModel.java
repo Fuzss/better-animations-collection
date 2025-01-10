@@ -5,10 +5,10 @@ import net.minecraft.client.model.OcelotModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.renderer.entity.state.FelineRenderState;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 
-public class OcelotTailModel<T extends Entity> extends OcelotModel<T> {
+public class OcelotTailModel extends OcelotModel {
     public static final int OCELOT_TAIL_LENGTH = 15;
 
     private final ModelPart tail;
@@ -23,17 +23,29 @@ public class OcelotTailModel<T extends Entity> extends OcelotModel<T> {
     public static LayerDefinition createAnimatedBodyMesh(CubeDeformation cubeDeformation) {
         MeshDefinition meshDefinition = OcelotModel.createBodyMesh(cubeDeformation);
         PartDefinition partDefinition = meshDefinition.getRoot();
-        PartDefinition partDefinition1 = partDefinition.addOrReplaceChild("tail1", CubeListBuilder.create().texOffs(0, 15).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 1.0F, 1.0F, cubeDeformation), PartPose.offsetAndRotation(0.0F, 15.0F, 8.0F, 0.9F, 0.0F, 0.0F));
+        PartDefinition partDefinition1 = partDefinition.addOrReplaceChild("tail1",
+                CubeListBuilder.create().texOffs(0, 15).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 1.0F, 1.0F, cubeDeformation),
+                PartPose.offsetAndRotation(0.0F, 15.0F, 8.0F, 0.9F, 0.0F, 0.0F));
         partDefinition.addOrReplaceChild("tail2", CubeListBuilder.create(), PartPose.ZERO);
         for (int i = 0; i < OCELOT_TAIL_LENGTH; ++i) {
             if (i < OCELOT_TAIL_LENGTH / 2) {
-                partDefinition1 = partDefinition1.addOrReplaceChild("tail" + (i + 2), CubeListBuilder.create().texOffs(0, 16 + i).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 1.0F, 1.0F, cubeDeformation), PartPose.offset(0.0F, 1.0F, 0.0F));
+                partDefinition1 = partDefinition1.addOrReplaceChild("tail" + (i + 2),
+                        CubeListBuilder.create()
+                                .texOffs(0, 16 + i)
+                                .addBox(-0.5F, 0.0F, -0.5F, 1.0F, 1.0F, 1.0F, cubeDeformation),
+                        PartPose.offset(0.0F, 1.0F, 0.0F));
             } else {
-                partDefinition1 = partDefinition1.addOrReplaceChild("tail" + (i + 2), CubeListBuilder.create().texOffs(4, 8 + i).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 1.0F, 1.0F, cubeDeformation), PartPose.offset(0.0F, 1.0F, 0.0F));
+                partDefinition1 = partDefinition1.addOrReplaceChild("tail" + (i + 2),
+                        CubeListBuilder.create()
+                                .texOffs(4, 8 + i)
+                                .addBox(-0.5F, 0.0F, -0.5F, 1.0F, 1.0F, 1.0F, cubeDeformation),
+                        PartPose.offset(0.0F, 1.0F, 0.0F));
             }
         }
         // makes front legs stick out of body a little like they used to
-        CubeListBuilder cubeListBuilder2 = CubeListBuilder.create().texOffs(40, 0).addBox(-1.0F, 0.0F, 0.0F, 2.0F, 10.0F, 2.0F, cubeDeformation);
+        CubeListBuilder cubeListBuilder2 = CubeListBuilder.create()
+                .texOffs(40, 0)
+                .addBox(-1.0F, 0.0F, 0.0F, 2.0F, 10.0F, 2.0F, cubeDeformation);
         partDefinition.addOrReplaceChild("left_front_leg", cubeListBuilder2, PartPose.offset(1.2F, 13.7F, -5.0F));
         partDefinition.addOrReplaceChild("right_front_leg", cubeListBuilder2, PartPose.offset(-1.2F, 13.7F, -5.0F));
         return LayerDefinition.create(meshDefinition, 64, 32);
@@ -52,13 +64,19 @@ public class OcelotTailModel<T extends Entity> extends OcelotModel<T> {
     }
 
     @Override
-    public void setupAnim(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(FelineRenderState renderState) {
+        super.setupAnim(renderState);
         // tail1 is still being updated by super class although unused, so we just copy the angles
         this.tail.y = this.tail1.y;
         this.tail.z = this.tail1.z;
         this.tail.xRot = this.tail1.xRot;
-        setupTailAnim(this.tail, this.tailParts, limbSwing, limbSwingAmount, ageInTicks, OcelotTailElement.animationSpeed, OcelotTailElement.tailLength);
-        super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+        setupTailAnim(this.tail,
+                this.tailParts,
+                renderState.walkAnimationPos,
+                renderState.walkAnimationSpeed,
+                renderState.ageInTicks,
+                OcelotTailElement.animationSpeed,
+                OcelotTailElement.tailLength);
     }
 
     public static void setupTailAnim(ModelPart tail, ModelPart[] tailParts, float limbSwing, float limbSwingAmount, float ageInTicks, int animationSpeed, int tailLength) {

@@ -25,19 +25,20 @@ public class FamiliarHorseElement extends ModelElement {
     private final ModelLayerLocation animatedChestedHorse;
 
     public FamiliarHorseElement(BiFunction<String, String, ModelLayerLocation> factory) {
+        super(, );
         this.animatedHorse = factory.apply("animated_horse", "main");
         this.animatedHorseArmor = factory.apply("animated_horse_armor", "main");
         this.animatedChestedHorse = factory.apply("animated_chested_horse", "main");
     }
 
     @Override
-    public String[] modelDescription() {
+    public String[] getDescriptionComponent() {
         return new String[]{"Makes horses more lively again, just like they used to be in older versions.",
                 "Does this by adding back their mouth and knees while staying true to the vanilla model style."};
     }
 
     @Override
-    void onRegisterAnimatedModels(AnimatedModelsContext context, EntityModelBakery bakery) {
+    protected void onRegisterAnimatedModels(AnimatedModelsContext context, EntityModelBakery bakery) {
         context.<Horse, HorseModel<Horse>>registerAnimatedModel(HorseModel.class, () -> new FamiliarHorseModel<>(bakery.bakeLayer(this.animatedHorse)), (RenderLayerParent<Horse, HorseModel<Horse>> renderLayerParent, RenderLayer<Horse, HorseModel<Horse>> renderLayer) -> {
             if (renderLayer instanceof HorseArmorLayer) {
                 ((HorseArmorLayerAccessor) renderLayer).setModel(new FamiliarHorseModel<>(bakery.bakeLayer(this.animatedHorseArmor)));

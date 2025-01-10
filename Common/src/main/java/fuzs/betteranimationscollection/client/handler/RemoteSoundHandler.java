@@ -73,7 +73,7 @@ public class RemoteSoundHandler {
     public void addAmbientSounds(Class<? extends Mob> entityClazz, Collection<SoundEvent> soundEvents) {
         this.noisyEntities.add(entityClazz);
         for (SoundEvent soundEvent : soundEvents) {
-            this.ambientSounds.put(soundEvent.getLocation(), entityClazz);
+            this.ambientSounds.put(soundEvent.location(), entityClazz);
         }
     }
 

@@ -3,8 +3,8 @@ package fuzs.betteranimationscollection.client.model;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.LivingEntity;
 
 public interface KneesModel {
 
@@ -12,19 +12,16 @@ public interface KneesModel {
 
     ModelPart leftShin();
 
-    static <T extends LivingEntity, M extends HumanoidModel<T> & KneesModel> void setupAnim(M model, T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        float flightAmplifier = 1.0F;
-        if (entityIn.getFallFlyingTicks() > 4) {
-            flightAmplifier = (float) entityIn.getDeltaMovement().lengthSqr();
-            flightAmplifier = flightAmplifier / 0.2F;
-            flightAmplifier = Math.max(1.0F, flightAmplifier * flightAmplifier * flightAmplifier);
-        }
-        if (model.riding) {
+    static <S extends HumanoidRenderState, M extends HumanoidModel<S> & KneesModel> void setupAnim(M model, S renderState) {
+        if (renderState.isPassenger) {
             model.rightShin().xRot = 0.6F;
             model.leftShin().xRot = 0.6F;
         } else {
-            model.rightShin().xRot = Math.max(0.0F, Mth.sin(limbSwing * 0.6662F)) * 1.5F * limbSwingAmount / flightAmplifier;
-            model.leftShin().xRot = Math.max(0.0F, Mth.sin(limbSwing * 0.6662F + (float) Math.PI)) * 1.5F * limbSwingAmount / flightAmplifier;
+            model.rightShin().xRot = Math.max(0.0F, Mth.sin(renderState.walkAnimationPos * 0.6662F)) * 1.5F *
+                    renderState.walkAnimationSpeed / renderState.speedValue;
+            model.leftShin().xRot =
+                    Math.max(0.0F, Mth.sin(renderState.walkAnimationPos * 0.6662F + (float) Math.PI)) * 1.5F *
+                            renderState.walkAnimationSpeed / renderState.speedValue;
         }
     }
 

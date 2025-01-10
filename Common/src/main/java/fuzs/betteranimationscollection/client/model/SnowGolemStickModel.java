@@ -1,11 +1,13 @@
 package fuzs.betteranimationscollection.client.model;
 
+import fuzs.betteranimationscollection.client.element.SnowGolemStickElement;
+import fuzs.betteranimationscollection.client.element.SoundBasedElement;
+import fuzs.puzzleslib.api.client.util.v1.RenderPropertyKey;
 import net.minecraft.client.model.SnowGolemModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 
-public class SnowGolemStickModel<T extends Entity> extends SnowGolemModel<T> {
+public class SnowGolemStickModel extends SnowGolemModel {
     private final ModelPart leftArm;
     private final ModelPart rightArm;
 
@@ -16,25 +18,22 @@ public class SnowGolemStickModel<T extends Entity> extends SnowGolemModel<T> {
     }
 
     @Override
-    public void setupAnim(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        if (entityIn instanceof Mob mob) {
-            // this only works because MobEntity#ambientSoundTime is manually being synced to the client in {@link fuzs.betteranimationscollection.client.element.SyncSoundElement}
-            int soundTime = mob.ambientSoundTime + mob.getAmbientSoundInterval();
-            // makes 5 % of snowman render left-handed, like for most mobs with arms in vanilla
-            boolean leftHanded = Math.abs(mob.getUUID().getLeastSignificantBits() % 20) == 0;
-            if (0 < soundTime && soundTime < 8) {
-                if (leftHanded) {
-                    this.leftArm.xRot = 1.5F - (float) soundTime * 1.5F / 8.0F;
-                    this.leftArm.yRot += (1.0F - (float) soundTime / 8.0F) * 2.0F;
-                } else {
-                    this.rightArm.xRot = 1.5F - (float) soundTime * 1.5F / 8.0F;
-                    this.rightArm.yRot -= (1.0F - (float) soundTime / 8.0F) * 2.0F;
-                }
+    public void setupAnim(LivingEntityRenderState renderState) {
+        super.setupAnim(renderState);
+        int soundTime = RenderPropertyKey.getRenderProperty(renderState, SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY);
+        boolean isLeftHanded = RenderPropertyKey.getRenderProperty(renderState,
+                SnowGolemStickElement.IS_LEFT_HANDED_PROPERTY);
+        if (0 < soundTime && soundTime < 8) {
+            if (isLeftHanded) {
+                this.leftArm.xRot = 1.5F - (float) soundTime * 1.5F / 8.0F;
+                this.leftArm.yRot += (1.0F - (float) soundTime / 8.0F) * 2.0F;
             } else {
-                this.leftArm.xRot = 0.0F;
-                this.rightArm.xRot = 0.0F;
+                this.rightArm.xRot = 1.5F - (float) soundTime * 1.5F / 8.0F;
+                this.rightArm.yRot -= (1.0F - (float) soundTime / 8.0F) * 2.0F;
             }
+        } else {
+            this.leftArm.xRot = 0.0F;
+            this.rightArm.xRot = 0.0F;
         }
     }
 }

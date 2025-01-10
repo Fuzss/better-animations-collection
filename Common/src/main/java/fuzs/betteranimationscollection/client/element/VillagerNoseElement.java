@@ -5,32 +5,41 @@ import fuzs.betteranimationscollection.client.model.VillagerNoseModel;
 import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.state.VillagerRenderState;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.npc.AbstractVillager;
 
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-public class VillagerNoseElement extends SoundDetectionElement {
+public class VillagerNoseElement extends SoundBasedElement<AbstractVillager, VillagerRenderState, VillagerModel> {
     private final ModelLayerLocation animatedVillager;
 
-    public VillagerNoseElement(BiFunction<String, String, ModelLayerLocation> factory) {
-        super(AbstractVillager.class, SoundEvents.VILLAGER_AMBIENT, SoundEvents.VILLAGER_TRADE, SoundEvents.WANDERING_TRADER_AMBIENT, SoundEvents.WANDERING_TRADER_TRADE);
-        this.animatedVillager = factory.apply("animated_villager", "main");
-        RemoteSoundHandler.INSTANCE.addAttackableEntity(AbstractVillager.class);
+    public VillagerNoseElement() {
+        super(AbstractVillager.class,
+                VillagerRenderState.class,
+                VillagerModel.class,
+                SoundEvents.VILLAGER_AMBIENT,
+                SoundEvents.VILLAGER_TRADE,
+                SoundEvents.WANDERING_TRADER_AMBIENT,
+                SoundEvents.WANDERING_TRADER_TRADE);
+        this.animatedVillager = this.registerModelLayer("animated_villager");
+        RemoteSoundHandler.INSTANCE.addAttackableEntity(this.entityClazz);
     }
 
     @Override
-    public String[] modelDescription() {
-        return new String[]{"A subtle change; this makes villagers wiggle their big noses whenever they make their iconic sound.",
-                "It's a small change, but who doesn't get a kick out of it?"};
+    public String[] getDescriptionComponent() {
+        return new String[]{
+                "A subtle change; this makes villagers wiggle their big noses whenever they make their iconic sound.",
+                "It's a small change, but who doesn't get a kick out of it?"
+        };
     }
 
     @Override
-    void onRegisterAnimatedModels(AnimatedModelsContext context, EntityModelBakery bakery) {
-        context.<LivingEntity, VillagerModel<LivingEntity>>registerAnimatedModel(VillagerModel.class, () -> new VillagerNoseModel<>(bakery.bakeLayer(this.animatedVillager)));
+    protected void setAnimatedModel(LivingEntityRenderer<?, VillagerRenderState, VillagerModel> entityRenderer, EntityRendererProvider.Context context) {
+        entityRenderer.model = new VillagerNoseModel(context.bakeLayer(this.animatedVillager));
     }
 
     @Override

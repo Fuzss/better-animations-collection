@@ -27,18 +27,19 @@ public class PlayfulDoggyElement extends ModelElement {
     private final ModelLayerLocation animatedWolfArmor;
 
     public PlayfulDoggyElement(BiFunction<String, String, ModelLayerLocation> factory) {
+        super(, );
         this.animatedWolf = factory.apply("animated_wolf", "main");
         this.animatedWolfArmor = factory.apply("animated_wolf", "armor");
     }
 
     @Override
-    public String[] modelDescription() {
+    public String[] getDescriptionComponent() {
         return new String[]{"Changes wolf tails to be fluffier and flowier, wagging realistically while they stand and run.",
                 "Also makes tamed wolves lie down instead of sitting. Hold up some meat and they'll roll over, too."};
     }
 
     @Override
-    void onRegisterAnimatedModels(AnimatedModelsContext context, EntityModelBakery bakery) {
+    protected void onRegisterAnimatedModels(AnimatedModelsContext context, EntityModelBakery bakery) {
         context.<Wolf, WolfModel<Wolf>>registerAnimatedModel(WolfModel.class, () -> new PlayfulDoggyModel<>(bakery.bakeLayer(this.animatedWolf)), (RenderLayerParent<Wolf, WolfModel<Wolf>> renderLayerParent, RenderLayer<Wolf, WolfModel<Wolf>> renderLayer) -> {
             if (renderLayer instanceof WolfArmorLayer wolfArmorLayer) {
                 wolfArmorLayer.model = new PlayfulDoggyModel<>(bakery.bakeLayer(this.animatedWolfArmor));

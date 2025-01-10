@@ -1,17 +1,20 @@
 package fuzs.betteranimationscollection.client;
 
 import fuzs.betteranimationscollection.BetterAnimationsCollection;
+import fuzs.betteranimationscollection.client.element.ModelElement;
 import fuzs.betteranimationscollection.client.element.ModelElements;
 import fuzs.betteranimationscollection.client.handler.RemoteSoundHandler;
 import fuzs.betteranimationscollection.config.ClientConfig;
 import fuzs.puzzleslib.api.client.core.v1.ClientModConstructor;
 import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import fuzs.puzzleslib.api.client.event.v1.AddResourcePackReloadListenersCallback;
+import fuzs.puzzleslib.api.client.event.v1.renderer.ExtractRenderStateCallbackV2;
 import fuzs.puzzleslib.api.event.v1.entity.EntityTickEvents;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
+import net.minecraft.world.entity.Entity;
 
 import java.util.function.BiConsumer;
 
@@ -24,14 +27,15 @@ public class BetterAnimationsCollectionClient implements ClientModConstructor {
 
     private static void registerEventHandlers() {
         EntityTickEvents.END.register(RemoteSoundHandler.INSTANCE::onEndEntityTick);
-        AddResourcePackReloadListenersCallback.EVENT.register(
-                (BiConsumer<ResourceLocation, PreparableReloadListener> consumer) -> {
-                    consumer.accept(BetterAnimationsCollection.id("animated_models"),
-                            (ResourceManagerReloadListener) (ResourceManager resourceManager) -> {
-                                ModelElements.applyAnimatedModels();
-                            }
-                    );
-                });
+        ExtractRenderStateCallbackV2.EVENT.register((Entity entity, EntityRenderState renderState, float partialTick) -> {
+            ModelElements.forEach((ModelElement<?, ?, ?> modelElement) -> {
+                modelElement.onExtractRenderState(entity, renderState, partialTick);
+            });
+        });
+        AddResourcePackReloadListenersCallback.EVENT.register((BiConsumer<ResourceLocation, PreparableReloadListener> consumer) -> {
+            consumer.accept(BetterAnimationsCollection.id("animated_models"),
+                    (ResourceManagerReloadListener) ModelElements::applyAnimatedModels);
+        });
     }
 
     @Override
@@ -44,7 +48,8 @@ public class BetterAnimationsCollectionClient implements ClientModConstructor {
 
     @Override
     public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
-        ModelElements.elements()
-                .forEach(element -> element.onRegisterLayerDefinitions(context::registerLayerDefinition));
+        ModelElements.forEach((ModelElement<?, ?, ?> modelElement) -> {
+            modelElement.onRegisterLayerDefinitions(context::registerLayerDefinition);
+        });
     }
 }
