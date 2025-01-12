@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.layers.WolfArmorLayer;
 import net.minecraft.client.renderer.entity.state.WolfRenderState;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.animal.Wolf;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
@@ -19,10 +20,12 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public class PlayfulDoggyElement extends SingletonModelElement<Wolf, WolfRenderState, WolfModel> {
+    public static final float MAX_ROLL_ANIM = 0.15F * Mth.PI;
+
     public static int tailLength;
     public static boolean fluffyTail;
     public static int animationSpeed;
-    public static SittingBehaviour sittingBehaviour;
+    public static SittingAnim sittingAnim;
 
     private final ModelLayerLocation animatedWolf;
     private final ModelLayerLocation animatedWolfArmor;
@@ -80,6 +83,18 @@ public class PlayfulDoggyElement extends SingletonModelElement<Wolf, WolfRenderS
                         32).apply(WolfModel.BABY_TRANSFORMER));
     }
 
+    public static float getRollAnimScale(WolfRenderState renderState) {
+        if (renderState.isSitting && PlayfulDoggyElement.sittingAnim.rollOver()) {
+            if (PlayfulDoggyElement.sittingAnim.begForMeat()) {
+                return renderState.headRollAngle >= 1.0E-4F ? renderState.headRollAngle / MAX_ROLL_ANIM : 0.0F;
+            } else {
+                return 1.0F;
+            }
+        } else {
+            return 0.0F;
+        }
+    }
+
     @Override
     public void setupModelConfig(ModConfigSpec.Builder builder, ValueCallback callback) {
         callback.accept(builder.comment("Define tail length.")
@@ -91,19 +106,18 @@ public class PlayfulDoggyElement extends SingletonModelElement<Wolf, WolfRenderS
         callback.accept(builder.comment("Animation swing speed for tail.").defineInRange("animation_speed", 5, 1, 20),
                 v -> animationSpeed = v);
         callback.accept(builder.comment("Pose and behaviour when sitting.",
-                                "By default makes wolves lie down instead, and roll over when a nearby player is holding a piece meat.")
-                        .defineEnum("sitting_behaviour", SittingBehaviour.LIE_DOWN_AND_BEG_FOR_MEAT),
-                v -> sittingBehaviour = v);
+                        "By default makes wolves lie down instead, and roll over when a nearby player is holding a piece meat.")
+                .defineEnum("sitting_behaviour", SittingAnim.LIE_DOWN_AND_BEG_FOR_MEAT), v -> sittingAnim = v);
     }
 
-    public enum SittingBehaviour {
-        DEFAULT,
+    public enum SittingAnim {
+        VANILLA,
         LIE_DOWN,
         ROLL_OVER,
         LIE_DOWN_AND_BEG_FOR_MEAT;
 
         public boolean lieDown() {
-            return this != DEFAULT;
+            return this != VANILLA;
         }
 
         public boolean rollOver() {

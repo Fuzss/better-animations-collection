@@ -79,7 +79,8 @@ public final class ModelElements {
                         modelElementEntry.getValue().onApplyModelAnimations(entityRenderer, context);
                     } catch (Exception exception) {
                         BetterAnimationsCollection.LOGGER.warn("Failed to apply model animations for '{}'",
-                                modelElementEntry.getKey());
+                                modelElementEntry.getKey(),
+                                exception);
                     }
                 }
             }

@@ -3,6 +3,7 @@ package fuzs.betteranimationscollection.client.element;
 import fuzs.puzzleslib.api.core.v1.utility.ResourceLocationHelper;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 
+@Deprecated(forRemoval = true)
 public interface ModelLayerFactory {
 
     String modId();

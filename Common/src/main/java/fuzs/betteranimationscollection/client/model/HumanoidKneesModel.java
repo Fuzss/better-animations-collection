@@ -27,7 +27,9 @@ public class HumanoidKneesModel extends HumanoidModel<HumanoidRenderState> imple
         Pair<CubeListBuilder, PartPose> leftLeg = createShin(0, 16, 1.9F, 0.0F, 0.0F, true, cubeDeformation);
         Pair<CubeListBuilder, PartPose> rightShin = createShin(0, 22, 0.0F, -6.0F, -2.0F, false, cubeDeformation);
         Pair<CubeListBuilder, PartPose> leftShin = createShin(0, 22, 0.0F, -6.0F, -2.0F, true, cubeDeformation);
-        PartDefinition partDefinition1 = partDefinition.addOrReplaceChild("right_leg", rightLeg.left(), rightLeg.right());
+        PartDefinition partDefinition1 = partDefinition.addOrReplaceChild("right_leg",
+                rightLeg.left(),
+                rightLeg.right());
         PartDefinition partDefinition2 = partDefinition.addOrReplaceChild("left_leg", leftLeg.left(), leftLeg.right());
         partDefinition1.addOrReplaceChild("right_shin", rightShin.left(), rightShin.right());
         partDefinition2.addOrReplaceChild("left_shin", leftShin.left(), leftShin.right());

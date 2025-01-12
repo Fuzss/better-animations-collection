@@ -70,18 +70,22 @@ public class FamiliarHorseElement extends ModelElement {
     @Override
     public void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context) {
         context.accept(this.animatedHorse,
-                () -> LayerDefinition.create(FamiliarHorseModel.createAnimatedBodyMesh(CubeDeformation.NONE), 64, 64));
+                () -> LayerDefinition.create(FamiliarHorseModel.createAnimatedBodyMesh(CubeDeformation.NONE, false),
+                        64,
+                        64));
         context.accept(this.animatedHorseArmor,
-                () -> LayerDefinition.create(FamiliarHorseModel.createAnimatedBodyMesh(new CubeDeformation(0.1F)),
-                        64,
-                        64));
-        context.accept(this.animatedDonkey, FamiliarDonkeyModel::createAnimatedBodyLayer);
+                () -> LayerDefinition.create(FamiliarHorseModel.createAnimatedBodyMesh(new CubeDeformation(0.1F), false), 64, 64));
+        context.accept(this.animatedDonkey, () -> FamiliarDonkeyModel.createAnimatedBodyLayer(false));
         context.accept(this.animatedHorseBaby,
-                () -> LayerDefinition.create(FamiliarHorseModel.createAnimatedBodyMesh(CubeDeformation.NONE), 64, 64));
-        context.accept(this.animatedHorseBabyArmor,
-                () -> LayerDefinition.create(FamiliarHorseModel.createAnimatedBodyMesh(new CubeDeformation(0.1F)),
+                () -> LayerDefinition.create(FamiliarHorseModel.createAnimatedBodyMesh(CubeDeformation.NONE, true),
                         64,
-                        64));
-        context.accept(this.animatedDonkeyBaby, FamiliarDonkeyModel::createAnimatedBodyLayer);
+                        64).apply(FamiliarHorseModel.getBabyTransformer()));
+        context.accept(this.animatedHorseBabyArmor,
+                () -> LayerDefinition.create(FamiliarHorseModel.createAnimatedBodyMesh(new CubeDeformation(0.1F), true),
+                        64,
+                        64).apply(FamiliarHorseModel.getBabyTransformer()));
+        context.accept(this.animatedDonkeyBaby,
+                () -> FamiliarDonkeyModel.createAnimatedBodyLayer(true)
+                        .apply(FamiliarDonkeyModel.getBabyTransformer()));
     }
 }

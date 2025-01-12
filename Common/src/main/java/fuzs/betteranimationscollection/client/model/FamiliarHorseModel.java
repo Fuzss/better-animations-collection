@@ -3,19 +3,13 @@ package fuzs.betteranimationscollection.client.model;
 import net.minecraft.client.model.HorseModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.renderer.entity.state.EquineRenderState;
 import net.minecraft.util.Mth;
 
 public class FamiliarHorseModel extends HorseModel {
-    private final ModelPart headParts;
     private final ModelPart upperMouth;
     private final ModelPart lowerMouth;
-    private final ModelPart mouthSaddleWrap;
-    private final ModelPart lowerMouthSaddleWrap;
     private final ModelPart leftHindLeg;
     private final ModelPart rightHindLeg;
     private final ModelPart leftFrontLeg;
@@ -24,24 +18,13 @@ public class FamiliarHorseModel extends HorseModel {
     private final ModelPart rightHindShin;
     private final ModelPart leftFrontShin;
     private final ModelPart rightFrontShin;
-    private final ModelPart leftHindBabyLeg;
-    private final ModelPart rightHindBabyLeg;
-    private final ModelPart leftFrontBabyLeg;
-    private final ModelPart rightFrontBabyLeg;
-    private final ModelPart leftHindBabyShin;
-    private final ModelPart rightHindBabyShin;
-    private final ModelPart leftFrontBabyShin;
-    private final ModelPart rightFrontBabyShin;
-    private final ModelPart rightSaddleMouth;
-    private final ModelPart leftSaddleMouth;
-//    private final ModelPart[] saddleParts;
-//    private final ModelPart[] ridingParts;
+    private final ModelPart[] saddleParts;
 
     public FamiliarHorseModel(ModelPart modelPart) {
         super(modelPart);
-        this.headParts = modelPart.getChild("head_parts");
-        this.upperMouth = this.headParts.getChild("upper_mouth");
-        this.lowerMouth = this.headParts.getChild("lower_mouth");
+        ModelPart headParts = modelPart.getChild("head_parts");
+        this.upperMouth = headParts.getChild("upper_mouth");
+        this.lowerMouth = headParts.getChild("lower_mouth");
         this.rightHindLeg = modelPart.getChild("right_hind_leg");
         this.leftHindLeg = modelPart.getChild("left_hind_leg");
         this.rightFrontLeg = modelPart.getChild("right_front_leg");
@@ -50,185 +33,190 @@ public class FamiliarHorseModel extends HorseModel {
         this.leftHindShin = modelPart.getChild("left_hind_shin");
         this.rightFrontShin = modelPart.getChild("right_front_shin");
         this.leftFrontShin = modelPart.getChild("left_front_shin");
-        this.rightHindBabyLeg = modelPart.getChild("right_hind_baby_leg");
-        this.leftHindBabyLeg = modelPart.getChild("left_hind_baby_leg");
-        this.rightFrontBabyLeg = modelPart.getChild("right_front_baby_leg");
-        this.leftFrontBabyLeg = modelPart.getChild("left_front_baby_leg");
-        this.rightHindBabyShin = modelPart.getChild("right_hind_baby_shin");
-        this.leftHindBabyShin = modelPart.getChild("left_hind_baby_shin");
-        this.rightFrontBabyShin = modelPart.getChild("right_front_baby_shin");
-        this.leftFrontBabyShin = modelPart.getChild("left_front_baby_shin");
-//        ModelPart saddle = this.body.getChild("saddle");
-        this.leftSaddleMouth = this.headParts.getChild("left_saddle_mouth");
-        this.rightSaddleMouth = this.headParts.getChild("right_saddle_mouth");
-//        ModelPart leftSaddleLine = this.headParts.getChild("left_saddle_line");
-//        ModelPart rightSaddleLine = this.headParts.getChild("right_saddle_line");
-//        ModelPart headSaddle = this.headParts.getChild("head_saddle");
-        this.mouthSaddleWrap = this.headParts.getChild("mouth_saddle_wrap");
-        this.lowerMouthSaddleWrap = this.headParts.getChild("lower_mouth_saddle_wrap");
-//        this.saddleParts = new ModelPart[]{saddle, this.leftSaddleMouth, this.rightSaddleMouth, headSaddle, this.mouthSaddleWrap, this.lowerMouthSaddleWrap};
-//        this.ridingParts = new ModelPart[]{leftSaddleLine, rightSaddleLine};
+        ModelPart leftSaddleMouth = this.upperMouth.getChild("left_saddle_mouth");
+        ModelPart rightSaddleMouth = this.upperMouth.getChild("right_saddle_mouth");
+        ModelPart mouthSaddleWrap = this.upperMouth.getChild("mouth_saddle_wrap");
+        ModelPart lowerMouthSaddleWrap = this.lowerMouth.getChild("lower_mouth_saddle_wrap");
+        this.saddleParts = new ModelPart[]{
+                leftSaddleMouth, rightSaddleMouth, mouthSaddleWrap, lowerMouthSaddleWrap
+        };
     }
 
-    public static MeshDefinition createAnimatedBodyMesh(CubeDeformation cubeDeformation) {
+    public static MeshDefinition createAnimatedBodyMesh(CubeDeformation cubeDeformation, boolean isBaby) {
         MeshDefinition meshDefinition = HorseModel.createBodyMesh(cubeDeformation);
         PartDefinition partDefinition = meshDefinition.getRoot();
-//        PartDefinition partDefinition2 = partDefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 32).addBox(-5.0F, -8.0F, -17.0F, 10.0F, 10.0F, 22.0F, new CubeDeformation(0.05F)), PartPose.offset(0.0F, 11.0F, 5.0F));
-        PartDefinition partDefinition3 = partDefinition.addOrReplaceChild("head_parts", CubeListBuilder.create().texOffs(0, 35).addBox(-2.05F, -6.0F, -2.0F, 4.0F, 12.0F, 7.0F), PartPose.rotation(0.5235988F, 0.0F, 0.0F));
-//        PartDefinition partDefinition4 = partDefinition3.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 13).addBox(-3.0F, -11.0F, -2.0F, 6.0F, 5.0F, 7.0F, cubeDeformation), PartPose.ZERO);
-//        partDefinition3.addOrReplaceChild("mane", CubeListBuilder.create().texOffs(56, 36).addBox(-1.0F, -11.0F, 5.01F, 2.0F, 16.0F, 2.0F, cubeDeformation), PartPose.ZERO);
-        partDefinition3.addOrReplaceChild("upper_mouth", CubeListBuilder.create().texOffs(0, 25).addBox(-2.0F, -11.0F, -7.0F, 4.0F, 3.0F, 5.0F, cubeDeformation), PartPose.ZERO);
-        partDefinition3.addOrReplaceChild("lower_mouth", CubeListBuilder.create().texOffs(0, 28).addBox(-2.0F, -8.0F, -7.0F, 4.0F, 2.0F, 5.0F, cubeDeformation), PartPose.ZERO);
 
-        // adult legs parts
-        partDefinition.addOrReplaceChild("left_hind_leg", CubeListBuilder.create().texOffs(48, 21).mirror().addBox(-3.0F, -1.01F, -1.0F, 4.0F, 5.0F, 4.0F, cubeDeformation), PartPose.offset(4.0F, 14.0F, 7.0F));
-        partDefinition.addOrReplaceChild("right_hind_leg", CubeListBuilder.create().texOffs(48, 21).addBox(-1.0F, -1.01F, -1.0F, 4.0F, 5.0F, 4.0F, cubeDeformation), PartPose.offset(-4.0F, 14.0F, 7.0F));
-        partDefinition.addOrReplaceChild("left_front_leg", CubeListBuilder.create().texOffs(48, 21).mirror().addBox(-3.0F, -1.01F, -1.9F, 4.0F, 5.0F, 4.0F, cubeDeformation), PartPose.offset(4.0F, 6.0F, -12.0F));
-        partDefinition.addOrReplaceChild("right_front_leg", CubeListBuilder.create().texOffs(48, 21).addBox(-1.0F, -1.01F, -1.9F, 4.0F, 5.0F, 4.0F, cubeDeformation), PartPose.offset(-4.0F, 6.0F, -12.0F));
-        partDefinition.addOrReplaceChild("left_hind_shin", CubeListBuilder.create().texOffs(48, 26).mirror().addBox(-3.0F, 0.99F, -1.0F, 4.0F, 6.0F, 4.0F, cubeDeformation), PartPose.offset(4.0F, 17.0F, 7.0F));
-        partDefinition.addOrReplaceChild("right_hind_shin", CubeListBuilder.create().texOffs(48, 26).addBox(-1.0F, 0.99F, -1.0F, 4.0F, 6.0F, 4.0F, cubeDeformation), PartPose.offset(-4.0F, 17.0F, 7.0F));
-        partDefinition.addOrReplaceChild("left_front_shin", CubeListBuilder.create().texOffs(48, 26).mirror().addBox(-3.0F, 0.99F, -1.9F, 4.0F, 6.0F, 4.0F, cubeDeformation), PartPose.offset(4.0F, 9.0F, -12.0F));
-        partDefinition.addOrReplaceChild("right_front_shin", CubeListBuilder.create().texOffs(48, 26).addBox(-1.0F, 0.99F, -1.9F, 4.0F, 6.0F, 4.0F, cubeDeformation), PartPose.offset(-4.0F, 9.0F, -12.0F));
+        // head parts
+        PartDefinition partDefinition3 = partDefinition.getChild("head_parts");
+        PartDefinition upperMouth = partDefinition3.addOrReplaceChild("upper_mouth",
+                CubeListBuilder.create().texOffs(0, 25).addBox(-2.0F, -3.0F, -5.0F, 4.0F, 3.0F, 5.0F, cubeDeformation),
+                PartPose.offset(0.0F, -8.0F, -2.0F));
+        PartDefinition lowerMouth = partDefinition3.addOrReplaceChild("lower_mouth",
+                CubeListBuilder.create().texOffs(0, 28).addBox(-2.0F, 0.0F, -5.0F, 4.0F, 2.0F, 5.0F, cubeDeformation),
+                PartPose.offset(0.0F, -8.0F, -2.0F));
+        partDefinition3.clearChild("left_saddle_mouth");
+        partDefinition3.clearChild("right_saddle_mouth");
+        upperMouth.addOrReplaceChild("left_saddle_mouth",
+                CubeListBuilder.create().texOffs(29, 5).addBox(2.0F, -1.0F, -4.0F, 1.0F, 2.0F, 2.0F, cubeDeformation),
+                PartPose.ZERO);
+        upperMouth.addOrReplaceChild("right_saddle_mouth",
+                CubeListBuilder.create().texOffs(29, 5).addBox(-3.0F, -1.0F, -4.0F, 1.0F, 2.0F, 2.0F, cubeDeformation),
+                PartPose.ZERO);
+        partDefinition3.clearChild("mouth_saddle_wrap");
+        upperMouth.addOrReplaceChild("mouth_saddle_wrap",
+                CubeListBuilder.create()
+                        .texOffs(19, 0)
+                        .addBox(-2.0F, -3.125F, -2.0F, 4.0F, 3.0F, 2.0F, new CubeDeformation(0.2F)),
+                PartPose.ZERO);
+        lowerMouth.addOrReplaceChild("lower_mouth_saddle_wrap",
+                CubeListBuilder.create()
+                        .texOffs(19, 0)
+                        .addBox(-2.0F, 0.0F, -2.0F, 4.0F, 2.0F, 2.0F, new CubeDeformation(0.18F)),
+                PartPose.ZERO);
 
-        // baby legs parts
-        CubeDeformation cubeDeformation2 = cubeDeformation.extend(0.0F, 1.0F, 0.0F);
-        partDefinition.addOrReplaceChild("left_hind_baby_leg", CubeListBuilder.create().texOffs(48, 21).mirror().addBox(-3.0F, 0.01F, -1.0F, 4.0F, 5.0F, 4.0F, cubeDeformation2), PartPose.offset(4.0F, 14.0F, 7.0F));
-        partDefinition.addOrReplaceChild("right_hind_baby_leg", CubeListBuilder.create().texOffs(48, 21).addBox(-1.0F, 0.01F, -1.0F, 4.0F, 5.0F, 4.0F, cubeDeformation2), PartPose.offset(-4.0F, 14.0F, 7.0F));
-        partDefinition.addOrReplaceChild("left_front_baby_leg", CubeListBuilder.create().texOffs(48, 21).mirror().addBox(-3.0F, 0.01F, -1.9F, 4.0F, 5.0F, 4.0F, cubeDeformation2), PartPose.offset(4.0F, 6.0F, -12.0F));
-        partDefinition.addOrReplaceChild("right_front_baby_leg", CubeListBuilder.create().texOffs(48, 21).addBox(-1.0F, 0.01F, -1.9F, 4.0F, 5.0F, 4.0F, cubeDeformation2), PartPose.offset(-4.0F, 6.0F, -12.0F));
-        partDefinition.addOrReplaceChild("left_hind_baby_shin", CubeListBuilder.create().texOffs(48, 26).mirror().addBox(-3.0F, 4.01F, -1.0F, 4.0F, 6.0F, 4.0F, cubeDeformation2), PartPose.offset(4.0F, 17.0F, 7.0F));
-        partDefinition.addOrReplaceChild("right_hind_baby_shin", CubeListBuilder.create().texOffs(48, 26).addBox(-1.0F, 4.01F, -1.0F, 4.0F, 6.0F, 4.0F, cubeDeformation2), PartPose.offset(-4.0F, 17.0F, 7.0F));
-        partDefinition.addOrReplaceChild("left_front_baby_shin", CubeListBuilder.create().texOffs(48, 26).mirror().addBox(-3.0F, 4.01F, -1.9F, 4.0F, 6.0F, 4.0F, cubeDeformation2), PartPose.offset(4.0F, 9.0F, -12.0F));
-        partDefinition.addOrReplaceChild("right_front_baby_shin", CubeListBuilder.create().texOffs(48, 26).addBox(-1.0F, 4.01F, -1.9F, 4.0F, 6.0F, 4.0F, cubeDeformation2), PartPose.offset(-4.0F, 9.0F, -12.0F));
+        // legs parts
+        if (isBaby) cubeDeformation = cubeDeformation.extend(0.0F, 1.0F, 0.0F);
+        partDefinition.addOrReplaceChild("left_hind_leg",
+                CubeListBuilder.create()
+                        .texOffs(48, 21)
+                        .mirror()
+                        .addBox(-3.0F, -1.01F, -1.0F, 4.0F, 5.0F, 4.0F, cubeDeformation),
+                PartPose.offset(4.0F, 14.0F, 7.0F));
+        partDefinition.addOrReplaceChild("right_hind_leg",
+                CubeListBuilder.create()
+                        .texOffs(48, 21)
+                        .addBox(-1.0F, -1.01F, -1.0F, 4.0F, 5.0F, 4.0F, cubeDeformation),
+                PartPose.offset(-4.0F, 14.0F, 7.0F));
+        partDefinition.addOrReplaceChild("left_front_leg",
+                CubeListBuilder.create()
+                        .texOffs(48, 21)
+                        .mirror()
+                        .addBox(-3.0F, -1.01F, -1.9F, 4.0F, 5.0F, 4.0F, cubeDeformation),
+                PartPose.offset(4.0F, 14.0F, -10.0F));
+        partDefinition.addOrReplaceChild("right_front_leg",
+                CubeListBuilder.create()
+                        .texOffs(48, 21)
+                        .addBox(-1.0F, -1.01F, -1.9F, 4.0F, 5.0F, 4.0F, cubeDeformation),
+                PartPose.offset(-4.0F, 14.0F, -10.0F));
+        partDefinition.addOrReplaceChild("left_hind_shin",
+                CubeListBuilder.create()
+                        .texOffs(48, 26)
+                        .mirror()
+                        .addBox(-3.0F, 0.99F, -1.0F, 4.0F, 6.0F, 4.0F, cubeDeformation),
+                PartPose.offset(4.0F, 17.0F, 7.0F));
+        partDefinition.addOrReplaceChild("right_hind_shin",
+                CubeListBuilder.create().texOffs(48, 26).addBox(-1.0F, 0.99F, -1.0F, 4.0F, 6.0F, 4.0F, cubeDeformation),
+                PartPose.offset(-4.0F, 17.0F, 7.0F));
+        partDefinition.addOrReplaceChild("left_front_shin",
+                CubeListBuilder.create()
+                        .texOffs(48, 26)
+                        .mirror()
+                        .addBox(-3.0F, 0.99F, -1.9F, 4.0F, 6.0F, 4.0F, cubeDeformation),
+                PartPose.offset(4.0F, 17.0F, -10.0F));
+        partDefinition.addOrReplaceChild("right_front_shin",
+                CubeListBuilder.create().texOffs(48, 26).addBox(-1.0F, 0.99F, -1.9F, 4.0F, 6.0F, 4.0F, cubeDeformation),
+                PartPose.offset(-4.0F, 17.0F, -10.0F));
 
-//        partDefinition2.addOrReplaceChild("tail", CubeListBuilder.create().texOffs(42, 36).addBox(-1.5F, 0.0F, 0.0F, 3.0F, 14.0F, 4.0F, cubeDeformation), PartPose.offsetAndRotation(0.0F, -5.0F, 2.0F, 0.5235988F, 0.0F, 0.0F));
-//        partDefinition2.addOrReplaceChild("saddle", CubeListBuilder.create().texOffs(26, 0).addBox(-5.0F, -8.0F, -9.0F, 10.0F, 9.0F, 9.0F, new CubeDeformation(0.5F)), PartPose.ZERO);
-        partDefinition3.addOrReplaceChild("left_saddle_mouth", CubeListBuilder.create().texOffs(29, 5).addBox(2.0F, -9.0F, -5.0F, 1.0F, 2.0F, 2.0F, cubeDeformation), PartPose.ZERO);
-        partDefinition3.addOrReplaceChild("right_saddle_mouth", CubeListBuilder.create().texOffs(29, 5).addBox(-3.0F, -9.0F, -5.0F, 1.0F, 2.0F, 2.0F, cubeDeformation), PartPose.ZERO);
-//        partDefinition3.addOrReplaceChild("left_saddle_line", CubeListBuilder.create().texOffs(32, 2).addBox(3.1F, -6.0F, -8.0F, 0.0F, 3.0F, 16.0F, cubeDeformation), PartPose.rotation(-0.5235988F, 0.0F, 0.0F));
-//        partDefinition3.addOrReplaceChild("right_saddle_line", CubeListBuilder.create().texOffs(32, 2).addBox(-3.1F, -6.0F, -8.0F, 0.0F, 3.0F, 16.0F, cubeDeformation), PartPose.rotation(-0.5235988F, 0.0F, 0.0F));
-
-        CubeDeformation cubeDeformation1 = new CubeDeformation(0.2F);
-        partDefinition3.addOrReplaceChild("head_saddle", CubeListBuilder.create().texOffs(1, 1).addBox(-3.0F, -11.0F, -1.9F, 6.0F, 5.0F, 6.0F, cubeDeformation1), PartPose.ZERO);
-        partDefinition3.addOrReplaceChild("mouth_saddle_wrap", CubeListBuilder.create().texOffs(19, 0).addBox(-2.0F, -11.0F, -4.0F, 4.0F, 3.0F, 2.0F, cubeDeformation1), PartPose.ZERO);
-        partDefinition3.addOrReplaceChild("lower_mouth_saddle_wrap", CubeListBuilder.create().texOffs(19, 0).addBox(-2.0F, -8.0F, -4.0F, 4.0F, 2.0F, 2.0F, cubeDeformation1), PartPose.ZERO);
-//        partDefinition4.addOrReplaceChild("left_ear", CubeListBuilder.create().texOffs(19, 16).addBox(0.55F, -13.0F, 4.0F, 2.0F, 3.0F, 1.0F, new CubeDeformation(-0.001F)), PartPose.ZERO);
-//        partDefinition4.addOrReplaceChild("right_ear", CubeListBuilder.create().texOffs(19, 16).addBox(-2.55F, -13.0F, 4.0F, 2.0F, 3.0F, 1.0F, new CubeDeformation(-0.001F)), PartPose.ZERO);
         return meshDefinition;
+    }
+
+    public static MeshTransformer getBabyTransformer() {
+        return BABY_TRANSFORMER;
     }
 
     @Override
     public void setupAnim(EquineRenderState renderState) {
         super.setupAnim(renderState);
+        setupAnim(renderState,
+                this.upperMouth,
+                this.lowerMouth,
+                this.rightHindShin,
+                this.rightHindLeg,
+                this.leftHindShin,
+                this.leftHindLeg,
+                this.rightFrontShin,
+                this.rightFrontLeg,
+                this.leftFrontShin,
+                this.leftFrontLeg,
+                this.saddleParts);
+    }
 
-        float f4 = renderState.xRot * ((float) Math.PI / 180F);
-        float f3 = Mth.clamp(renderState.yRot, -20.0F, 20.0F);
-        if (renderState.walkAnimationSpeed > 0.2F) {
+    static void setupAnim(EquineRenderState renderState, ModelPart upperMouth, ModelPart lowerMouth, ModelPart rightHindShin, ModelPart rightHindLeg, ModelPart leftHindShin, ModelPart leftHindLeg, ModelPart rightFrontShin, ModelPart rightFrontLeg, ModelPart leftFrontShin, ModelPart leftFrontLeg, ModelPart[] saddleParts) {
+        setupMouthAnim(renderState, upperMouth, lowerMouth);
+        setupLegsAnim(renderState,
+                rightHindShin,
+                rightHindLeg,
+                leftHindShin,
+                leftHindLeg,
+                rightFrontShin,
+                rightFrontLeg,
+                leftFrontShin,
+                leftFrontLeg);
+        setupSaddleAnim(renderState, saddleParts);
+    }
 
-            f4 += Mth.cos(renderState.walkAnimationPos * 0.4F) * 0.15F * renderState.walkAnimationSpeed;
+    private static void setupMouthAnim(EquineRenderState renderState, ModelPart upperMouth, ModelPart lowerMouth) {
+        float feedingAnimation = renderState.feedingAnimation;
+        upperMouth.xRot += -0.09424778F * feedingAnimation;
+        lowerMouth.xRot += 0.15707964F * feedingAnimation;
+    }
+
+    private static void setupLegsAnim(EquineRenderState renderState, ModelPart rightHindShin, ModelPart rightHindLeg, ModelPart leftHindShin, ModelPart leftHindLeg, ModelPart rightFrontShin, ModelPart rightFrontLeg, ModelPart leftFrontShin, ModelPart leftFrontLeg) {
+        float standAnimation = renderState.standAnimation;
+        float standAnimationInv = 1.0F - standAnimation;
+        float ageInTicks = renderState.ageInTicks;
+        float isInWater = renderState.isInWater ? 0.2F : 1.0F;
+        float walkAnimationPos = Mth.cos(isInWater * renderState.walkAnimationPos * 0.6662F + Mth.PI);
+        float walkAnimationSpeedLeg = walkAnimationPos * 1.8F * renderState.walkAnimationSpeed;
+        float walkAnimationSpeedShin = walkAnimationPos * 1.4F * renderState.walkAnimationSpeed;
+        float standAnimationAngle = 0.2617994F * standAnimation;
+        float animationProgress = Mth.cos(ageInTicks * 0.6F + Mth.PI);
+        float ageScale = renderState.ageScale;
+
+        rightHindShin.y = rightHindLeg.y +
+                Mth.sin(Mth.HALF_PI + standAnimationAngle + standAnimationInv * -walkAnimationSpeedLeg) * 3.0F *
+                        ageScale;
+        rightHindShin.z = rightHindLeg.z +
+                Mth.cos(-Mth.HALF_PI + standAnimationAngle + standAnimationInv * -walkAnimationSpeedLeg) * 3.0F *
+                        ageScale;
+        leftHindShin.y = leftHindLeg.y +
+                Mth.sin(Mth.HALF_PI + standAnimationAngle + standAnimationInv * walkAnimationSpeedLeg) * 3.0F *
+                        ageScale;
+        leftHindShin.z = leftHindLeg.z +
+                Mth.cos(-Mth.HALF_PI + standAnimationAngle + standAnimationInv * walkAnimationSpeedLeg) * 3.0F *
+                        ageScale;
+
+        // similar to vanilla super, but walkAnimationSpeed variable is different
+        float rightFrontLegAnimation =
+                ((-Mth.PI / 3.0F) + animationProgress) * standAnimation + walkAnimationSpeedLeg * standAnimationInv;
+        float leftFrontLegAnimation =
+                ((-Mth.PI / 3.0F) - animationProgress) * standAnimation - walkAnimationSpeedLeg * standAnimationInv;
+        rightFrontShin.y = rightFrontLeg.y + Mth.sin(Mth.HALF_PI + rightFrontLegAnimation) * 3.0F * ageScale;
+        rightFrontShin.z = rightFrontLeg.z + Mth.cos(-Mth.HALF_PI + rightFrontLegAnimation) * 3.0F * ageScale;
+        leftFrontShin.y = leftFrontLeg.y + Mth.sin(Mth.HALF_PI + leftFrontLegAnimation) * 3.0F * ageScale;
+        leftFrontShin.z = leftFrontLeg.z + Mth.cos(-Mth.HALF_PI + leftFrontLegAnimation) * 3.0F * ageScale;
+
+        rightHindLeg.xRot = standAnimationAngle - walkAnimationSpeedLeg * standAnimationInv;
+        rightHindShin.xRot = -0.08726646F * standAnimation +
+                (-walkAnimationSpeedShin - Math.max(0.0F, walkAnimationSpeedShin)) * standAnimationInv;
+        leftHindLeg.xRot = standAnimationAngle + walkAnimationSpeedLeg * standAnimationInv;
+        leftHindShin.xRot = -0.08726646F * standAnimation +
+                (walkAnimationSpeedShin - Math.max(0.0F, -walkAnimationSpeedShin)) * standAnimationInv;
+
+        // x-rotations for leg parts are similar to vanilla
+        rightFrontLeg.xRot = rightFrontLegAnimation;
+        rightFrontShin.xRot =
+                (rightFrontLeg.xRot + Mth.PI * Math.max(0.0F, 0.2F + animationProgress * 0.2F)) * standAnimation +
+                        (walkAnimationSpeedShin + Math.max(0.0F, walkAnimationSpeedShin)) * standAnimationInv;
+        leftFrontLeg.xRot = leftFrontLegAnimation;
+        leftFrontShin.xRot =
+                (leftFrontLeg.xRot + Mth.PI * Math.max(0.0F, 0.2F - animationProgress * 0.2F)) * standAnimation +
+                        (-walkAnimationSpeedShin + Math.max(0.0F, -walkAnimationSpeedShin)) * standAnimationInv;
+    }
+
+    private static void setupSaddleAnim(EquineRenderState renderState, ModelPart[] saddleParts) {
+        for (ModelPart modelPart : saddleParts) {
+            modelPart.visible = renderState.isSaddled;
         }
-
-
-        float f5 = renderState.eatAnimation;
-        float f6 = renderState.standAnimation;
-        float f7 = 1.0F - f6;
-        float f8 = renderState.feedingAnimation;
-        float f9 = renderState.ageInTicks;
-        this.headParts.y = 4.0F;
-        this.headParts.z = -12.0F;
-        this.headParts.xRot = ((float) Math.PI / 6F) + f4;
-        this.headParts.yRot = f3 * ((float) Math.PI / 180F);
-        float f10 = renderState.isInWater ? 0.2F : 1.0F;
-        float f11 = Mth.cos(f10 * renderState.walkAnimationPos * 0.6662F + (float) Math.PI);
-        float f12 = f11 * 1.8F * renderState.walkAnimationSpeed;
-        float f13 = f11 * 1.4F * renderState.walkAnimationSpeed;
-        this.headParts.xRot = f6 * (0.2617994F + f4) + f5 * 2.1816616F + (1.0F - Math.max(f6, f5)) * this.headParts.xRot;
-        this.headParts.yRot = f6 * f3 * 0.017453292F + (1.0F - Math.max(f6, f5)) * this.headParts.yRot;
-        this.headParts.y = f6 * -4.0F + f5 * 11.0F + (1.0F - Math.max(f6, f5)) * this.headParts.y;
-        this.headParts.z = f6 * -4.0F + f5 * -12.0F + (1.0F - Math.max(f6, f5)) * this.headParts.z;
-
-        this.upperMouth.y = this.mouthSaddleWrap.y = this.leftSaddleMouth.y = this.rightSaddleMouth.y = 0.02F;
-        this.lowerMouth.y = this.lowerMouthSaddleWrap.y = 0.0F;
-        this.upperMouth.z = this.mouthSaddleWrap.z = this.leftSaddleMouth.z = this.rightSaddleMouth.z = 0.02F - f8;
-        this.lowerMouth.z = this.lowerMouthSaddleWrap.z = f8;
-        this.upperMouth.xRot = this.mouthSaddleWrap.xRot = this.leftSaddleMouth.xRot = this.rightSaddleMouth.xRot = -0.09424778F * f8;
-        this.lowerMouth.xRot = this.lowerMouthSaddleWrap.xRot = 0.15707964F * f8;
-        this.upperMouth.yRot = this.mouthSaddleWrap.yRot = this.leftSaddleMouth.yRot = this.rightSaddleMouth.yRot = 0.0F;
-        this.lowerMouth.yRot = this.lowerMouthSaddleWrap.yRot = 0.0F;
-
-        float f14 = 0.2617994F * f6;
-        float f15 = Mth.cos(f9 * 0.6F + (float) Math.PI);
-        this.rightFrontLeg.y = 2.0F * f6 + 14.0F * f7;
-        this.rightFrontLeg.z = -6.0F * f6 - 10.0F * f7;
-        this.leftFrontLeg.y = this.rightFrontLeg.y;
-        this.leftFrontLeg.z = this.rightFrontLeg.z;
-        this.rightHindShin.y = this.rightHindLeg.y + Mth.sin(((float) Math.PI / 2F) + f14 + f7 * - f12) * 3.0F;
-        this.rightHindShin.z = this.rightHindLeg.z + Mth.cos(-((float) Math.PI / 2F) + f14 + f7 * - f12) * 3.0F;
-        this.leftHindShin.y = this.leftHindLeg.y + Mth.sin(((float) Math.PI / 2F) + f14 + f7 * f12) * 3.0F;
-        this.leftHindShin.z = this.leftHindLeg.z + Mth.cos(-((float) Math.PI / 2F) + f14 + f7 * f12) * 3.0F;
-        float f16 = ((-(float) Math.PI / 3F) + f15) * f6 + f12 * f7;
-        float f17 = ((-(float) Math.PI / 3F) - f15) * f6 - f12 * f7;
-        this.rightFrontShin.y = this.rightFrontLeg.y + Mth.sin(((float) Math.PI / 2F) + f16) * 3.0F;
-        this.rightFrontShin.z = this.rightFrontLeg.z + Mth.cos(-((float) Math.PI / 2F) + f16) * 3.0F;
-        this.leftFrontShin.y = this.leftFrontLeg.y + Mth.sin(((float) Math.PI / 2F) + f17) * 3.0F;
-        this.leftFrontShin.z = this.leftFrontLeg.z + Mth.cos(-((float) Math.PI / 2F) + f17) * 3.0F;
-        this.rightHindLeg.xRot = f14 - f12 * f7;
-        this.rightHindShin.xRot = -0.08726646F * f6 + (-f13 - Math.max(0.0F, f13)) * f7;
-        this.leftHindLeg.xRot = f14 + f12 * f7;
-        this.leftHindShin.xRot = -0.08726646F * f6 + (f13 - Math.max(0.0F, -f13)) * f7;
-        this.rightFrontLeg.xRot = f16;
-        this.rightFrontShin.xRot = (this.rightFrontLeg.xRot + (float) Math.PI * Math.max(0.0F, 0.2F + f15 * 0.2F)) * f6 + (f13 + Math.max(0.0F, f13)) * f7;
-        this.leftFrontLeg.xRot = f17;
-        this.leftFrontShin.xRot = (this.leftFrontLeg.xRot + (float) Math.PI * Math.max(0.0F, 0.2F - f15 * 0.2F)) * f6 + (-f13 + Math.max(0.0F, -f13)) * f7;
-
-        this.copyBabyModelAngles();
-        this.setBabyModelVisibility(renderState);
-        this.lowerMouthSaddleWrap.visible = renderState.isSaddled;
-    }
-
-    private void copyBabyModelAngles() {
-        this.rightHindBabyLeg.y = this.rightHindLeg.y;
-        this.rightHindBabyLeg.z = this.rightHindLeg.z;
-        this.rightHindBabyLeg.xRot = this.rightHindLeg.xRot;
-        this.leftHindBabyLeg.y = this.leftHindLeg.y;
-        this.leftHindBabyLeg.z = this.leftHindLeg.z;
-        this.leftHindBabyLeg.xRot = this.leftHindLeg.xRot;
-        this.rightFrontBabyLeg.y = this.rightFrontLeg.y;
-        this.rightFrontBabyLeg.z = this.rightFrontLeg.z;
-        this.rightFrontBabyLeg.xRot = this.rightFrontLeg.xRot;
-        this.leftFrontBabyLeg.y = this.leftFrontLeg.y;
-        this.leftFrontBabyLeg.z = this.leftFrontLeg.z;
-        this.leftFrontBabyLeg.xRot = this.leftFrontLeg.xRot;
-        this.rightHindBabyShin.y = this.rightHindShin.y;
-        this.rightHindBabyShin.z = this.rightHindShin.z;
-        this.rightHindBabyShin.xRot = this.rightHindShin.xRot;
-        this.leftHindBabyShin.y = this.leftHindShin.y;
-        this.leftHindBabyShin.z = this.leftHindShin.z;
-        this.leftHindBabyShin.xRot = this.leftHindShin.xRot;
-        this.rightFrontBabyShin.y = this.rightFrontShin.y;
-        this.rightFrontBabyShin.z = this.rightFrontShin.z;
-        this.rightFrontBabyShin.xRot = this.rightFrontShin.xRot;
-        this.leftFrontBabyShin.y = this.leftFrontShin.y;
-        this.leftFrontBabyShin.z = this.leftFrontShin.z;
-        this.leftFrontBabyShin.xRot = this.leftFrontShin.xRot;
-    }
-
-    private void setBabyModelVisibility(EquineRenderState renderState) {
-        this.rightHindLeg.visible = !renderState.isBaby;
-        this.leftHindLeg.visible = !renderState.isBaby;
-        this.rightFrontLeg.visible = !renderState.isBaby;
-        this.leftFrontLeg.visible = !renderState.isBaby;
-        this.rightHindShin.visible = !renderState.isBaby;
-        this.leftHindShin.visible = !renderState.isBaby;
-        this.rightFrontShin.visible = !renderState.isBaby;
-        this.leftFrontShin.visible = !renderState.isBaby;
-        this.rightHindBabyLeg.visible = renderState.isBaby;
-        this.leftHindBabyLeg.visible = renderState.isBaby;
-        this.rightFrontBabyLeg.visible = renderState.isBaby;
-        this.leftFrontBabyLeg.visible = renderState.isBaby;
-        this.rightHindBabyShin.visible = renderState.isBaby;
-        this.leftHindBabyShin.visible = renderState.isBaby;
-        this.rightFrontBabyShin.visible = renderState.isBaby;
-        this.leftFrontBabyShin.visible = renderState.isBaby;
     }
 }
