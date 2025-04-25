@@ -21,9 +21,13 @@ public class IronGolemNoseModel extends IronGolemModel {
     }
 
     public static LayerDefinition createAnimatedBodyLayer() {
-        LayerDefinition layerDefinition = IronGolemModel.createBodyLayer();
-        MeshDefinition meshDefinition = layerDefinition.mesh;
-        PartDefinition partDefinition = meshDefinition.getRoot();
+        return IronGolemModel.createBodyLayer().apply((MeshDefinition meshDefinition) -> {
+            modifyMesh(meshDefinition.getRoot());
+            return meshDefinition;
+        });
+    }
+
+    private static void modifyMesh(PartDefinition partDefinition) {
         // separate nose from head model
         PartDefinition partDefinition1 = partDefinition.addOrReplaceChild("head",
                 CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -12.0F, -5.5F, 8.0F, 10.0F, 8.0F),
@@ -31,14 +35,14 @@ public class IronGolemNoseModel extends IronGolemModel {
         partDefinition1.addOrReplaceChild("nose",
                 CubeListBuilder.create().texOffs(24, 0).addBox(-1.0F, -1.0F, -7.5F, 2.0F, 4.0F, 2.0F),
                 PartPose.offset(0.0F, -4.0F, 0.0F));
-        return layerDefinition;
     }
 
     @Override
     public void setupAnim(IronGolemRenderState renderState) {
         super.setupAnim(renderState);
-        float soundTime = RenderPropertyKey.getRenderProperty(renderState,
-                SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY);
+        float soundTime = RenderPropertyKey.getOrDefault(renderState,
+                SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY,
+                0.0F);
         float maxSoundTime = 20.0F;
         if (0.0F < soundTime && soundTime < maxSoundTime) {
             float rotation = Mth.sin(soundTime * ((3.0F * Mth.PI) / 20.0F));

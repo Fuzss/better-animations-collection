@@ -32,12 +32,14 @@ public class JigglySlimeModel extends SlimeModel {
     @Override
     public void setupAnim(EntityRenderState renderState) {
         super.setupAnim(renderState);
-        float walkAnimationPos = RenderPropertyKey.getRenderProperty(renderState,
-                JigglySlimeElement.WALK_ANIMATION_POS_PROPERTY);
+        float walkAnimationPos = RenderPropertyKey.getOrDefault(renderState,
+                JigglySlimeElement.WALK_ANIMATION_POS_PROPERTY,
+                0.0F);
         float progress = walkAnimationPos + renderState.ageInTicks * JigglySlimeElement.animationSpeed / 15.0F;
         float magnitude = JigglySlimeElement.animationSpeed / 20.0F;
-        float targetSquish = RenderPropertyKey.getRenderProperty(renderState,
-                JigglySlimeElement.TARGET_SQUISH_PROPERTY);
+        float targetSquish = RenderPropertyKey.getOrDefault(renderState,
+                JigglySlimeElement.TARGET_SQUISH_PROPERTY,
+                0.0F);
         if (targetSquish < 0.0F) {
             magnitude += -targetSquish * 0.5F;
         }

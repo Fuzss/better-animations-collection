@@ -23,7 +23,11 @@ public class DrownedKneesModel extends DrownedModel implements KneesModel {
 
     public static MeshDefinition createAnimatedMesh(CubeDeformation cubeDeformation, float offsetY) {
         MeshDefinition meshDefinition = HumanoidKneesModel.createAnimatedMesh(cubeDeformation, offsetY);
-        PartDefinition partDefinition = meshDefinition.getRoot();
+        modifyMesh(meshDefinition.getRoot(), cubeDeformation);
+        return meshDefinition;
+    }
+
+    private static void modifyMesh(PartDefinition partDefinition, CubeDeformation cubeDeformation) {
         Pair<CubeListBuilder, PartPose> leftLeg = HumanoidKneesModel.createShin(16,
                 48,
                 1.9F,
@@ -40,7 +44,6 @@ public class DrownedKneesModel extends DrownedModel implements KneesModel {
                 cubeDeformation);
         PartDefinition partDefinition2 = partDefinition.addOrReplaceChild("left_leg", leftLeg.left(), leftLeg.right());
         partDefinition2.addOrReplaceChild("left_shin", leftShin.left(), leftShin.right());
-        return meshDefinition;
     }
 
     @Override

@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.layers.SheepWoolLayer;
 import net.minecraft.client.renderer.entity.state.SheepRenderState;
-import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.animal.sheep.Sheep;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;

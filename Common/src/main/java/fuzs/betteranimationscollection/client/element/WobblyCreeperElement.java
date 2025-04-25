@@ -77,9 +77,9 @@ public class WobblyCreeperElement extends SingletonModelElement<Creeper, Creeper
     @Override
     public void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context) {
         context.accept(this.animatedCreeper,
-                () -> WobblyCreeperModel.createAnimatedBodyLayer(CubeDeformation.NONE, false));
+                () -> WobblyCreeperModel.createAnimatedBodyLayer(CubeDeformation.NONE));
         context.accept(this.animatedCreeperArmor,
-                () -> WobblyCreeperModel.createAnimatedBodyLayer(new CubeDeformation(2.0F), true));
+                () -> WobblyCreeperModel.createAnimatedBodyLayer(new CubeDeformation(2.0F)));
     }
 
     @Override
@@ -91,7 +91,7 @@ public class WobblyCreeperElement extends SingletonModelElement<Creeper, Creeper
                     entity.getUUID().getLeastSignificantBits() %
                             (WobblyCreeperElement.WobbleDirection.values().length - 1))];
         }
-        RenderPropertyKey.setRenderProperty(renderState, WOBBLE_DIRECTION_PROPERTY, wobbleDirection);
+        RenderPropertyKey.set(renderState, WOBBLE_DIRECTION_PROPERTY, wobbleDirection);
     }
 
     @Override

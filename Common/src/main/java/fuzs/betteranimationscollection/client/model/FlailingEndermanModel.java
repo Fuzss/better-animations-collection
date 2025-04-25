@@ -30,9 +30,13 @@ public class FlailingEndermanModel extends EndermanModel<EndermanRenderState> {
     }
 
     public static LayerDefinition createAnimatedBodyLayer() {
-        LayerDefinition layerDefinition = EndermanModel.createBodyLayer();
-        MeshDefinition meshDefinition = layerDefinition.mesh;
-        PartDefinition partDefinition = meshDefinition.getRoot();
+        return EndermanModel.createBodyLayer().apply((MeshDefinition meshDefinition) -> {
+            modifyMesh(meshDefinition.getRoot());
+            return meshDefinition;
+        });
+    }
+
+    private static void modifyMesh(PartDefinition partDefinition) {
         PartDefinition partDefinition1 = partDefinition.addOrReplaceChild("right_arm",
                 CubeListBuilder.create().texOffs(56, 0).addBox(-1.0F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F),
                 PartPose.offset(-3.0F, -13.0F, 0.0F));
@@ -49,7 +53,6 @@ public class FlailingEndermanModel extends EndermanModel<EndermanRenderState> {
                     CubeListBuilder.create().texOffs(56, 2 + i * 2).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 2.0F, 2.0F, true),
                     PartPose.offset(0.0F, i == 0 ? 1.0F : 2.0F, 0.0F));
         }
-        return layerDefinition;
     }
 
     @Override

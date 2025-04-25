@@ -55,7 +55,11 @@ public class PlayfulDoggyModel extends WolfModel {
 
     public static MeshDefinition createAnimatedBodyLayer(CubeDeformation cubeDeformation) {
         MeshDefinition meshDefinition = WolfModel.createMeshDefinition(cubeDeformation);
-        PartDefinition partDefinition = meshDefinition.getRoot();
+        modifyMesh(meshDefinition.getRoot(), cubeDeformation);
+        return meshDefinition;
+    }
+
+    private static void modifyMesh(PartDefinition partDefinition, CubeDeformation cubeDeformation) {
         PartDefinition partDefinition1 = partDefinition.getChild("tail");
         PartDefinition partDefinition3 = partDefinition.addOrReplaceChild("fluffy_tail",
                 CubeListBuilder.create(),
@@ -80,7 +84,6 @@ public class PlayfulDoggyModel extends WolfModel {
                             .addBox(0.0F, 0.0F, -1.0F, 2.0F, 1.0F, 2.0F, cubeDeformation1),
                     PartPose.offset(0.0F, 1.0F + getTailFluffiness(i), 0.0F));
         }
-        return meshDefinition;
     }
 
     private static float getTailFluffiness(int index) {

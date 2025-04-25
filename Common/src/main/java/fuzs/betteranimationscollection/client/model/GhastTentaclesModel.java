@@ -30,9 +30,13 @@ public class GhastTentaclesModel extends GhastModel {
     }
 
     public static LayerDefinition createAnimatedBodyLayer() {
-        LayerDefinition layerDefinition = GhastModel.createBodyLayer();
-        MeshDefinition meshDefinition = layerDefinition.mesh;
-        PartDefinition partDefinition = meshDefinition.getRoot();
+        return GhastModel.createBodyLayer().apply((MeshDefinition meshDefinition) -> {
+            modifyMesh(meshDefinition.getRoot());
+            return meshDefinition;
+        });
+    }
+
+    private static void modifyMesh(PartDefinition partDefinition) {
         for (int i = 0; i < 9; ++i) {
             float offsetX = (((float) (i % 3) - (float) (i / 3 % 2) * 0.5F + 0.25F) / 2.0F * 2.0F - 1.0F) * 5.0F;
             float offsetY = 24.6F;
@@ -46,7 +50,6 @@ public class GhastTentaclesModel extends GhastModel {
                         PartPose.offset(0.0F, 1.0F, 0.0F));
             }
         }
-        return layerDefinition;
     }
 
     @Override

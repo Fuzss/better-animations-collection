@@ -22,7 +22,11 @@ public class HumanoidKneesModel extends HumanoidModel<HumanoidRenderState> imple
 
     public static MeshDefinition createAnimatedMesh(CubeDeformation cubeDeformation, float offsetY) {
         MeshDefinition meshDefinition = HumanoidModel.createMesh(cubeDeformation, offsetY);
-        PartDefinition partDefinition = meshDefinition.getRoot();
+        modifyMesh(meshDefinition.getRoot(), cubeDeformation);
+        return meshDefinition;
+    }
+
+    private static void modifyMesh(PartDefinition partDefinition, CubeDeformation cubeDeformation) {
         Pair<CubeListBuilder, PartPose> rightLeg = createShin(0, 16, -1.9F, 0.0F, 0.0F, false, cubeDeformation);
         Pair<CubeListBuilder, PartPose> leftLeg = createShin(0, 16, 1.9F, 0.0F, 0.0F, true, cubeDeformation);
         Pair<CubeListBuilder, PartPose> rightShin = createShin(0, 22, 0.0F, -6.0F, -2.0F, false, cubeDeformation);
@@ -33,7 +37,6 @@ public class HumanoidKneesModel extends HumanoidModel<HumanoidRenderState> imple
         PartDefinition partDefinition2 = partDefinition.addOrReplaceChild("left_leg", leftLeg.left(), leftLeg.right());
         partDefinition1.addOrReplaceChild("right_shin", rightShin.left(), rightShin.right());
         partDefinition2.addOrReplaceChild("left_shin", leftShin.left(), leftShin.right());
-        return meshDefinition;
     }
 
     public static Pair<CubeListBuilder, PartPose> createShin(int textureX, int textureY, float offsetX, float offsetY, float offsetZ, boolean mirror, CubeDeformation cubeDeformation) {

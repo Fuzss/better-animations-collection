@@ -54,7 +54,7 @@ public class SquidTentaclesElement extends SingletonModelElement<Squid, SquidRen
     @Override
     protected void extractRenderState(Squid entity, SquidRenderState renderState, float partialTick) {
         super.extractRenderState(entity, renderState, partialTick);
-        RenderPropertyKey.setRenderProperty(renderState, DELTA_MOVEMENT_PROPERTY, entity.getDeltaMovement());
+        RenderPropertyKey.set(renderState, DELTA_MOVEMENT_PROPERTY, entity.getDeltaMovement());
     }
 
     @Override

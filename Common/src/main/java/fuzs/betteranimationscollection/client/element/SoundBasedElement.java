@@ -32,7 +32,7 @@ public abstract class SoundBasedElement<T extends Mob, S extends LivingEntityRen
     protected void extractRenderState(T entity, S renderState, float partialTick) {
         super.extractRenderState(entity, renderState, partialTick);
         // this only works because MobEntity#ambientSoundTime is manually being synced to the client
-        RenderPropertyKey.setRenderProperty(renderState,
+        RenderPropertyKey.set(renderState,
                 AMBIENT_SOUND_TIME_PROPERTY,
                 entity.ambientSoundTime + entity.getAmbientSoundInterval() + partialTick);
     }

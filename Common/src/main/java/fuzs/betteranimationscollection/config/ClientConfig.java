@@ -17,20 +17,16 @@ import java.util.Map;
 
 public class ClientConfig implements ConfigCore {
     @Config(
-            category = "general",
-            name = "mobs_without_animations",
-            description = {
-                    "Mob variants that shouldn't have any model changes applied to them.",
-                    ConfigDataSet.CONFIG_DESCRIPTION
-            }
+            category = "general", name = "mobs_without_animations", description = {
+            "Mob variants that shouldn't have any model changes applied to them.", ConfigDataSet.CONFIG_DESCRIPTION
+    }
     )
     List<String> mobBlacklistRaw = KeyedValueProvider.toString(Registries.ENTITY_TYPE);
     @Config(
-            category = "general",
-            description = {
-                    "Block range for sound detection system to look for a mob that made a certain sound on the server, so the client may play an animation.",
-                    "The client is not sent an exact position, so the mob's location must be estimated."
-            }
+            category = "general", description = {
+            "Block range for sound detection system to look for a mob that made a certain sound on the server, so the client may play an animation.",
+            "The client is not sent an exact position, so the mob's location must be estimated."
+    }
     )
     @Config.DoubleRange(min = 0.5, max = 8.0)
     public double soundDetectionRange = 1.5;
@@ -40,12 +36,12 @@ public class ClientConfig implements ConfigCore {
     @Override
     public void addToBuilder(ModConfigSpec.Builder builder, ValueCallback callback) {
         builder.push("models");
-        for (Map.Entry<ResourceLocation, ModelElement> entry : ModelElements.MODEL_ELEMENTS.entrySet()) {
+        for (Map.Entry<ResourceLocation, ModelElement> entry : ModelElements.getModelElements().entrySet()) {
             callback.accept(builder.comment(entry.getValue().getDescriptionComponent())
                     .define(entry.getKey().getPath(), true), entry.getValue()::setEnabled);
         }
         builder.pop();
-        for (Map.Entry<ResourceLocation, ModelElement> entry : ModelElements.MODEL_ELEMENTS.entrySet()) {
+        for (Map.Entry<ResourceLocation, ModelElement> entry : ModelElements.getModelElements().entrySet()) {
             builder.push(entry.getKey().getPath());
             entry.getValue().setupModelConfig(builder, callback);
             builder.pop();

@@ -12,9 +12,13 @@ public class SpiderKneesModel extends SpiderModel {
     }
 
     public static LayerDefinition createAnimatedSpiderBodyLayer() {
-        LayerDefinition layerDefinition = SpiderModel.createSpiderBodyLayer();
-        MeshDefinition meshDefinition = layerDefinition.mesh;
-        PartDefinition partDefinition = meshDefinition.getRoot();
+        return SpiderModel.createSpiderBodyLayer().apply((MeshDefinition meshDefinition) -> {
+            modifyMesh(meshDefinition.getRoot());
+            return meshDefinition;
+        });
+    }
+
+    private static void modifyMesh(PartDefinition partDefinition) {
         CubeListBuilder rightLegBuilder = CubeListBuilder.create()
                 .texOffs(18, 0)
                 .addBox(-7.0F, -1.0F, -1.0F, 8.0F, 2.0F, 2.0F);
@@ -98,6 +102,5 @@ public class SpiderKneesModel extends SpiderModel {
                 .addOrReplaceChild("lower_left_front_leg",
                         lowerLeftLegBuilder,
                         PartPose.offsetAndRotation(7.0F, 0.5F, 0.0F, 0.0F, 0.0F, 1.05F));
-        return layerDefinition;
     }
 }

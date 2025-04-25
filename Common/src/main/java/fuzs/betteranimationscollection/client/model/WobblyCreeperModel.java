@@ -29,19 +29,23 @@ public class WobblyCreeperModel extends CreeperModel {
         this.chargedModel = chargedModel;
     }
 
-    public static LayerDefinition createAnimatedBodyLayer(CubeDeformation cubeDeformation, boolean chargedModel) {
-        // fewer parts for charge layer as it looks silly with too much overlap inside the model
-        int partHeight = chargedModel ? 3 : 1;
-        LayerDefinition layerDefinition = CreeperModel.createBodyLayer(cubeDeformation);
-        MeshDefinition meshDefinition = layerDefinition.mesh;
-        PartDefinition partDefinition = meshDefinition.getRoot();
+    public static LayerDefinition createAnimatedBodyLayer(CubeDeformation cubeDeformation) {
+        return CreeperModel.createBodyLayer(cubeDeformation).apply((MeshDefinition meshDefinition) -> {
+            modifyMesh(meshDefinition.getRoot(), cubeDeformation);
+            return meshDefinition;
+        });
+    }
+
+    private static void modifyMesh(PartDefinition partDefinition, CubeDeformation cubeDeformation) {
+        // fewer parts for the charge layer as it looks silly with too much overlap inside the model
+        int partHeight = cubeDeformation != CubeDeformation.NONE ? 3 : 1;
         partDefinition.clearChild("head");
         PartDefinition partDefinition1 = partDefinition.addOrReplaceChild("body",
                 CubeListBuilder.create()
                         .texOffs(16, 27)
                         .addBox(-4.0F, 12.0F - partHeight, -2.0F, 8.0F, partHeight, 4.0F, cubeDeformation),
                 PartPose.offset(0.0F, 6.0F, 0.0F));
-        for (int i = 0; i < (chargedModel ? 4 : 11); i++) {
+        for (int i = 0; i < (cubeDeformation != CubeDeformation.NONE ? 4 : 11); i++) {
             partDefinition1 = partDefinition1.addOrReplaceChild("body" + i,
                     CubeListBuilder.create()
                             .texOffs(16, 27 - partHeight - i * partHeight)
@@ -64,7 +68,6 @@ public class WobblyCreeperModel extends CreeperModel {
         partDefinition.addOrReplaceChild("left_front_leg",
                 CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, 0.0F, -4.0F, 4.0F, 6.0F, 4.0F, cubeDeformation),
                 PartPose.offset(2.0F, 18.0F, -2.0F));
-        return layerDefinition;
     }
 
     @Override
@@ -78,8 +81,9 @@ public class WobblyCreeperModel extends CreeperModel {
         float magnitude = this.resolveMagnitude(renderState.walkAnimationSpeed * 3.5F);
         float cosSwing = magnitude * Mth.cos(renderState.walkAnimationPos * 0.6662F) * (this.chargedModel ? 3 : 1);
         float sinSwing = magnitude * Mth.sin(renderState.walkAnimationPos * 0.6662F) * (this.chargedModel ? 3 : 1);
-        WobblyCreeperElement.WobbleDirection wobbleDirection = RenderPropertyKey.getRenderProperty(renderState,
-                WobblyCreeperElement.WOBBLE_DIRECTION_PROPERTY);
+        WobblyCreeperElement.WobbleDirection wobbleDirection = RenderPropertyKey.getOrDefault(renderState,
+                WobblyCreeperElement.WOBBLE_DIRECTION_PROPERTY,
+                WobblyCreeperElement.WobbleDirection.SIDE);
         for (ModelPart bodyPart : this.bodyParts) {
             switch (wobbleDirection) {
                 case SIDE -> {

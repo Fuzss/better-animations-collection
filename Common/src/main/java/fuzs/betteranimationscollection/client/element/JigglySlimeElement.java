@@ -66,13 +66,11 @@ public class JigglySlimeElement extends SingletonModelElement<Slime, SlimeRender
     protected void extractRenderState(Slime entity, SlimeRenderState renderState, float partialTick) {
         super.extractRenderState(entity, renderState, partialTick);
         if (!entity.isPassenger() && entity.isAlive()) {
-            RenderPropertyKey.setRenderProperty(renderState,
-                    WALK_ANIMATION_POS_PROPERTY,
-                    entity.walkAnimation.position(partialTick));
+            RenderPropertyKey.set(renderState, WALK_ANIMATION_POS_PROPERTY, entity.walkAnimation.position(partialTick));
         } else {
-            RenderPropertyKey.setRenderProperty(renderState, WALK_ANIMATION_POS_PROPERTY, 0.0F);
+            RenderPropertyKey.set(renderState, WALK_ANIMATION_POS_PROPERTY, 0.0F);
         }
-        RenderPropertyKey.setRenderProperty(renderState, TARGET_SQUISH_PROPERTY, entity.targetSquish);
+        RenderPropertyKey.set(renderState, TARGET_SQUISH_PROPERTY, entity.targetSquish);
     }
 
     @Override

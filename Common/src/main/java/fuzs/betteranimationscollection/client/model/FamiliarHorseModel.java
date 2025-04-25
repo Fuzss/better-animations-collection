@@ -1,5 +1,8 @@
 package fuzs.betteranimationscollection.client.model;
 
+import net.minecraft.client.model.AbstractEquineModel;
+import net.minecraft.client.model.BabyModelTransform;
+import net.minecraft.client.model.EquineSaddleModel;
 import net.minecraft.client.model.HorseModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -7,7 +10,17 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.renderer.entity.state.EquineRenderState;
 import net.minecraft.util.Mth;
 
+import java.util.Set;
+
 public class FamiliarHorseModel extends HorseModel {
+    protected static final MeshTransformer BABY_TRANSFORMER = new BabyModelTransform(true,
+            20.2F,
+            1.36F,
+            2.7272F,
+            2.0F,
+            24.0F,
+            Set.of("head_parts"));
+
     private final ModelPart upperMouth;
     private final ModelPart lowerMouth;
     private final ModelPart leftHindLeg;
@@ -18,7 +31,6 @@ public class FamiliarHorseModel extends HorseModel {
     private final ModelPart rightHindShin;
     private final ModelPart leftFrontShin;
     private final ModelPart rightFrontShin;
-    private final ModelPart[] saddleParts;
 
     public FamiliarHorseModel(ModelPart modelPart) {
         super(modelPart);
@@ -33,49 +45,41 @@ public class FamiliarHorseModel extends HorseModel {
         this.leftHindShin = modelPart.getChild("left_hind_shin");
         this.rightFrontShin = modelPart.getChild("right_front_shin");
         this.leftFrontShin = modelPart.getChild("left_front_shin");
-        ModelPart leftSaddleMouth = this.upperMouth.getChild("left_saddle_mouth");
-        ModelPart rightSaddleMouth = this.upperMouth.getChild("right_saddle_mouth");
-        ModelPart mouthSaddleWrap = this.upperMouth.getChild("mouth_saddle_wrap");
-        ModelPart lowerMouthSaddleWrap = this.lowerMouth.getChild("lower_mouth_saddle_wrap");
-        this.saddleParts = new ModelPart[]{
-                leftSaddleMouth, rightSaddleMouth, mouthSaddleWrap, lowerMouthSaddleWrap
-        };
     }
 
-    public static MeshDefinition createAnimatedBodyMesh(CubeDeformation cubeDeformation, boolean isBaby) {
-        MeshDefinition meshDefinition = HorseModel.createBodyMesh(cubeDeformation);
-        PartDefinition partDefinition = meshDefinition.getRoot();
+    public static LayerDefinition createAnimatedBodyLayer(CubeDeformation cubeDeformation, float scale, boolean isBaby) {
+        MeshDefinition meshDefinition = createAnimatedBodyMesh(cubeDeformation);
+        return LayerDefinition.create(meshDefinition, 64, 64)
+                .apply(isBaby ? BABY_TRANSFORMER : MeshTransformer.IDENTITY)
+                .apply(MeshTransformer.scaling(scale));
+    }
 
-        // head parts
-        PartDefinition partDefinition3 = partDefinition.getChild("head_parts");
-        PartDefinition upperMouth = partDefinition3.addOrReplaceChild("upper_mouth",
+    public static LayerDefinition createAnimatedSaddleLayer(float scale, boolean isBaby) {
+        return EquineSaddleModel.createFullScaleSaddleLayer(isBaby).apply((MeshDefinition meshDefinition) -> {
+            modifyHeadMesh(meshDefinition.getRoot(), CubeDeformation.NONE);
+            FamiliarEquineSaddleModel.modifyMesh(meshDefinition.getRoot());
+            return meshDefinition;
+        }).apply(isBaby ? BABY_TRANSFORMER : MeshTransformer.IDENTITY).apply(MeshTransformer.scaling(scale));
+    }
+
+    static MeshDefinition createAnimatedBodyMesh(CubeDeformation cubeDeformation) {
+        MeshDefinition meshDefinition = AbstractEquineModel.createBodyMesh(cubeDeformation);
+        modifyHeadMesh(meshDefinition.getRoot(), cubeDeformation);
+        modifyLegsMesh(meshDefinition.getRoot(), cubeDeformation);
+        return meshDefinition;
+    }
+
+    static void modifyHeadMesh(PartDefinition partDefinition, CubeDeformation cubeDeformation) {
+        PartDefinition partDefinition1 = partDefinition.getChild("head_parts");
+        partDefinition1.addOrReplaceChild("upper_mouth",
                 CubeListBuilder.create().texOffs(0, 25).addBox(-2.0F, -3.0F, -5.0F, 4.0F, 3.0F, 5.0F, cubeDeformation),
                 PartPose.offset(0.0F, -8.0F, -2.0F));
-        PartDefinition lowerMouth = partDefinition3.addOrReplaceChild("lower_mouth",
+        partDefinition1.addOrReplaceChild("lower_mouth",
                 CubeListBuilder.create().texOffs(0, 28).addBox(-2.0F, 0.0F, -5.0F, 4.0F, 2.0F, 5.0F, cubeDeformation),
                 PartPose.offset(0.0F, -8.0F, -2.0F));
-        partDefinition3.clearChild("left_saddle_mouth");
-        partDefinition3.clearChild("right_saddle_mouth");
-        upperMouth.addOrReplaceChild("left_saddle_mouth",
-                CubeListBuilder.create().texOffs(29, 5).addBox(2.0F, -1.0F, -4.0F, 1.0F, 2.0F, 2.0F, cubeDeformation),
-                PartPose.ZERO);
-        upperMouth.addOrReplaceChild("right_saddle_mouth",
-                CubeListBuilder.create().texOffs(29, 5).addBox(-3.0F, -1.0F, -4.0F, 1.0F, 2.0F, 2.0F, cubeDeformation),
-                PartPose.ZERO);
-        partDefinition3.clearChild("mouth_saddle_wrap");
-        upperMouth.addOrReplaceChild("mouth_saddle_wrap",
-                CubeListBuilder.create()
-                        .texOffs(19, 0)
-                        .addBox(-2.0F, -3.125F, -2.0F, 4.0F, 3.0F, 2.0F, new CubeDeformation(0.2F)),
-                PartPose.ZERO);
-        lowerMouth.addOrReplaceChild("lower_mouth_saddle_wrap",
-                CubeListBuilder.create()
-                        .texOffs(19, 0)
-                        .addBox(-2.0F, 0.0F, -2.0F, 4.0F, 2.0F, 2.0F, new CubeDeformation(0.18F)),
-                PartPose.ZERO);
+    }
 
-        // legs parts
-        if (isBaby) cubeDeformation = cubeDeformation.extend(0.0F, 1.0F, 0.0F);
+    static void modifyLegsMesh(PartDefinition partDefinition, CubeDeformation cubeDeformation) {
         partDefinition.addOrReplaceChild("left_hind_leg",
                 CubeListBuilder.create()
                         .texOffs(48, 21)
@@ -116,12 +120,6 @@ public class FamiliarHorseModel extends HorseModel {
         partDefinition.addOrReplaceChild("right_front_shin",
                 CubeListBuilder.create().texOffs(48, 26).addBox(-1.0F, 0.99F, -1.9F, 4.0F, 6.0F, 4.0F, cubeDeformation),
                 PartPose.offset(-4.0F, 17.0F, -10.0F));
-
-        return meshDefinition;
-    }
-
-    public static MeshTransformer getBabyTransformer() {
-        return BABY_TRANSFORMER;
     }
 
     @Override
@@ -137,11 +135,10 @@ public class FamiliarHorseModel extends HorseModel {
                 this.rightFrontShin,
                 this.rightFrontLeg,
                 this.leftFrontShin,
-                this.leftFrontLeg,
-                this.saddleParts);
+                this.leftFrontLeg);
     }
 
-    static void setupAnim(EquineRenderState renderState, ModelPart upperMouth, ModelPart lowerMouth, ModelPart rightHindShin, ModelPart rightHindLeg, ModelPart leftHindShin, ModelPart leftHindLeg, ModelPart rightFrontShin, ModelPart rightFrontLeg, ModelPart leftFrontShin, ModelPart leftFrontLeg, ModelPart[] saddleParts) {
+    static void setupAnim(EquineRenderState renderState, ModelPart upperMouth, ModelPart lowerMouth, ModelPart rightHindShin, ModelPart rightHindLeg, ModelPart leftHindShin, ModelPart leftHindLeg, ModelPart rightFrontShin, ModelPart rightFrontLeg, ModelPart leftFrontShin, ModelPart leftFrontLeg) {
         setupMouthAnim(renderState, upperMouth, lowerMouth);
         setupLegsAnim(renderState,
                 rightHindShin,
@@ -152,10 +149,9 @@ public class FamiliarHorseModel extends HorseModel {
                 rightFrontLeg,
                 leftFrontShin,
                 leftFrontLeg);
-        setupSaddleAnim(renderState, saddleParts);
     }
 
-    private static void setupMouthAnim(EquineRenderState renderState, ModelPart upperMouth, ModelPart lowerMouth) {
+    static void setupMouthAnim(EquineRenderState renderState, ModelPart upperMouth, ModelPart lowerMouth) {
         float feedingAnimation = renderState.feedingAnimation;
         upperMouth.xRot += -0.09424778F * feedingAnimation;
         lowerMouth.xRot += 0.15707964F * feedingAnimation;
@@ -212,11 +208,5 @@ public class FamiliarHorseModel extends HorseModel {
         leftFrontShin.xRot =
                 (leftFrontLeg.xRot + Mth.PI * Math.max(0.0F, 0.2F - animationProgress * 0.2F)) * standAnimation +
                         (-walkAnimationSpeedShin + Math.max(0.0F, -walkAnimationSpeedShin)) * standAnimationInv;
-    }
-
-    private static void setupSaddleAnim(EquineRenderState renderState, ModelPart[] saddleParts) {
-        for (ModelPart modelPart : saddleParts) {
-            modelPart.visible = renderState.isSaddled;
-        }
     }
 }

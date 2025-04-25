@@ -18,9 +18,13 @@ public class SpitfulLlamaModel extends LlamaModel {
     }
 
     public static LayerDefinition createAnimatedBodyLayer(CubeDeformation cubeDeformation) {
-        LayerDefinition layerDefinition = LlamaModel.createBodyLayer(cubeDeformation);
-        MeshDefinition meshDefinition = layerDefinition.mesh;
-        PartDefinition partDefinition = meshDefinition.getRoot();
+        return LlamaModel.createBodyLayer(cubeDeformation).apply((MeshDefinition meshDefinition) -> {
+            modifyMesh(meshDefinition.getRoot(), cubeDeformation);
+            return meshDefinition;
+        });
+    }
+
+    private static void modifyMesh(PartDefinition partDefinition, CubeDeformation cubeDeformation) {
         // overwrite normal head as it already includes the mouth
         PartDefinition partDefinition1 = partDefinition.addOrReplaceChild("head",
                 CubeListBuilder.create()
@@ -37,14 +41,14 @@ public class SpitfulLlamaModel extends LlamaModel {
         partDefinition1.addOrReplaceChild("mouth",
                 CubeListBuilder.create().texOffs(0, 2).addBox(-2.0F, 0.0F, -4.0F, 4.0F, 2.0F, 9.0F, cubeDeformation),
                 PartPose.offset(0.0F, -12.0F, -6.0F));
-        return layerDefinition;
     }
 
     @Override
     public void setupAnim(LlamaRenderState renderState) {
         super.setupAnim(renderState);
-        float soundTime = RenderPropertyKey.getRenderProperty(renderState,
-                SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY);
+        float soundTime = RenderPropertyKey.getOrDefault(renderState,
+                SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY,
+                0.0F);
         if (0.0F < soundTime && soundTime < 5.0F) {
             float rotation = Math.abs(Mth.sin(soundTime * Mth.PI / 5.0F));
             this.mouth.xRot = rotation * 0.75F;

@@ -1,6 +1,5 @@
 package fuzs.betteranimationscollection.client.element;
 
-import com.google.common.collect.Maps;
 import fuzs.betteranimationscollection.BetterAnimationsCollection;
 import fuzs.betteranimationscollection.config.ClientConfig;
 import net.minecraft.client.Minecraft;
@@ -11,12 +10,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.EntityType;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public final class ModelElements {
-    public static final Map<ResourceLocation, ModelElement> MODEL_ELEMENTS = Maps.newHashMap();
+    private static final Map<ResourceLocation, ModelElement> MODEL_ELEMENTS = new HashMap<>();
 
     static {
         registerModelElement("oinky_pig", OinkyPigElement::new);
@@ -57,6 +58,10 @@ public final class ModelElements {
         if (!mustBeChanged || MODEL_ELEMENTS.values().stream().anyMatch(ModelElement::markedChanged)) {
             Minecraft.getInstance().reloadResourcePacks();
         }
+    }
+
+    public static Map<ResourceLocation, ModelElement> getModelElements() {
+        return Collections.unmodifiableMap(MODEL_ELEMENTS);
     }
 
     @SuppressWarnings("ConstantValue")

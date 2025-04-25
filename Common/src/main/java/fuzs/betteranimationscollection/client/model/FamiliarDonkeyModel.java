@@ -1,6 +1,7 @@
 package fuzs.betteranimationscollection.client.model;
 
 import net.minecraft.client.model.DonkeyModel;
+import net.minecraft.client.model.EquineSaddleModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
@@ -19,7 +20,6 @@ public class FamiliarDonkeyModel extends DonkeyModel {
     private final ModelPart rightHindShin;
     private final ModelPart leftFrontShin;
     private final ModelPart rightFrontShin;
-    private final ModelPart[] saddleParts;
 
     public FamiliarDonkeyModel(ModelPart modelPart) {
         super(modelPart);
@@ -34,23 +34,26 @@ public class FamiliarDonkeyModel extends DonkeyModel {
         this.leftHindShin = modelPart.getChild("left_hind_shin");
         this.rightFrontShin = modelPart.getChild("right_front_shin");
         this.leftFrontShin = modelPart.getChild("left_front_shin");
-        ModelPart leftSaddleMouth = this.upperMouth.getChild("left_saddle_mouth");
-        ModelPart rightSaddleMouth = this.upperMouth.getChild("right_saddle_mouth");
-        ModelPart mouthSaddleWrap = this.upperMouth.getChild("mouth_saddle_wrap");
-        ModelPart lowerMouthSaddleWrap = this.lowerMouth.getChild("lower_mouth_saddle_wrap");
-        this.saddleParts = new ModelPart[]{
-                leftSaddleMouth, rightSaddleMouth, mouthSaddleWrap, lowerMouthSaddleWrap
-        };
     }
 
-    public static LayerDefinition createAnimatedBodyLayer(boolean isBaby) {
-        MeshDefinition meshDefinition = FamiliarHorseModel.createAnimatedBodyMesh(CubeDeformation.NONE, isBaby);
+    public static LayerDefinition createAnimatedBodyLayer(float scale, boolean isBaby) {
+        MeshDefinition meshDefinition = FamiliarHorseModel.createAnimatedBodyMesh(CubeDeformation.NONE);
         modifyMesh(meshDefinition.getRoot());
-        return LayerDefinition.create(meshDefinition, 64, 64);
+        return LayerDefinition.create(meshDefinition, 64, 64)
+                .apply(isBaby ? FamiliarHorseModel.BABY_TRANSFORMER : MeshTransformer.IDENTITY)
+                .apply(MeshTransformer.scaling(scale));
     }
 
-    public static MeshTransformer getBabyTransformer() {
-        return BABY_TRANSFORMER;
+    public static LayerDefinition createAnimatedSaddleLayer(float scale, boolean isBaby) {
+        return EquineSaddleModel.createFullScaleSaddleLayer(isBaby)
+                .apply((MeshDefinition meshDefinition) -> {
+                    FamiliarHorseModel.modifyHeadMesh(meshDefinition.getRoot(), CubeDeformation.NONE);
+                    FamiliarEquineSaddleModel.modifyMesh(meshDefinition.getRoot());
+                    modifyMesh(meshDefinition.getRoot());
+                    return meshDefinition;
+                })
+                .apply(isBaby ? FamiliarHorseModel.BABY_TRANSFORMER : MeshTransformer.IDENTITY)
+                .apply(MeshTransformer.scaling(scale));
     }
 
     @Override
@@ -66,7 +69,6 @@ public class FamiliarDonkeyModel extends DonkeyModel {
                 this.rightFrontShin,
                 this.rightFrontLeg,
                 this.leftFrontShin,
-                this.leftFrontLeg,
-                this.saddleParts);
+                this.leftFrontLeg);
     }
 }

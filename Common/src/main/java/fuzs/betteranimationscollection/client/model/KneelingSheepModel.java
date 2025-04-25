@@ -31,9 +31,13 @@ public class KneelingSheepModel extends SheepModel {
     }
 
     public static LayerDefinition createAnimatedBodyLayer() {
-        LayerDefinition layerDefinition = SheepModel.createBodyLayer();
-        MeshDefinition meshDefinition = layerDefinition.mesh;
-        PartDefinition partDefinition = meshDefinition.getRoot();
+        return SheepModel.createBodyLayer().apply((MeshDefinition meshDefinition) -> {
+            modifyMesh(meshDefinition.getRoot());
+            return meshDefinition;
+        });
+    }
+
+    private static void modifyMesh(PartDefinition partDefinition) {
         partDefinition.addOrReplaceChild("body",
                 CubeListBuilder.create().texOffs(28, 8).addBox(-4.0F, -15.0F, 0.0F, 8.0F, 16.0F, 6.0F),
                 PartPose.offsetAndRotation(0.0F, 12.0F, 7.0F, Mth.HALF_PI, 0.0F, 0.0F));
@@ -51,7 +55,6 @@ public class KneelingSheepModel extends SheepModel {
         PartPose partPose = PartPose.offset(0.0F, 6.0F, 0.0F);
         partDefinition1.addOrReplaceChild("right_front_lower_leg", cubeListBuilder, partPose);
         partDefinition2.addOrReplaceChild("left_front_lower_leg", cubeListBuilder, partPose);
-        return layerDefinition;
     }
 
     @Override

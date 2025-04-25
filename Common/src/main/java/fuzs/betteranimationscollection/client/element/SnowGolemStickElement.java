@@ -43,7 +43,7 @@ public class SnowGolemStickElement extends SoundBasedElement<SnowGolem, LivingEn
     protected void extractRenderState(SnowGolem entity, LivingEntityRenderState renderState, float partialTick) {
         super.extractRenderState(entity, renderState, partialTick);
         // makes 5 % of snowman render left-handed, like for most mobs with arms in vanilla
-        RenderPropertyKey.setRenderProperty(renderState,
+        RenderPropertyKey.set(renderState,
                 IS_LEFT_HANDED_PROPERTY,
                 Math.abs(entity.getUUID().getLeastSignificantBits() % 20) == 0);
     }

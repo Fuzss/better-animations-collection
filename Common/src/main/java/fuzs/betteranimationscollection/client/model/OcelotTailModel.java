@@ -22,7 +22,11 @@ public class OcelotTailModel extends OcelotModel {
 
     public static LayerDefinition createAnimatedBodyMesh(CubeDeformation cubeDeformation) {
         MeshDefinition meshDefinition = OcelotModel.createBodyMesh(cubeDeformation);
-        PartDefinition partDefinition = meshDefinition.getRoot();
+        modifyMesh(meshDefinition.getRoot(), cubeDeformation);
+        return LayerDefinition.create(meshDefinition, 64, 32);
+    }
+
+    private static void modifyMesh(PartDefinition partDefinition, CubeDeformation cubeDeformation) {
         PartDefinition partDefinition1 = partDefinition.addOrReplaceChild("tail1",
                 CubeListBuilder.create().texOffs(0, 15).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 1.0F, 1.0F, cubeDeformation),
                 PartPose.offsetAndRotation(0.0F, 15.0F, 8.0F, 0.9F, 0.0F, 0.0F));
@@ -48,7 +52,6 @@ public class OcelotTailModel extends OcelotModel {
                 .addBox(-1.0F, 0.0F, 0.0F, 2.0F, 10.0F, 2.0F, cubeDeformation);
         partDefinition.addOrReplaceChild("left_front_leg", cubeListBuilder2, PartPose.offset(1.2F, 13.7F, -5.0F));
         partDefinition.addOrReplaceChild("right_front_leg", cubeListBuilder2, PartPose.offset(-1.2F, 13.7F, -5.0F));
-        return LayerDefinition.create(meshDefinition, 64, 32);
     }
 
     public static ModelPart[] getTailParts(ModelPart tail) {

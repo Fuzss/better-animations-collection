@@ -35,9 +35,13 @@ public class SquidTentaclesModel extends SquidModel {
     }
 
     public static LayerDefinition createAnimatedBodyLayer() {
-        LayerDefinition layerDefinition = SquidModel.createBodyLayer();
-        MeshDefinition meshDefinition = layerDefinition.mesh;
-        PartDefinition partDefinition = meshDefinition.getRoot();
+        return SquidModel.createBodyLayer().apply((MeshDefinition meshDefinition) -> {
+            modifyMesh(meshDefinition.getRoot());
+            return meshDefinition;
+        });
+    }
+
+    private static void modifyMesh(PartDefinition partDefinition) {
         CubeListBuilder cubeListBuilder = CubeListBuilder.create()
                 .texOffs(48, 0)
                 .addBox(-1.0F, 0.0F, -1.0F, 2.0F, 2.0F, 2.0F);
@@ -58,15 +62,15 @@ public class SquidTentaclesModel extends SquidModel {
                         PartPose.offset(0.0F, 2.0F, 0.0F));
             }
         }
-        return layerDefinition;
     }
 
     @Override
     public void setupAnim(SquidRenderState renderState) {
         super.setupAnim(renderState);
         float progress = renderState.tentacleAngle / 1.75F;
-        Vec3 deltaMovement = RenderPropertyKey.getRenderProperty(renderState,
-                SquidTentaclesElement.DELTA_MOVEMENT_PROPERTY);
+        Vec3 deltaMovement = RenderPropertyKey.getOrDefault(renderState,
+                SquidTentaclesElement.DELTA_MOVEMENT_PROPERTY,
+                Vec3.ZERO);
         float magnitude = (float) (
                 Math.sqrt(Math.abs(deltaMovement.x) + Math.abs(deltaMovement.y) + Math.abs(deltaMovement.z)) - 0.075F);
         magnitude *= 0.375F;

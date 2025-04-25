@@ -40,7 +40,7 @@ public class IronGolemNoseElement extends SingletonModelElement<IronGolem, IronG
     protected void extractRenderState(IronGolem entity, IronGolemRenderState renderState, float partialTick) {
         super.extractRenderState(entity, renderState, partialTick);
         // this only works because MobEntity#ambientSoundTime is manually being synced to the client
-        RenderPropertyKey.setRenderProperty(renderState,
+        RenderPropertyKey.set(renderState,
                 SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY,
                 entity.ambientSoundTime + entity.getAmbientSoundInterval() + partialTick);
     }
