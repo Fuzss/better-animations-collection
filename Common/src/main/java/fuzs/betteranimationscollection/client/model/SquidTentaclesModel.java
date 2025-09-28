@@ -68,7 +68,7 @@ public class SquidTentaclesModel<T extends Entity> extends SquidModel<T> {
             this.tentacles[i].xRot += (float) Math.sin(progress) * magnitude;
             for (int j = 0; j < this.tentacleParts[i].length; j++) {
                 this.tentacleParts[i][j].xRot = -ageInTicks * 0.375F + (float) Math.sin(progress + (float) (j + 1)) * magnitude;
-                this.tentacleParts[i][j].visible = i < SquidTentaclesElement.tentaclesLength;
+                this.tentacleParts[i][j].visible = j < SquidTentaclesElement.tentaclesLength;
             }
         }
     }
