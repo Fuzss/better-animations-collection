@@ -4,10 +4,8 @@ import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.renderer.entity.ArmorModelSet;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 
 public class HumanoidKneesModel extends HumanoidModel<HumanoidRenderState> implements KneesModel {
@@ -20,10 +18,18 @@ public class HumanoidKneesModel extends HumanoidModel<HumanoidRenderState> imple
         this.leftShin = modelPart.getChild("left_leg").getChild("left_shin");
     }
 
-    public static MeshDefinition createAnimatedMesh(CubeDeformation cubeDeformation, float offsetY) {
-        MeshDefinition meshDefinition = HumanoidModel.createMesh(cubeDeformation, offsetY);
+    public static MeshDefinition createAnimatedMesh(CubeDeformation cubeDeformation) {
+        MeshDefinition meshDefinition = HumanoidModel.createMesh(cubeDeformation, 0.0F);
         modifyMesh(meshDefinition.getRoot(), cubeDeformation);
         return meshDefinition;
+    }
+
+    public static ArmorModelSet<LayerDefinition> createArmorLayerSet(CubeDeformation innerCubeDeformation, CubeDeformation outerCubeDeformation) {
+        return createArmorMeshSet(HumanoidKneesModel::createAnimatedMesh,
+                innerCubeDeformation,
+                outerCubeDeformation).map((MeshDefinition meshDefinition) -> LayerDefinition.create(meshDefinition,
+                64,
+                32));
     }
 
     private static void modifyMesh(PartDefinition partDefinition, CubeDeformation cubeDeformation) {
@@ -50,12 +56,6 @@ public class HumanoidKneesModel extends HumanoidModel<HumanoidRenderState> imple
     public void setupAnim(HumanoidRenderState renderState) {
         super.setupAnim(renderState);
         KneesModel.setupAnim(this, renderState);
-    }
-
-    @Override
-    public void copyPropertiesTo(HumanoidModel<HumanoidRenderState> model) {
-        super.copyPropertiesTo(model);
-        KneesModel.copyPropertiesTo(this, model);
     }
 
     @Override

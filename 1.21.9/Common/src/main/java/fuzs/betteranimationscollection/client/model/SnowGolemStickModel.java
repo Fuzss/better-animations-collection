@@ -2,7 +2,7 @@ package fuzs.betteranimationscollection.client.model;
 
 import fuzs.betteranimationscollection.client.element.SnowGolemStickElement;
 import fuzs.betteranimationscollection.client.element.SoundBasedElement;
-import fuzs.puzzleslib.api.client.renderer.v1.RenderPropertyKey;
+import fuzs.puzzleslib.api.client.renderer.v1.RenderStateExtraData;
 import net.minecraft.client.model.SnowGolemModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
@@ -20,10 +20,10 @@ public class SnowGolemStickModel extends SnowGolemModel {
     @Override
     public void setupAnim(LivingEntityRenderState renderState) {
         super.setupAnim(renderState);
-        float soundTime = RenderPropertyKey.getOrDefault(renderState,
+        float soundTime = RenderStateExtraData.getOrDefault(renderState,
                 SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY,
                 0.0F);
-        boolean isLeftHanded = RenderPropertyKey.getOrDefault(renderState,
+        boolean isLeftHanded = RenderStateExtraData.getOrDefault(renderState,
                 SnowGolemStickElement.IS_LEFT_HANDED_PROPERTY,
                 false);
         if (0.0F < soundTime && soundTime < 8.0F) {

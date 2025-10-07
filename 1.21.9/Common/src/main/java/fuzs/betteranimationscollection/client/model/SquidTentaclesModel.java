@@ -1,7 +1,7 @@
 package fuzs.betteranimationscollection.client.model;
 
 import fuzs.betteranimationscollection.client.element.SquidTentaclesElement;
-import fuzs.puzzleslib.api.client.renderer.v1.RenderPropertyKey;
+import fuzs.puzzleslib.api.client.renderer.v1.RenderStateExtraData;
 import net.minecraft.client.model.SquidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -68,7 +68,7 @@ public class SquidTentaclesModel extends SquidModel {
     public void setupAnim(SquidRenderState renderState) {
         super.setupAnim(renderState);
         float progress = renderState.tentacleAngle / 1.75F;
-        Vec3 deltaMovement = RenderPropertyKey.getOrDefault(renderState,
+        Vec3 deltaMovement = RenderStateExtraData.getOrDefault(renderState,
                 SquidTentaclesElement.DELTA_MOVEMENT_PROPERTY,
                 Vec3.ZERO);
         float magnitude = (float) (

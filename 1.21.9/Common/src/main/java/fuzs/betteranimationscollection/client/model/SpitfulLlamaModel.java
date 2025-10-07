@@ -1,7 +1,7 @@
 package fuzs.betteranimationscollection.client.model;
 
 import fuzs.betteranimationscollection.client.element.SoundBasedElement;
-import fuzs.puzzleslib.api.client.renderer.v1.RenderPropertyKey;
+import fuzs.puzzleslib.api.client.renderer.v1.RenderStateExtraData;
 import net.minecraft.client.model.LlamaModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -46,7 +46,7 @@ public class SpitfulLlamaModel extends LlamaModel {
     @Override
     public void setupAnim(LlamaRenderState renderState) {
         super.setupAnim(renderState);
-        float soundTime = RenderPropertyKey.getOrDefault(renderState,
+        float soundTime = RenderStateExtraData.getOrDefault(renderState,
                 SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY,
                 0.0F);
         if (0.0F < soundTime && soundTime < 5.0F) {

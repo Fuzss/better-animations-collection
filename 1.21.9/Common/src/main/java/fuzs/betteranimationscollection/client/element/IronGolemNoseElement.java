@@ -2,17 +2,14 @@ package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.client.handler.RemoteSoundHandler;
 import fuzs.betteranimationscollection.client.model.IronGolemNoseModel;
-import fuzs.puzzleslib.api.client.renderer.v1.RenderPropertyKey;
+import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
+import fuzs.puzzleslib.api.client.renderer.v1.RenderStateExtraData;
 import net.minecraft.client.model.IronGolemModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.IronGolemRenderState;
 import net.minecraft.world.entity.animal.IronGolem;
-
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 public class IronGolemNoseElement extends SingletonModelElement<IronGolem, IronGolemRenderState, IronGolemModel> {
     private final ModelLayerLocation animatedIronGolem;
@@ -40,13 +37,13 @@ public class IronGolemNoseElement extends SingletonModelElement<IronGolem, IronG
     protected void extractRenderState(IronGolem entity, IronGolemRenderState renderState, float partialTick) {
         super.extractRenderState(entity, renderState, partialTick);
         // this only works because MobEntity#ambientSoundTime is manually being synced to the client
-        RenderPropertyKey.set(renderState,
+        RenderStateExtraData.set(renderState,
                 SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY,
                 entity.ambientSoundTime + entity.getAmbientSoundInterval() + partialTick);
     }
 
     @Override
-    public void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context) {
-        context.accept(this.animatedIronGolem, IronGolemNoseModel::createAnimatedBodyLayer);
+    public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
+        context.registerLayerDefinition(this.animatedIronGolem, IronGolemNoseModel::createAnimatedBodyLayer);
     }
 }

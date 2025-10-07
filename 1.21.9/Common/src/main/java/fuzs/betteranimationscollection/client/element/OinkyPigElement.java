@@ -2,12 +2,12 @@ package fuzs.betteranimationscollection.client.element;
 
 import com.google.common.collect.Maps;
 import fuzs.betteranimationscollection.client.model.OinkyPigModel;
+import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
 import net.minecraft.client.model.AdultAndBabyModelPair;
 import net.minecraft.client.model.PigModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.AgeableMobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -23,8 +23,6 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 public class OinkyPigElement extends SoundBasedElement<Pig, PigRenderState, PigModel> {
     public static boolean floatyEars;
@@ -76,8 +74,8 @@ public class OinkyPigElement extends SoundBasedElement<Pig, PigRenderState, PigM
 
     @Override
     protected @Nullable RenderLayer<PigRenderState, PigModel> getAnimatedLayer(RenderLayer<PigRenderState, PigModel> renderLayer, LivingEntityRenderer<?, PigRenderState, PigModel> entityRenderer, EntityRendererProvider.Context context) {
-        if (renderLayer instanceof SimpleEquipmentLayer<PigRenderState, PigModel, ?> equipmentLayer &&
-                equipmentLayer.layer == EquipmentClientInfo.LayerType.PIG_SADDLE) {
+        if (renderLayer instanceof SimpleEquipmentLayer<PigRenderState, PigModel, ?> equipmentLayer
+                && equipmentLayer.layer == EquipmentClientInfo.LayerType.PIG_SADDLE) {
             ((SimpleEquipmentLayer<PigRenderState, PigModel, PigModel>) renderLayer).adultModel = new OinkyPigModel(
                     context.bakeLayer(this.animatedPigSaddle));
             ((SimpleEquipmentLayer<PigRenderState, PigModel, PigModel>) renderLayer).babyModel = new OinkyPigModel(
@@ -89,15 +87,18 @@ public class OinkyPigElement extends SoundBasedElement<Pig, PigRenderState, PigM
     }
 
     @Override
-    public void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context) {
-        context.accept(this.animatedPig, () -> OinkyPigModel.createAnimatedBodyLayer(CubeDeformation.NONE));
-        context.accept(this.animatedColdPig, () -> OinkyPigModel.createAnimatedColdBodyLayer(CubeDeformation.NONE));
-        context.accept(this.animatedPigSaddle, () -> OinkyPigModel.createAnimatedBodyLayer(new CubeDeformation(0.5F)));
-        context.accept(this.animatedPigBaby,
+    public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
+        context.registerLayerDefinition(this.animatedPig,
+                () -> OinkyPigModel.createAnimatedBodyLayer(CubeDeformation.NONE));
+        context.registerLayerDefinition(this.animatedColdPig,
+                () -> OinkyPigModel.createAnimatedColdBodyLayer(CubeDeformation.NONE));
+        context.registerLayerDefinition(this.animatedPigSaddle,
+                () -> OinkyPigModel.createAnimatedBodyLayer(new CubeDeformation(0.5F)));
+        context.registerLayerDefinition(this.animatedPigBaby,
                 () -> OinkyPigModel.createAnimatedBodyLayer(CubeDeformation.NONE).apply(PigModel.BABY_TRANSFORMER));
-        context.accept(this.animatedColdPigBaby,
+        context.registerLayerDefinition(this.animatedColdPigBaby,
                 () -> OinkyPigModel.createAnimatedColdBodyLayer(CubeDeformation.NONE).apply(PigModel.BABY_TRANSFORMER));
-        context.accept(this.animatedPigBabySaddle,
+        context.registerLayerDefinition(this.animatedPigBabySaddle,
                 () -> OinkyPigModel.createAnimatedBodyLayer(new CubeDeformation(0.5F))
                         .apply(PigModel.BABY_TRANSFORMER));
     }

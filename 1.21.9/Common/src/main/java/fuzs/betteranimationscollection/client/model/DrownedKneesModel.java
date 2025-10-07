@@ -2,7 +2,6 @@ package fuzs.betteranimationscollection.client.model;
 
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.client.model.DrownedModel;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -21,8 +20,8 @@ public class DrownedKneesModel extends DrownedModel implements KneesModel {
         this.leftShin = modelPart.getChild("left_leg").getChild("left_shin");
     }
 
-    public static MeshDefinition createAnimatedMesh(CubeDeformation cubeDeformation, float offsetY) {
-        MeshDefinition meshDefinition = HumanoidKneesModel.createAnimatedMesh(cubeDeformation, offsetY);
+    public static MeshDefinition createAnimatedMesh(CubeDeformation cubeDeformation) {
+        MeshDefinition meshDefinition = HumanoidKneesModel.createAnimatedMesh(cubeDeformation);
         modifyMesh(meshDefinition.getRoot(), cubeDeformation);
         return meshDefinition;
     }
@@ -50,13 +49,7 @@ public class DrownedKneesModel extends DrownedModel implements KneesModel {
     public void setupAnim(ZombieRenderState renderState) {
         super.setupAnim(renderState);
         KneesModel.setupAnim(this, renderState);
-        // should probably also do something about swimming animation as legs are used there, too
-    }
-
-    @Override
-    public void copyPropertiesTo(HumanoidModel<ZombieRenderState> model) {
-        super.copyPropertiesTo(model);
-        KneesModel.copyPropertiesTo(this, model);
+        // TODO should probably also do something about swimming animation as legs are used there, too
     }
 
     @Override

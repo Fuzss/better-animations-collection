@@ -1,19 +1,16 @@
 package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.client.model.OcelotTailModel;
+import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
 import net.minecraft.client.model.OcelotModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.FelineRenderState;
 import net.minecraft.world.entity.animal.Ocelot;
 import net.neoforged.neoforge.common.ModConfigSpec;
-
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 public class OcelotTailElement extends SingletonModelElement<Ocelot, FelineRenderState, OcelotModel> {
     public static int tailLength;
@@ -44,9 +41,10 @@ public class OcelotTailElement extends SingletonModelElement<Ocelot, FelineRende
     }
 
     @Override
-    public void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context) {
-        context.accept(this.animatedOcelot, () -> OcelotTailModel.createAnimatedBodyMesh(CubeDeformation.NONE));
-        context.accept(this.animatedOcelotBaby,
+    public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
+        context.registerLayerDefinition(this.animatedOcelot,
+                () -> OcelotTailModel.createAnimatedBodyMesh(CubeDeformation.NONE));
+        context.registerLayerDefinition(this.animatedOcelotBaby,
                 () -> OcelotTailModel.createAnimatedBodyMesh(CubeDeformation.NONE).apply(OcelotModel.BABY_TRANSFORMER));
     }
 

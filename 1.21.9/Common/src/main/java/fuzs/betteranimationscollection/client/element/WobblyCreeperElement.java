@@ -1,26 +1,24 @@
 package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.client.model.WobblyCreeperModel;
-import fuzs.puzzleslib.api.client.renderer.v1.RenderPropertyKey;
+import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
+import fuzs.puzzleslib.api.client.renderer.v1.RenderStateExtraData;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
 import net.minecraft.client.model.CreeperModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.CreeperPowerLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.CreeperRenderState;
+import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.monster.Creeper;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
-
 public class WobblyCreeperElement extends SingletonModelElement<Creeper, CreeperRenderState, CreeperModel> {
-    public static final RenderPropertyKey<WobbleDirection> WOBBLE_DIRECTION_PROPERTY = key("wobble_direction");
+    public static final ContextKey<WobbleDirection> WOBBLE_DIRECTION_PROPERTY = key("wobble_direction");
 
     public static WobbleDirection wobbleDirection;
 
@@ -75,10 +73,10 @@ public class WobblyCreeperElement extends SingletonModelElement<Creeper, Creeper
     }
 
     @Override
-    public void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context) {
-        context.accept(this.animatedCreeper,
+    public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
+        context.registerLayerDefinition(this.animatedCreeper,
                 () -> WobblyCreeperModel.createAnimatedBodyLayer(CubeDeformation.NONE));
-        context.accept(this.animatedCreeperArmor,
+        context.registerLayerDefinition(this.animatedCreeperArmor,
                 () -> WobblyCreeperModel.createAnimatedBodyLayer(new CubeDeformation(2.0F)));
     }
 
@@ -88,10 +86,11 @@ public class WobblyCreeperElement extends SingletonModelElement<Creeper, Creeper
         WobblyCreeperElement.WobbleDirection wobbleDirection = WobblyCreeperElement.wobbleDirection;
         if (wobbleDirection == WobblyCreeperElement.WobbleDirection.RANDOM) {
             wobbleDirection = WobblyCreeperElement.WobbleDirection.values()[(int) Math.abs(
-                    entity.getUUID().getLeastSignificantBits() %
-                            (WobblyCreeperElement.WobbleDirection.values().length - 1))];
+                    entity.getUUID().getLeastSignificantBits() % (WobblyCreeperElement.WobbleDirection.values().length
+                            - 1))];
         }
-        RenderPropertyKey.set(renderState, WOBBLE_DIRECTION_PROPERTY, wobbleDirection);
+
+        RenderStateExtraData.set(renderState, WOBBLE_DIRECTION_PROPERTY, wobbleDirection);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package fuzs.betteranimationscollection.client.model;
 
 import it.unimi.dsi.fastutil.Pair;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PiglinModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -11,19 +10,11 @@ import net.minecraft.client.renderer.entity.state.PiglinRenderState;
 public class PiglinKneesModel extends PiglinModel implements KneesModel {
     private final ModelPart rightShin;
     private final ModelPart leftShin;
-    private final ModelPart rightPants;
-    private final ModelPart leftPants;
-    private final ModelPart rightLowerPants;
-    private final ModelPart leftLowerPants;
 
     public PiglinKneesModel(ModelPart modelPart) {
         super(modelPart);
         this.rightShin = modelPart.getChild("right_leg").getChild("right_shin");
         this.leftShin = modelPart.getChild("left_leg").getChild("left_shin");
-        this.rightPants = modelPart.getChild("right_pants");
-        this.rightLowerPants = this.rightPants.getChild("right_lower_pants");
-        this.leftPants = modelPart.getChild("left_pants");
-        this.leftLowerPants = this.leftPants.getChild("left_lower_pants");
     }
 
     public static LayerDefinition createAnimatedBodyLayer() {
@@ -65,8 +56,12 @@ public class PiglinKneesModel extends PiglinModel implements KneesModel {
                 rightLeg.left(),
                 rightLeg.right());
         PartDefinition partDefinition2 = partDefinition.addOrReplaceChild("left_leg", leftLeg.left(), leftLeg.right());
-        partDefinition1.addOrReplaceChild("right_shin", rightShin.left(), rightShin.right());
-        partDefinition2.addOrReplaceChild("left_shin", leftShin.left(), leftShin.right());
+        PartDefinition partDefinition3 = partDefinition1.addOrReplaceChild("right_shin",
+                rightShin.left(),
+                rightShin.right());
+        PartDefinition partDefinition4 = partDefinition2.addOrReplaceChild("left_shin",
+                leftShin.left(),
+                leftShin.right());
         CubeDeformation cubeDeformation = new CubeDeformation(0.25F);
         Pair<CubeListBuilder, PartPose> rightPants = HumanoidKneesModel.createShin(0,
                 32,
@@ -96,30 +91,16 @@ public class PiglinKneesModel extends PiglinModel implements KneesModel {
                 -2.0F,
                 true,
                 cubeDeformation);
-        PartDefinition partDefinition11 = partDefinition.addOrReplaceChild("right_pants",
-                rightPants.left(),
-                rightPants.right());
-        PartDefinition partDefinition22 = partDefinition.addOrReplaceChild("left_pants",
-                leftPants.left(),
-                leftPants.right());
-        partDefinition11.addOrReplaceChild("right_lower_pants", rightLowerPants.left(), rightLowerPants.right());
-        partDefinition22.addOrReplaceChild("left_lower_pants", leftLowerPants.left(), leftLowerPants.right());
+        partDefinition1.addOrReplaceChild("right_pants", rightPants.left(), PartPose.ZERO);
+        partDefinition2.addOrReplaceChild("left_pants", leftPants.left(), PartPose.ZERO);
+        partDefinition3.addOrReplaceChild("right_lower_pants", rightLowerPants.left(), PartPose.ZERO);
+        partDefinition4.addOrReplaceChild("left_lower_pants", leftLowerPants.left(), PartPose.ZERO);
     }
 
     @Override
     public void setupAnim(PiglinRenderState renderState) {
         super.setupAnim(renderState);
         KneesModel.setupAnim(this, renderState);
-        this.rightPants.copyFrom(this.rightLeg);
-        this.leftPants.copyFrom(this.leftLeg);
-        this.rightLowerPants.copyFrom(this.rightShin);
-        this.leftLowerPants.copyFrom(this.leftShin);
-    }
-
-    @Override
-    public void copyPropertiesTo(HumanoidModel<PiglinRenderState> model) {
-        super.copyPropertiesTo(model);
-        KneesModel.copyPropertiesTo(this, model);
     }
 
     @Override

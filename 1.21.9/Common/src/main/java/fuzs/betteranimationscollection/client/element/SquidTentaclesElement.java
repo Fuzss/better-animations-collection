@@ -1,23 +1,21 @@
 package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.client.model.SquidTentaclesModel;
-import fuzs.puzzleslib.api.client.renderer.v1.RenderPropertyKey;
+import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
+import fuzs.puzzleslib.api.client.renderer.v1.RenderStateExtraData;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
 import net.minecraft.client.model.SquidModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.SquidRenderState;
+import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.animal.Squid;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
-
 public class SquidTentaclesElement extends SingletonModelElement<Squid, SquidRenderState, SquidModel> {
-    public static final RenderPropertyKey<Vec3> DELTA_MOVEMENT_PROPERTY = key("delta_movement");
+    public static final ContextKey<Vec3> DELTA_MOVEMENT_PROPERTY = key("delta_movement");
 
     public static int tentaclesLength;
 
@@ -45,16 +43,16 @@ public class SquidTentaclesElement extends SingletonModelElement<Squid, SquidRen
     }
 
     @Override
-    public void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context) {
-        context.accept(this.animatedSquid, SquidTentaclesModel::createAnimatedBodyLayer);
-        context.accept(this.animatedSquidBaby,
+    public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
+        context.registerLayerDefinition(this.animatedSquid, SquidTentaclesModel::createAnimatedBodyLayer);
+        context.registerLayerDefinition(this.animatedSquidBaby,
                 () -> SquidTentaclesModel.createAnimatedBodyLayer().apply(SquidModel.BABY_TRANSFORMER));
     }
 
     @Override
     protected void extractRenderState(Squid entity, SquidRenderState renderState, float partialTick) {
         super.extractRenderState(entity, renderState, partialTick);
-        RenderPropertyKey.set(renderState, DELTA_MOVEMENT_PROPERTY, entity.getDeltaMovement());
+        RenderStateExtraData.set(renderState, DELTA_MOVEMENT_PROPERTY, entity.getDeltaMovement());
     }
 
     @Override

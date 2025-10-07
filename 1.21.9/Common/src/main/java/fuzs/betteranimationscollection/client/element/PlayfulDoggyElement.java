@@ -1,6 +1,7 @@
 package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.client.model.PlayfulDoggyModel;
+import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
 import net.minecraft.client.model.WolfModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -15,9 +16,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.animal.wolf.Wolf;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 public class PlayfulDoggyElement extends SingletonModelElement<Wolf, WolfRenderState, WolfModel> {
     public static final float MAX_ROLL_ANIM = 0.15F * Mth.PI;
@@ -67,17 +65,17 @@ public class PlayfulDoggyElement extends SingletonModelElement<Wolf, WolfRenderS
     }
 
     @Override
-    public void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context) {
-        context.accept(this.animatedWolf,
+    public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
+        context.registerLayerDefinition(this.animatedWolf,
                 () -> LayerDefinition.create(PlayfulDoggyModel.createAnimatedBodyLayer(CubeDeformation.NONE), 64, 32));
-        context.accept(this.animatedWolfArmor,
+        context.registerLayerDefinition(this.animatedWolfArmor,
                 () -> LayerDefinition.create(PlayfulDoggyModel.createAnimatedBodyLayer(new CubeDeformation(0.2F)),
                         64,
                         32));
-        context.accept(this.animatedWolfBaby,
+        context.registerLayerDefinition(this.animatedWolfBaby,
                 () -> LayerDefinition.create(PlayfulDoggyModel.createAnimatedBodyLayer(CubeDeformation.NONE), 64, 32)
                         .apply(WolfModel.BABY_TRANSFORMER));
-        context.accept(this.animatedWolfBabyArmor,
+        context.registerLayerDefinition(this.animatedWolfBabyArmor,
                 () -> LayerDefinition.create(PlayfulDoggyModel.createAnimatedBodyLayer(new CubeDeformation(0.2F)),
                         64,
                         32).apply(WolfModel.BABY_TRANSFORMER));
@@ -102,7 +100,13 @@ public class PlayfulDoggyElement extends SingletonModelElement<Wolf, WolfRenderS
                         PlayfulDoggyModel.WOLF_TAIL_LENGTH,
                         1,
                         PlayfulDoggyModel.WOLF_TAIL_LENGTH), v -> tailLength = v);
-        callback.accept(builder.comment("Make wolf tail fluffy.").define("fluffy_tail", true), v -> fluffyTail = v);
+        callback.accept(builder.comment("Make wolf tail fluffy.").define("fluffy_tail", true), v -> {
+            if (fluffyTail != v) {
+                this.markChanged();
+            }
+
+            fluffyTail = v;
+        });
         callback.accept(builder.comment("Animation swing speed for tail.").defineInRange("animation_speed", 5, 1, 20),
                 v -> animationSpeed = v);
         callback.accept(builder.comment("Pose and behaviour when sitting.",

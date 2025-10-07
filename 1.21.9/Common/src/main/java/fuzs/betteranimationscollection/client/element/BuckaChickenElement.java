@@ -2,11 +2,11 @@ package fuzs.betteranimationscollection.client.element;
 
 import com.google.common.collect.Maps;
 import fuzs.betteranimationscollection.client.model.BuckaChickenModel;
+import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
 import net.minecraft.client.model.AdultAndBabyModelPair;
 import net.minecraft.client.model.ChickenModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.AgeableMobRenderer;
 import net.minecraft.client.renderer.entity.ChickenRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -18,8 +18,6 @@ import net.minecraft.world.entity.animal.ChickenVariant;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 public class BuckaChickenElement extends SoundBasedElement<Chicken, ChickenRenderState, ChickenModel> {
     public static boolean slimBill;
@@ -72,12 +70,12 @@ public class BuckaChickenElement extends SoundBasedElement<Chicken, ChickenRende
     }
 
     @Override
-    public void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context) {
-        context.accept(this.animatedChicken, BuckaChickenModel::createAnimatedBodyLayer);
-        context.accept(this.animatedColdChicken, BuckaChickenModel::createAnimatedColdBodyLayer);
-        context.accept(this.animatedChickenBaby,
+    public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
+        context.registerLayerDefinition(this.animatedChicken, BuckaChickenModel::createAnimatedBodyLayer);
+        context.registerLayerDefinition(this.animatedColdChicken, BuckaChickenModel::createAnimatedColdBodyLayer);
+        context.registerLayerDefinition(this.animatedChickenBaby,
                 () -> BuckaChickenModel.createAnimatedBodyLayer().apply(ChickenModel.BABY_TRANSFORMER));
-        context.accept(this.animatedColdChickenBaby,
+        context.registerLayerDefinition(this.animatedColdChickenBaby,
                 () -> BuckaChickenModel.createAnimatedColdBodyLayer().apply(ChickenModel.BABY_TRANSFORMER));
     }
 
@@ -85,7 +83,13 @@ public class BuckaChickenElement extends SoundBasedElement<Chicken, ChickenRende
     public void setupModelConfig(ModConfigSpec.Builder builder, ValueCallback callback) {
         super.setupModelConfig(builder, callback);
         callback.accept(builder.comment("Make bill a lot slimmer so chickens look less like ducks.")
-                .define("slim_bill", true), v -> slimBill = v);
+                .define("slim_bill", true), v -> {
+            if (slimBill != v) {
+                this.markChanged();
+            }
+
+            slimBill = v;
+        });
         callback.accept(builder.comment("Move head back and forth when chicken is walking.").define("move_head", true),
                 v -> moveHead = v);
         callback.accept(builder.comment("Wiggle chin when chicken is walking.").define("wiggle_wattles", true),

@@ -2,11 +2,11 @@ package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.client.model.CatTailModel;
 import fuzs.betteranimationscollection.client.model.OcelotTailModel;
+import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
 import net.minecraft.client.model.CatModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.CatCollarLayer;
@@ -15,9 +15,6 @@ import net.minecraft.client.renderer.entity.state.CatRenderState;
 import net.minecraft.world.entity.animal.Cat;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 public class CatTailElement extends SingletonModelElement<Cat, CatRenderState, CatModel> {
     public static int tailLength;
@@ -63,13 +60,14 @@ public class CatTailElement extends SingletonModelElement<Cat, CatRenderState, C
     }
 
     @Override
-    public void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context) {
-        context.accept(this.animatedCat, () -> OcelotTailModel.createAnimatedBodyMesh(CubeDeformation.NONE));
-        context.accept(this.animatedCatCollar,
+    public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
+        context.registerLayerDefinition(this.animatedCat,
+                () -> OcelotTailModel.createAnimatedBodyMesh(CubeDeformation.NONE));
+        context.registerLayerDefinition(this.animatedCatCollar,
                 () -> OcelotTailModel.createAnimatedBodyMesh(new CubeDeformation(0.01F)));
-        context.accept(this.animatedCatBaby,
+        context.registerLayerDefinition(this.animatedCatBaby,
                 () -> OcelotTailModel.createAnimatedBodyMesh(CubeDeformation.NONE).apply(CatModel.BABY_TRANSFORMER));
-        context.accept(this.animatedCatBabyCollar,
+        context.registerLayerDefinition(this.animatedCatBabyCollar,
                 () -> OcelotTailModel.createAnimatedBodyMesh(new CubeDeformation(0.01F))
                         .apply(CatModel.BABY_TRANSFORMER));
     }

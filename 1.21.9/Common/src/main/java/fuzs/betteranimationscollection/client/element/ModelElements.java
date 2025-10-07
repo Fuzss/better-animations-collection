@@ -68,9 +68,9 @@ public final class ModelElements {
     public static void applyAnimatedModels(ResourceManager resourceManager) {
         Minecraft minecraft = Minecraft.getInstance();
         for (Map.Entry<EntityType<?>, EntityRenderer<?, ?>> entityRendererEntry : minecraft.getEntityRenderDispatcher().renderers.entrySet()) {
-            if (!BetterAnimationsCollection.CONFIG.get(ClientConfig.class).mobBlacklist.contains(entityRendererEntry.getKey()) &&
-                    entityRendererEntry.getValue() instanceof LivingEntityRenderer<?, ?, ?> entityRenderer &&
-                    entityRenderer.getModel() != null) {
+            if (!BetterAnimationsCollection.CONFIG.get(ClientConfig.class).mobBlacklist.contains(entityRendererEntry.getKey())
+                    && entityRendererEntry.getValue() instanceof LivingEntityRenderer<?, ?, ?> entityRenderer
+                    && entityRenderer.getModel() != null) {
                 EntityRendererProvider.Context context = new EntityRendererProvider.Context(minecraft.getEntityRenderDispatcher(),
                         minecraft.getItemModelResolver(),
                         minecraft.getMapRenderer(),
@@ -78,7 +78,9 @@ public final class ModelElements {
                         resourceManager,
                         minecraft.getEntityModels(),
                         minecraft.getEntityRenderDispatcher().equipmentAssets,
-                        minecraft.font);
+                        minecraft.getAtlasManager(),
+                        minecraft.font,
+                        minecraft.playerSkinRenderCache());
                 for (Map.Entry<ResourceLocation, ModelElement> modelElementEntry : MODEL_ELEMENTS.entrySet()) {
                     try {
                         modelElementEntry.getValue().onApplyModelAnimations(entityRenderer, context);

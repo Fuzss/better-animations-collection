@@ -1,43 +1,49 @@
 package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.BetterAnimationsCollection;
+import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import fuzs.puzzleslib.api.client.init.v1.ModelLayerFactory;
-import fuzs.puzzleslib.api.client.renderer.v1.RenderPropertyKey;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.AgeableMobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.Entity;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public abstract class ModelElement implements ModelLayerFactory {
     private boolean isEnabled = true;
-    private boolean markedChanged = true;
+    private boolean markedChanged;
 
-    protected static <T> RenderPropertyKey<T> key(String path) {
-        return new RenderPropertyKey<>(BetterAnimationsCollection.id(path));
+    protected static <T> ContextKey<T> key(String path) {
+        return new ContextKey<>(BetterAnimationsCollection.id(path));
     }
 
     public void setEnabled(boolean isEnabled) {
         if (isEnabled != this.isEnabled) {
             this.isEnabled = isEnabled;
-            this.markedChanged = true;
+            this.markChanged();
         }
     }
 
+    protected void markChanged() {
+        this.markedChanged = true;
+    }
+
     public boolean markedChanged() {
-        return this.markedChanged;
+        if (this.markedChanged) {
+            this.markedChanged = false;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public abstract String[] getDescriptionComponent();
@@ -67,7 +73,7 @@ public abstract class ModelElement implements ModelLayerFactory {
         ageableRenderer.babyModel = childModel;
     }
 
-    public abstract void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context);
+    public abstract void onRegisterLayerDefinitions(LayerDefinitionsContext context);
 
     public void onExtractRenderState(Entity entity, EntityRenderState renderState, float partialTick) {
         // NO-OP

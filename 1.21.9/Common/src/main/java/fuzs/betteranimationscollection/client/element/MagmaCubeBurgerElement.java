@@ -1,16 +1,13 @@
 package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.client.model.MagmaCubeBurgerModel;
+import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import net.minecraft.client.model.LavaSlimeModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.SlimeRenderState;
 import net.minecraft.world.entity.monster.MagmaCube;
-
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 public class MagmaCubeBurgerElement extends SingletonModelElement<MagmaCube, SlimeRenderState, LavaSlimeModel> {
     private final ModelLayerLocation animatedMagmaCube;
@@ -34,7 +31,7 @@ public class MagmaCubeBurgerElement extends SingletonModelElement<MagmaCube, Sli
     }
 
     @Override
-    public void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context) {
-        context.accept(this.animatedMagmaCube, LavaSlimeModel::createBodyLayer);
+    public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
+        context.registerLayerDefinition(this.animatedMagmaCube, LavaSlimeModel::createBodyLayer);
     }
 }

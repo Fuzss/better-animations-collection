@@ -1,26 +1,24 @@
 package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.client.model.JigglySlimeModel;
-import fuzs.puzzleslib.api.client.renderer.v1.RenderPropertyKey;
+import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
+import fuzs.puzzleslib.api.client.renderer.v1.RenderStateExtraData;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
 import net.minecraft.client.model.SlimeModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.layers.SlimeOuterLayer;
 import net.minecraft.client.renderer.entity.state.SlimeRenderState;
+import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.monster.Slime;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
-
 public class JigglySlimeElement extends SingletonModelElement<Slime, SlimeRenderState, SlimeModel> {
-    public static final RenderPropertyKey<Float> WALK_ANIMATION_POS_PROPERTY = key("walk_animation_pos");
-    public static final RenderPropertyKey<Float> TARGET_SQUISH_PROPERTY = key("target_squish");
+    public static final ContextKey<Float> WALK_ANIMATION_POS_PROPERTY = key("walk_animation_pos");
+    public static final ContextKey<Float> TARGET_SQUISH_PROPERTY = key("target_squish");
 
     public static int animationSpeed;
 
@@ -57,20 +55,23 @@ public class JigglySlimeElement extends SingletonModelElement<Slime, SlimeRender
     }
 
     @Override
-    public void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context) {
-        context.accept(this.animatedSlime, SlimeModel::createInnerBodyLayer);
-        context.accept(this.animatedSlimeOuter, SlimeModel::createOuterBodyLayer);
+    public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
+        context.registerLayerDefinition(this.animatedSlime, SlimeModel::createInnerBodyLayer);
+        context.registerLayerDefinition(this.animatedSlimeOuter, SlimeModel::createOuterBodyLayer);
     }
 
     @Override
     protected void extractRenderState(Slime entity, SlimeRenderState renderState, float partialTick) {
         super.extractRenderState(entity, renderState, partialTick);
         if (!entity.isPassenger() && entity.isAlive()) {
-            RenderPropertyKey.set(renderState, WALK_ANIMATION_POS_PROPERTY, entity.walkAnimation.position(partialTick));
+            RenderStateExtraData.set(renderState,
+                    WALK_ANIMATION_POS_PROPERTY,
+                    entity.walkAnimation.position(partialTick));
         } else {
-            RenderPropertyKey.set(renderState, WALK_ANIMATION_POS_PROPERTY, 0.0F);
+            RenderStateExtraData.set(renderState, WALK_ANIMATION_POS_PROPERTY, 0.0F);
         }
-        RenderPropertyKey.set(renderState, TARGET_SQUISH_PROPERTY, entity.targetSquish);
+
+        RenderStateExtraData.set(renderState, TARGET_SQUISH_PROPERTY, entity.targetSquish);
     }
 
     @Override

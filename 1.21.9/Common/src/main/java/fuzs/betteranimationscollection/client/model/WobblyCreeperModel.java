@@ -1,7 +1,7 @@
 package fuzs.betteranimationscollection.client.model;
 
 import fuzs.betteranimationscollection.client.element.WobblyCreeperElement;
-import fuzs.puzzleslib.api.client.renderer.v1.RenderPropertyKey;
+import fuzs.puzzleslib.api.client.renderer.v1.RenderStateExtraData;
 import net.minecraft.client.model.CreeperModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -81,7 +81,7 @@ public class WobblyCreeperModel extends CreeperModel {
         float magnitude = this.resolveMagnitude(renderState.walkAnimationSpeed * 3.5F);
         float cosSwing = magnitude * Mth.cos(renderState.walkAnimationPos * 0.6662F) * (this.chargedModel ? 3 : 1);
         float sinSwing = magnitude * Mth.sin(renderState.walkAnimationPos * 0.6662F) * (this.chargedModel ? 3 : 1);
-        WobblyCreeperElement.WobbleDirection wobbleDirection = RenderPropertyKey.getOrDefault(renderState,
+        WobblyCreeperElement.WobbleDirection wobbleDirection = RenderStateExtraData.getOrDefault(renderState,
                 WobblyCreeperElement.WOBBLE_DIRECTION_PROPERTY,
                 WobblyCreeperElement.WobbleDirection.SIDE);
         for (ModelPart bodyPart : this.bodyParts) {

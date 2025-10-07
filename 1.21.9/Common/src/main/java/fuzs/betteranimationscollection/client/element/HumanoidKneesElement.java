@@ -4,6 +4,7 @@ import fuzs.betteranimationscollection.client.model.DrownedKneesModel;
 import fuzs.betteranimationscollection.client.model.HumanoidKneesModel;
 import fuzs.betteranimationscollection.client.model.PiglinKneesModel;
 import fuzs.betteranimationscollection.client.model.ZombieKneesModel;
+import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import net.minecraft.client.model.DrownedModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PiglinModel;
@@ -12,6 +13,7 @@ import net.minecraft.client.model.geom.LayerDefinitions;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.renderer.entity.ArmorModelSet;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.DrownedOuterLayer;
@@ -21,52 +23,37 @@ import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.client.renderer.entity.state.PiglinRenderState;
 import net.minecraft.client.renderer.entity.state.ZombieRenderState;
 
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
-
 public class HumanoidKneesElement extends ModelElement {
     private final ModelLayerLocation animatedZombie;
-    private final ModelLayerLocation animatedZombieInnerArmor;
-    private final ModelLayerLocation animatedZombieOuterArmor;
+    private final ArmorModelSet<ModelLayerLocation> animatedZombieArmor;
     private final ModelLayerLocation animatedZombieBaby;
-    private final ModelLayerLocation animatedZombieBabyInnerArmor;
-    private final ModelLayerLocation animatedZombieBabyOuterArmor;
+    private final ArmorModelSet<ModelLayerLocation> animatedZombieBabyArmor;
     private final ModelLayerLocation animatedDrowned;
     private final ModelLayerLocation animatedDrownedOuterLayer;
-    private final ModelLayerLocation animatedDrownedInnerArmor;
-    private final ModelLayerLocation animatedDrownedOuterArmor;
+    private final ArmorModelSet<ModelLayerLocation> animatedDrownedArmor;
     private final ModelLayerLocation animatedDrownedBaby;
     private final ModelLayerLocation animatedDrownedBabyOuterLayer;
-    private final ModelLayerLocation animatedDrownedBabyInnerArmor;
-    private final ModelLayerLocation animatedDrownedBabyOuterArmor;
+    private final ArmorModelSet<ModelLayerLocation> animatedDrownedBabyArmor;
     private final ModelLayerLocation animatedPiglin;
-    private final ModelLayerLocation animatedPiglinInnerArmor;
-    private final ModelLayerLocation animatedPiglinOuterArmor;
+    private final ArmorModelSet<ModelLayerLocation> animatedPiglinArmor;
     private final ModelLayerLocation animatedPiglinBaby;
-    private final ModelLayerLocation animatedPiglinBabyInnerArmor;
-    private final ModelLayerLocation animatedPiglinBabyOuterArmor;
+    private final ArmorModelSet<ModelLayerLocation> animatedPiglinBabyArmor;
 
     public HumanoidKneesElement() {
         this.animatedZombie = this.registerModelLayer("animated_zombie");
-        this.animatedZombieInnerArmor = this.registerInnerArmorModelLayer("animated_zombie");
-        this.animatedZombieOuterArmor = this.registerOuterArmorModelLayer("animated_zombie");
+        this.animatedZombieArmor = this.registerArmorSet("animated_zombie");
         this.animatedZombieBaby = this.registerModelLayer("animated_zombie_baby");
-        this.animatedZombieBabyInnerArmor = this.registerInnerArmorModelLayer("animated_zombie_baby");
-        this.animatedZombieBabyOuterArmor = this.registerOuterArmorModelLayer("animated_zombie_baby");
+        this.animatedZombieBabyArmor = this.registerArmorSet("animated_zombie_baby");
         this.animatedDrowned = this.registerModelLayer("animated_drowned");
         this.animatedDrownedOuterLayer = this.registerModelLayer("animated_drowned", "outer");
-        this.animatedDrownedInnerArmor = this.registerInnerArmorModelLayer("animated_drowned");
-        this.animatedDrownedOuterArmor = this.registerOuterArmorModelLayer("animated_drowned");
+        this.animatedDrownedArmor = this.registerArmorSet("animated_drowned");
         this.animatedDrownedBaby = this.registerModelLayer("animated_drowned_baby");
         this.animatedDrownedBabyOuterLayer = this.registerModelLayer("animated_drowned_baby", "outer");
-        this.animatedDrownedBabyInnerArmor = this.registerInnerArmorModelLayer("animated_drowned_baby");
-        this.animatedDrownedBabyOuterArmor = this.registerOuterArmorModelLayer("animated_drowned_baby");
+        this.animatedDrownedBabyArmor = this.registerArmorSet("animated_drowned_baby");
         this.animatedPiglin = this.registerModelLayer("animated_piglin");
-        this.animatedPiglinInnerArmor = this.registerInnerArmorModelLayer("animated_piglin");
-        this.animatedPiglinOuterArmor = this.registerOuterArmorModelLayer("animated_piglin");
+        this.animatedPiglinArmor = this.registerArmorSet("animated_piglin");
         this.animatedPiglinBaby = this.registerModelLayer("animated_piglin_baby");
-        this.animatedPiglinBabyInnerArmor = this.registerInnerArmorModelLayer("animated_piglin_baby");
-        this.animatedPiglinBabyOuterArmor = this.registerOuterArmorModelLayer("animated_piglin_baby");
+        this.animatedPiglinBabyArmor = this.registerArmorSet("animated_piglin_baby");
     }
 
     @Override
@@ -86,12 +73,15 @@ public class HumanoidKneesElement extends ModelElement {
             applyLayerAnimation((LivingEntityRenderer<?, ZombieRenderState, ZombieModel<ZombieRenderState>>) entityRenderer,
                     context,
                     (RenderLayer<ZombieRenderState, ZombieModel<ZombieRenderState>> renderLayer) -> {
-                        if (renderLayer instanceof HumanoidArmorLayer<?, ?, ?>) {
+                        // TODO temporarily disabled using the animated mesh, as the boots don't work
+                        if (false && renderLayer instanceof HumanoidArmorLayer<?, ?, ?>) {
                             return new HumanoidArmorLayer<>((LivingEntityRenderer<?, ZombieRenderState, ZombieModel<ZombieRenderState>>) entityRenderer,
-                                    new ZombieKneesModel(context.bakeLayer(this.animatedZombieInnerArmor)),
-                                    new ZombieKneesModel(context.bakeLayer(this.animatedZombieOuterArmor)),
-                                    new ZombieKneesModel(context.bakeLayer(this.animatedZombieBabyInnerArmor)),
-                                    new ZombieKneesModel(context.bakeLayer(this.animatedZombieBabyOuterArmor)),
+                                    ArmorModelSet.bake(this.animatedZombieArmor,
+                                            context.getModelSet(),
+                                            ZombieKneesModel::new),
+                                    ArmorModelSet.bake(this.animatedZombieBabyArmor,
+                                            context.getModelSet(),
+                                            ZombieKneesModel::new),
                                     context.getEquipmentRenderer());
                         } else {
                             return null;
@@ -105,12 +95,15 @@ public class HumanoidKneesElement extends ModelElement {
             applyLayerAnimation((LivingEntityRenderer<?, ZombieRenderState, DrownedModel>) entityRenderer,
                     context,
                     (RenderLayer<ZombieRenderState, DrownedModel> renderLayer) -> {
-                        if (renderLayer instanceof HumanoidArmorLayer<?, ?, ?>) {
+                        // TODO temporarily disabled using the animated mesh, as the boots don't work
+                        if (false && renderLayer instanceof HumanoidArmorLayer<?, ?, ?>) {
                             return new HumanoidArmorLayer<>((LivingEntityRenderer<?, ZombieRenderState, DrownedModel>) entityRenderer,
-                                    new DrownedKneesModel(context.bakeLayer(this.animatedDrownedInnerArmor)),
-                                    new DrownedKneesModel(context.bakeLayer(this.animatedDrownedOuterArmor)),
-                                    new DrownedKneesModel(context.bakeLayer(this.animatedDrownedBabyInnerArmor)),
-                                    new DrownedKneesModel(context.bakeLayer(this.animatedDrownedBabyOuterArmor)),
+                                    ArmorModelSet.bake(this.animatedDrownedArmor,
+                                            context.getModelSet(),
+                                            DrownedKneesModel::new),
+                                    ArmorModelSet.bake(this.animatedDrownedBabyArmor,
+                                            context.getModelSet(),
+                                            DrownedKneesModel::new),
                                     context.getEquipmentRenderer());
                         } else {
                             return null;
@@ -135,12 +128,15 @@ public class HumanoidKneesElement extends ModelElement {
             applyLayerAnimation((LivingEntityRenderer<?, HumanoidRenderState, HumanoidModel<HumanoidRenderState>>) entityRenderer,
                     context,
                     (RenderLayer<HumanoidRenderState, HumanoidModel<HumanoidRenderState>> renderLayer) -> {
-                        if (renderLayer instanceof HumanoidArmorLayer<?, ?, ?>) {
+                        // TODO temporarily disabled using the animated mesh, as the boots don't work
+                        if (false && renderLayer instanceof HumanoidArmorLayer<?, ?, ?>) {
                             return new HumanoidArmorLayer<>((LivingEntityRenderer<?, HumanoidRenderState, HumanoidModel<HumanoidRenderState>>) entityRenderer,
-                                    new HumanoidKneesModel(context.bakeLayer(this.animatedPiglinInnerArmor)),
-                                    new HumanoidKneesModel(context.bakeLayer(this.animatedPiglinOuterArmor)),
-                                    new HumanoidKneesModel(context.bakeLayer(this.animatedPiglinBabyInnerArmor)),
-                                    new HumanoidKneesModel(context.bakeLayer(this.animatedPiglinBabyOuterArmor)),
+                                    ArmorModelSet.bake(this.animatedPiglinArmor,
+                                            context.getModelSet(),
+                                            HumanoidKneesModel::new),
+                                    ArmorModelSet.bake(this.animatedPiglinBabyArmor,
+                                            context.getModelSet(),
+                                            HumanoidKneesModel::new),
                                     context.getEquipmentRenderer());
                         } else {
                             return null;
@@ -150,77 +146,45 @@ public class HumanoidKneesElement extends ModelElement {
     }
 
     @Override
-    public void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context) {
-        context.accept(this.animatedZombie,
-                () -> LayerDefinition.create(HumanoidKneesModel.createAnimatedMesh(CubeDeformation.NONE, 0.0F),
-                        64,
-                        64));
-        context.accept(this.animatedZombieInnerArmor,
-                () -> LayerDefinition.create(HumanoidKneesModel.createAnimatedMesh(LayerDefinitions.INNER_ARMOR_DEFORMATION, 0.0F),
-                        64,
-                        32));
-        context.accept(this.animatedZombieOuterArmor,
-                () -> LayerDefinition.create(HumanoidKneesModel.createAnimatedMesh(LayerDefinitions.OUTER_ARMOR_DEFORMATION, 0.0F),
-                        64,
-                        32));
-        context.accept(this.animatedZombieBaby,
-                () -> LayerDefinition.create(HumanoidKneesModel.createAnimatedMesh(CubeDeformation.NONE, 0.0F), 64, 64)
+    public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
+        context.registerLayerDefinition(this.animatedZombie,
+                () -> LayerDefinition.create(HumanoidKneesModel.createAnimatedMesh(CubeDeformation.NONE), 64, 64));
+        context.registerArmorDefinition(this.animatedZombieArmor,
+                HumanoidKneesModel.createArmorLayerSet(LayerDefinitions.INNER_ARMOR_DEFORMATION,
+                        LayerDefinitions.OUTER_ARMOR_DEFORMATION));
+        context.registerLayerDefinition(this.animatedZombieBaby,
+                () -> LayerDefinition.create(HumanoidKneesModel.createAnimatedMesh(CubeDeformation.NONE), 64, 64)
                         .apply(HumanoidModel.BABY_TRANSFORMER));
-        context.accept(this.animatedZombieBabyInnerArmor,
-                () -> LayerDefinition.create(HumanoidKneesModel.createAnimatedMesh(LayerDefinitions.INNER_ARMOR_DEFORMATION, 0.0F),
-                        64,
-                        32).apply(HumanoidModel.BABY_TRANSFORMER));
-        context.accept(this.animatedZombieBabyOuterArmor,
-                () -> LayerDefinition.create(HumanoidKneesModel.createAnimatedMesh(LayerDefinitions.OUTER_ARMOR_DEFORMATION, 0.0F),
-                        64,
-                        32).apply(HumanoidModel.BABY_TRANSFORMER));
-        context.accept(this.animatedDrowned,
-                () -> LayerDefinition.create(DrownedKneesModel.createAnimatedMesh(CubeDeformation.NONE, 0.0F), 64, 64));
-        context.accept(this.animatedDrownedOuterLayer,
-                () -> LayerDefinition.create(DrownedKneesModel.createAnimatedMesh(new CubeDeformation(0.25F), 0.0F),
-                        64,
-                        64));
-        context.accept(this.animatedDrownedInnerArmor,
-                () -> LayerDefinition.create(HumanoidKneesModel.createAnimatedMesh(LayerDefinitions.INNER_ARMOR_DEFORMATION, 0.0F),
-                        64,
-                        32));
-        context.accept(this.animatedDrownedOuterArmor,
-                () -> LayerDefinition.create(HumanoidKneesModel.createAnimatedMesh(LayerDefinitions.OUTER_ARMOR_DEFORMATION, 0.0F),
-                        64,
-                        32));
-        context.accept(this.animatedDrownedBaby,
-                () -> LayerDefinition.create(DrownedKneesModel.createAnimatedMesh(CubeDeformation.NONE, 0.0F), 64, 64)
+        context.registerArmorDefinition(this.animatedZombieBabyArmor,
+                HumanoidKneesModel.createArmorLayerSet(LayerDefinitions.INNER_ARMOR_DEFORMATION,
+                                LayerDefinitions.OUTER_ARMOR_DEFORMATION)
+                        .map((LayerDefinition layerDefinition) -> layerDefinition.apply(HumanoidModel.BABY_TRANSFORMER)));
+        context.registerLayerDefinition(this.animatedDrowned,
+                () -> LayerDefinition.create(DrownedKneesModel.createAnimatedMesh(CubeDeformation.NONE), 64, 64));
+        context.registerLayerDefinition(this.animatedDrownedOuterLayer,
+                () -> LayerDefinition.create(DrownedKneesModel.createAnimatedMesh(new CubeDeformation(0.25F)), 64, 64));
+        context.registerArmorDefinition(this.animatedDrownedArmor,
+                HumanoidKneesModel.createArmorLayerSet(LayerDefinitions.INNER_ARMOR_DEFORMATION,
+                        LayerDefinitions.OUTER_ARMOR_DEFORMATION));
+        context.registerLayerDefinition(this.animatedDrownedBaby,
+                () -> LayerDefinition.create(DrownedKneesModel.createAnimatedMesh(CubeDeformation.NONE), 64, 64)
                         .apply(HumanoidModel.BABY_TRANSFORMER));
-        context.accept(this.animatedDrownedBabyOuterLayer,
-                () -> LayerDefinition.create(DrownedKneesModel.createAnimatedMesh(new CubeDeformation(0.25F), 0.0F),
-                        64,
-                        64).apply(HumanoidModel.BABY_TRANSFORMER));
-        context.accept(this.animatedDrownedBabyInnerArmor,
-                () -> LayerDefinition.create(HumanoidKneesModel.createAnimatedMesh(LayerDefinitions.INNER_ARMOR_DEFORMATION, 0.0F),
-                        64,
-                        32).apply(HumanoidModel.BABY_TRANSFORMER));
-        context.accept(this.animatedDrownedBabyOuterArmor,
-                () -> LayerDefinition.create(HumanoidKneesModel.createAnimatedMesh(LayerDefinitions.OUTER_ARMOR_DEFORMATION, 0.0F),
-                        64,
-                        32).apply(HumanoidModel.BABY_TRANSFORMER));
-        context.accept(this.animatedPiglin, PiglinKneesModel::createAnimatedBodyLayer);
-        context.accept(this.animatedPiglinInnerArmor,
-                () -> LayerDefinition.create(HumanoidKneesModel.createAnimatedMesh(LayerDefinitions.INNER_ARMOR_DEFORMATION, 0.0F),
-                        64,
-                        32));
-        context.accept(this.animatedPiglinOuterArmor,
-                () -> LayerDefinition.create(HumanoidKneesModel.createAnimatedMesh(new CubeDeformation(1.02F), 0.0F),
-                        64,
-                        32));
-        context.accept(this.animatedPiglinBaby,
+        context.registerLayerDefinition(this.animatedDrownedBabyOuterLayer,
+                () -> LayerDefinition.create(DrownedKneesModel.createAnimatedMesh(new CubeDeformation(0.25F)), 64, 64)
+                        .apply(HumanoidModel.BABY_TRANSFORMER));
+        context.registerArmorDefinition(this.animatedDrownedBabyArmor,
+                HumanoidKneesModel.createArmorLayerSet(LayerDefinitions.INNER_ARMOR_DEFORMATION,
+                                LayerDefinitions.OUTER_ARMOR_DEFORMATION)
+                        .map((LayerDefinition layerDefinition) -> layerDefinition.apply(HumanoidModel.BABY_TRANSFORMER)));
+        context.registerLayerDefinition(this.animatedPiglin, PiglinKneesModel::createAnimatedBodyLayer);
+        context.registerArmorDefinition(this.animatedPiglinArmor,
+                HumanoidKneesModel.createArmorLayerSet(LayerDefinitions.INNER_ARMOR_DEFORMATION,
+                        new CubeDeformation(1.02F)));
+        context.registerLayerDefinition(this.animatedPiglinBaby,
                 () -> PiglinKneesModel.createAnimatedBodyLayer().apply(HumanoidModel.BABY_TRANSFORMER));
-        context.accept(this.animatedPiglinBabyInnerArmor,
-                () -> LayerDefinition.create(HumanoidKneesModel.createAnimatedMesh(LayerDefinitions.INNER_ARMOR_DEFORMATION, 0.0F),
-                        64,
-                        32).apply(HumanoidModel.BABY_TRANSFORMER));
-        context.accept(this.animatedPiglinBabyOuterArmor,
-                () -> LayerDefinition.create(HumanoidKneesModel.createAnimatedMesh(new CubeDeformation(1.02F), 0.0F),
-                        64,
-                        32).apply(HumanoidModel.BABY_TRANSFORMER));
+        context.registerArmorDefinition(this.animatedPiglinBabyArmor,
+                HumanoidKneesModel.createArmorLayerSet(LayerDefinitions.INNER_ARMOR_DEFORMATION,
+                                new CubeDeformation(1.02F))
+                        .map((LayerDefinition layerDefinition) -> layerDefinition.apply(HumanoidModel.BABY_TRANSFORMER)));
     }
 }

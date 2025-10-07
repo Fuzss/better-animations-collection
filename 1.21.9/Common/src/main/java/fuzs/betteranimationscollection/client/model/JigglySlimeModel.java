@@ -1,7 +1,7 @@
 package fuzs.betteranimationscollection.client.model;
 
 import fuzs.betteranimationscollection.client.element.JigglySlimeElement;
-import fuzs.puzzleslib.api.client.renderer.v1.RenderPropertyKey;
+import fuzs.puzzleslib.api.client.renderer.v1.RenderStateExtraData;
 import net.minecraft.client.model.SlimeModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
@@ -32,17 +32,18 @@ public class JigglySlimeModel extends SlimeModel {
     @Override
     public void setupAnim(EntityRenderState renderState) {
         super.setupAnim(renderState);
-        float walkAnimationPos = RenderPropertyKey.getOrDefault(renderState,
+        float walkAnimationPos = RenderStateExtraData.getOrDefault(renderState,
                 JigglySlimeElement.WALK_ANIMATION_POS_PROPERTY,
                 0.0F);
         float progress = walkAnimationPos + renderState.ageInTicks * JigglySlimeElement.animationSpeed / 15.0F;
         float magnitude = JigglySlimeElement.animationSpeed / 20.0F;
-        float targetSquish = RenderPropertyKey.getOrDefault(renderState,
+        float targetSquish = RenderStateExtraData.getOrDefault(renderState,
                 JigglySlimeElement.TARGET_SQUISH_PROPERTY,
                 0.0F);
         if (targetSquish < 0.0F) {
             magnitude += -targetSquish * 0.5F;
         }
+
         if (this.isSlimeGelLayer) {
             this.cube.x += Mth.sin(progress * 0.3F) * magnitude * 0.5F;
             this.cube.y += Mth.sin(progress * 0.33F) * magnitude * 0.5F;

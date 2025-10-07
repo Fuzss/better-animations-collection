@@ -2,7 +2,7 @@ package fuzs.betteranimationscollection.client.element;
 
 import com.google.common.base.Predicates;
 import fuzs.betteranimationscollection.client.handler.RemoteSoundHandler;
-import fuzs.puzzleslib.api.client.renderer.v1.RenderPropertyKey;
+import fuzs.puzzleslib.api.client.renderer.v1.RenderStateExtraData;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
 import fuzs.puzzleslib.api.config.v3.serialization.ConfigDataSet;
 import fuzs.puzzleslib.api.config.v3.serialization.KeyedValueProvider;
@@ -10,6 +10,7 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.Mob;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
@@ -17,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class SoundBasedElement<T extends Mob, S extends LivingEntityRenderState, M extends EntityModel<? super S>> extends SingletonModelElement<T, S, M> {
-    public static final RenderPropertyKey<Float> AMBIENT_SOUND_TIME_PROPERTY = key("ambient_sound_time");
+    public static final ContextKey<Float> AMBIENT_SOUND_TIME_PROPERTY = key("ambient_sound_time");
 
     private final SoundEvent[] sounds;
 
@@ -32,7 +33,7 @@ public abstract class SoundBasedElement<T extends Mob, S extends LivingEntityRen
     protected void extractRenderState(T entity, S renderState, float partialTick) {
         super.extractRenderState(entity, renderState, partialTick);
         // this only works because MobEntity#ambientSoundTime is manually being synced to the client
-        RenderPropertyKey.set(renderState,
+        RenderStateExtraData.set(renderState,
                 AMBIENT_SOUND_TIME_PROPERTY,
                 entity.ambientSoundTime + entity.getAmbientSoundInterval() + partialTick);
     }

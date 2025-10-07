@@ -2,9 +2,9 @@ package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.client.model.KneelingSheepFurModel;
 import fuzs.betteranimationscollection.client.model.KneelingSheepModel;
+import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import net.minecraft.client.model.SheepModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
@@ -12,9 +12,6 @@ import net.minecraft.client.renderer.entity.layers.SheepWoolLayer;
 import net.minecraft.client.renderer.entity.state.SheepRenderState;
 import net.minecraft.world.entity.animal.sheep.Sheep;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 public class KneelingSheepElement extends SingletonModelElement<Sheep, SheepRenderState, SheepModel> {
     private final ModelLayerLocation animatedSheep;
@@ -58,12 +55,12 @@ public class KneelingSheepElement extends SingletonModelElement<Sheep, SheepRend
     }
 
     @Override
-    public void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context) {
-        context.accept(this.animatedSheep, KneelingSheepModel::createAnimatedBodyLayer);
-        context.accept(this.animatedSheepFur, KneelingSheepFurModel::createAnimatedFurLayer);
-        context.accept(this.animatedSheepBaby,
+    public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
+        context.registerLayerDefinition(this.animatedSheep, KneelingSheepModel::createAnimatedBodyLayer);
+        context.registerLayerDefinition(this.animatedSheepFur, KneelingSheepFurModel::createAnimatedFurLayer);
+        context.registerLayerDefinition(this.animatedSheepBaby,
                 () -> KneelingSheepModel.createAnimatedBodyLayer().apply(SheepModel.BABY_TRANSFORMER));
-        context.accept(this.animatedSheepBabyFur,
+        context.registerLayerDefinition(this.animatedSheepBabyFur,
                 () -> KneelingSheepFurModel.createAnimatedFurLayer().apply(SheepModel.BABY_TRANSFORMER));
     }
 }

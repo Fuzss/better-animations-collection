@@ -40,7 +40,7 @@ public class BetterAnimationsCollectionClient implements ClientModConstructor {
 
     @Override
     public void onClientSetup() {
-        // add this listener later, so it doesn't interfere with initial config loading
+        // add this listener later, so it doesn't interfere with the initial config loading
         BetterAnimationsCollection.CONFIG.getHolder(ClientConfig.class)
                 .addCallback(() -> ModelElements.buildAnimatedModels(true));
     }
@@ -48,7 +48,7 @@ public class BetterAnimationsCollectionClient implements ClientModConstructor {
     @Override
     public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
         ModelElements.forEach((ModelElement modelElement) -> {
-            modelElement.onRegisterLayerDefinitions(context::registerLayerDefinition);
+            modelElement.onRegisterLayerDefinitions(context);
         });
     }
 }

@@ -2,6 +2,7 @@ package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.client.handler.RemoteSoundHandler;
 import fuzs.betteranimationscollection.client.model.VillagerNoseModel;
+import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -12,9 +13,6 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.VillagerRenderState;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.npc.AbstractVillager;
-
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 public class VillagerNoseElement extends SoundBasedElement<AbstractVillager, VillagerRenderState, VillagerModel> {
     private final ModelLayerLocation animatedGenericVillager;
@@ -55,12 +53,13 @@ public class VillagerNoseElement extends SoundBasedElement<AbstractVillager, Vil
     }
 
     @Override
-    public void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context) {
-        context.accept(this.animatedGenericVillager,
+    public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
+        context.registerLayerDefinition(this.animatedGenericVillager,
                 () -> LayerDefinition.create(VillagerModel.createBodyModel(), 64, 64));
-        context.accept(this.animatedVillager, () -> LayerDefinition.create(VillagerModel.createBodyModel(), 64, 64));
+        context.registerLayerDefinition(this.animatedVillager,
+                () -> LayerDefinition.create(VillagerModel.createBodyModel(), 64, 64));
         // large baby villager head like Bedrock Edition
-        context.accept(this.animatedVillagerBaby,
+        context.registerLayerDefinition(this.animatedVillagerBaby,
                 () -> LayerDefinition.create(VillagerModel.createBodyModel(), 64, 64)
                         .apply(HumanoidModel.BABY_TRANSFORMER));
     }

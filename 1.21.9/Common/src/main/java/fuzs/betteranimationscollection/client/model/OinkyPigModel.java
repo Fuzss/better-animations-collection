@@ -2,7 +2,7 @@ package fuzs.betteranimationscollection.client.model;
 
 import fuzs.betteranimationscollection.client.element.OinkyPigElement;
 import fuzs.betteranimationscollection.client.element.SoundBasedElement;
-import fuzs.puzzleslib.api.client.renderer.v1.RenderPropertyKey;
+import fuzs.puzzleslib.api.client.renderer.v1.RenderStateExtraData;
 import net.minecraft.client.model.ColdPigModel;
 import net.minecraft.client.model.PigModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -55,7 +55,7 @@ public class OinkyPigModel extends PigModel {
     @Override
     public void setupAnim(LivingEntityRenderState renderState) {
         super.setupAnim(renderState);
-        float soundTime = RenderPropertyKey.getOrDefault(renderState,
+        float soundTime = RenderStateExtraData.getOrDefault(renderState,
                 SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY,
                 0.0F);
         if (0.0F < soundTime && soundTime < 8.0F) {

@@ -2,11 +2,11 @@ package fuzs.betteranimationscollection.client.element;
 
 import com.google.common.collect.Maps;
 import fuzs.betteranimationscollection.client.model.CowUdderModel;
+import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
 import net.minecraft.client.model.AdultAndBabyModelPair;
 import net.minecraft.client.model.CowModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.AgeableMobRenderer;
 import net.minecraft.client.renderer.entity.CowRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -17,8 +17,6 @@ import net.minecraft.world.entity.animal.CowVariant;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 public class CowUdderElement extends SingletonModelElement<Cow, CowRenderState, CowModel> {
     public static int animationSpeed;
@@ -73,15 +71,15 @@ public class CowUdderElement extends SingletonModelElement<Cow, CowRenderState, 
     }
 
     @Override
-    public void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context) {
-        context.accept(this.animatedCow, CowUdderModel::createAnimatedBodyLayer);
-        context.accept(this.animatedColdCow, CowUdderModel::createAnimatedColdBodyLayer);
-        context.accept(this.animatedWarmCow, CowUdderModel::createAnimatedWarmBodyLayer);
-        context.accept(this.animatedCowBaby,
+    public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
+        context.registerLayerDefinition(this.animatedCow, CowUdderModel::createAnimatedBodyLayer);
+        context.registerLayerDefinition(this.animatedColdCow, CowUdderModel::createAnimatedColdBodyLayer);
+        context.registerLayerDefinition(this.animatedWarmCow, CowUdderModel::createAnimatedWarmBodyLayer);
+        context.registerLayerDefinition(this.animatedCowBaby,
                 () -> CowUdderModel.createAnimatedBodyLayer().apply(CowUdderModel.BABY_TRANSFORMER));
-        context.accept(this.animatedColdCowBaby,
+        context.registerLayerDefinition(this.animatedColdCowBaby,
                 () -> CowUdderModel.createAnimatedColdBodyLayer().apply(CowUdderModel.BABY_TRANSFORMER));
-        context.accept(this.animatedWarmCowBaby,
+        context.registerLayerDefinition(this.animatedWarmCowBaby,
                 () -> CowUdderModel.createAnimatedWarmBodyLayer().apply(CowUdderModel.BABY_TRANSFORMER));
     }
 

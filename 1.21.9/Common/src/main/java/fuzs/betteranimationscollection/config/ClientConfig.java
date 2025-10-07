@@ -16,18 +16,14 @@ import java.util.List;
 import java.util.Map;
 
 public class ClientConfig implements ConfigCore {
-    @Config(
-            category = "general", name = "mobs_without_animations", description = {
+    @Config(category = "general", name = "mobs_without_animations", description = {
             "Mob variants that shouldn't have any model changes applied to them.", ConfigDataSet.CONFIG_DESCRIPTION
-    }
-    )
-    List<String> mobBlacklistRaw = KeyedValueProvider.toString(Registries.ENTITY_TYPE);
-    @Config(
-            category = "general", description = {
+    })
+    List<String> mobBlacklistRaw = KeyedValueProvider.asString(Registries.ENTITY_TYPE);
+    @Config(category = "general", description = {
             "Block range for sound detection system to look for a mob that made a certain sound on the server, so the client may play an animation.",
             "The client is not sent an exact position, so the mob's location must be estimated."
-    }
-    )
+    })
     @Config.DoubleRange(min = 0.5, max = 8.0)
     public double soundDetectionRange = 1.5;
 

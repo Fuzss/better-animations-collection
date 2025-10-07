@@ -3,12 +3,12 @@ package fuzs.betteranimationscollection.client.element;
 import fuzs.betteranimationscollection.client.model.FamiliarDonkeyModel;
 import fuzs.betteranimationscollection.client.model.FamiliarEquineSaddleModel;
 import fuzs.betteranimationscollection.client.model.FamiliarHorseModel;
+import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import net.minecraft.client.model.DonkeyModel;
 import net.minecraft.client.model.EquineSaddleModel;
 import net.minecraft.client.model.HorseModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.DonkeyRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HorseRenderer;
@@ -18,9 +18,6 @@ import net.minecraft.client.renderer.entity.layers.SimpleEquipmentLayer;
 import net.minecraft.client.renderer.entity.state.DonkeyRenderState;
 import net.minecraft.client.renderer.entity.state.HorseRenderState;
 import net.minecraft.client.resources.model.EquipmentClientInfo;
-
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 public class FamiliarHorseElement extends ModelElement {
     private final ModelLayerLocation animatedHorse;
@@ -73,16 +70,16 @@ public class FamiliarHorseElement extends ModelElement {
             applyLayerAnimation((LivingEntityRenderer<?, HorseRenderState, HorseModel>) entityRenderer,
                     context,
                     (RenderLayer<HorseRenderState, HorseModel> renderLayer) -> {
-                        if (renderLayer instanceof SimpleEquipmentLayer<HorseRenderState, HorseModel, ?> equipmentLayer &&
-                                equipmentLayer.layer == EquipmentClientInfo.LayerType.HORSE_BODY) {
+                        if (renderLayer instanceof SimpleEquipmentLayer<HorseRenderState, HorseModel, ?> equipmentLayer
+                                && equipmentLayer.layer == EquipmentClientInfo.LayerType.HORSE_BODY) {
                             ((SimpleEquipmentLayer<HorseRenderState, HorseModel, HorseModel>) renderLayer).adultModel = new FamiliarHorseModel(
                                     context.bakeLayer(this.animatedHorseArmor));
                             ((SimpleEquipmentLayer<HorseRenderState, HorseModel, HorseModel>) renderLayer).babyModel = new FamiliarHorseModel(
                                     context.bakeLayer(this.animatedHorseBabyArmor));
                             return equipmentLayer;
                         } else if (
-                                renderLayer instanceof SimpleEquipmentLayer<HorseRenderState, HorseModel, ?> equipmentLayer &&
-                                        equipmentLayer.layer == EquipmentClientInfo.LayerType.HORSE_SADDLE) {
+                                renderLayer instanceof SimpleEquipmentLayer<HorseRenderState, HorseModel, ?> equipmentLayer
+                                        && equipmentLayer.layer == EquipmentClientInfo.LayerType.HORSE_SADDLE) {
                             ((SimpleEquipmentLayer<HorseRenderState, HorseModel, EquineSaddleModel>) renderLayer).adultModel = new FamiliarEquineSaddleModel(
                                     context.bakeLayer(this.animatedHorseSaddle));
                             ((SimpleEquipmentLayer<HorseRenderState, HorseModel, EquineSaddleModel>) renderLayer).babyModel = new FamiliarEquineSaddleModel(
@@ -92,8 +89,8 @@ public class FamiliarHorseElement extends ModelElement {
                             return null;
                         }
                     });
-        } else if (entityRenderer.getModel().getClass() == DonkeyModel.class &&
-                entityRenderer instanceof DonkeyRenderer<?> donkeyRenderer) {
+        } else if (entityRenderer.getModel().getClass() == DonkeyModel.class
+                && entityRenderer instanceof DonkeyRenderer<?> donkeyRenderer) {
             if (donkeyRenderer.texture == DonkeyRenderer.Type.MULE.texture) {
                 setAnimatedAgeableModel((LivingEntityRenderer<?, DonkeyRenderState, DonkeyModel>) entityRenderer,
                         new FamiliarDonkeyModel(context.bakeLayer(this.animatedMule)),
@@ -101,8 +98,8 @@ public class FamiliarHorseElement extends ModelElement {
                 applyLayerAnimation((LivingEntityRenderer<?, DonkeyRenderState, DonkeyModel>) entityRenderer,
                         context,
                         (RenderLayer<DonkeyRenderState, DonkeyModel> renderLayer) -> {
-                            if (renderLayer instanceof SimpleEquipmentLayer<DonkeyRenderState, DonkeyModel, ?> equipmentLayer &&
-                                    equipmentLayer.layer == EquipmentClientInfo.LayerType.MULE_SADDLE) {
+                            if (renderLayer instanceof SimpleEquipmentLayer<DonkeyRenderState, DonkeyModel, ?> equipmentLayer
+                                    && equipmentLayer.layer == EquipmentClientInfo.LayerType.MULE_SADDLE) {
                                 ((SimpleEquipmentLayer<DonkeyRenderState, DonkeyModel, EquineSaddleModel>) renderLayer).adultModel = new FamiliarEquineSaddleModel(
                                         context.bakeLayer(this.animatedMuleSaddle));
                                 ((SimpleEquipmentLayer<DonkeyRenderState, DonkeyModel, EquineSaddleModel>) renderLayer).babyModel = new FamiliarEquineSaddleModel(
@@ -119,8 +116,8 @@ public class FamiliarHorseElement extends ModelElement {
                 applyLayerAnimation((LivingEntityRenderer<?, DonkeyRenderState, DonkeyModel>) entityRenderer,
                         context,
                         (RenderLayer<DonkeyRenderState, DonkeyModel> renderLayer) -> {
-                            if (renderLayer instanceof SimpleEquipmentLayer<DonkeyRenderState, DonkeyModel, ?> equipmentLayer &&
-                                    equipmentLayer.layer == EquipmentClientInfo.LayerType.DONKEY_SADDLE) {
+                            if (renderLayer instanceof SimpleEquipmentLayer<DonkeyRenderState, DonkeyModel, ?> equipmentLayer
+                                    && equipmentLayer.layer == EquipmentClientInfo.LayerType.DONKEY_SADDLE) {
                                 ((SimpleEquipmentLayer<DonkeyRenderState, DonkeyModel, EquineSaddleModel>) renderLayer).adultModel = new FamiliarEquineSaddleModel(
                                         context.bakeLayer(this.animatedDonkeySaddle));
                                 ((SimpleEquipmentLayer<DonkeyRenderState, DonkeyModel, EquineSaddleModel>) renderLayer).babyModel = new FamiliarEquineSaddleModel(
@@ -135,32 +132,38 @@ public class FamiliarHorseElement extends ModelElement {
     }
 
     @Override
-    public void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context) {
+    public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
         CubeDeformation armorDeformation = new CubeDeformation(0.1F);
         float horseScale = 1.1F;
         float donkeyScale = 0.87F;
         float muleScale = 0.92F;
-        context.accept(this.animatedHorse,
+        context.registerLayerDefinition(this.animatedHorse,
                 () -> FamiliarHorseModel.createAnimatedBodyLayer(CubeDeformation.NONE, horseScale, false));
-        context.accept(this.animatedHorseSaddle, () -> FamiliarHorseModel.createAnimatedSaddleLayer(horseScale, false));
-        context.accept(this.animatedHorseArmor,
+        context.registerLayerDefinition(this.animatedHorseSaddle,
+                () -> FamiliarHorseModel.createAnimatedSaddleLayer(horseScale, false));
+        context.registerLayerDefinition(this.animatedHorseArmor,
                 () -> FamiliarHorseModel.createAnimatedBodyLayer(armorDeformation, horseScale, false));
-        context.accept(this.animatedDonkey, () -> FamiliarDonkeyModel.createAnimatedBodyLayer(donkeyScale, false));
-        context.accept(this.animatedDonkeySaddle,
+        context.registerLayerDefinition(this.animatedDonkey,
+                () -> FamiliarDonkeyModel.createAnimatedBodyLayer(donkeyScale, false));
+        context.registerLayerDefinition(this.animatedDonkeySaddle,
                 () -> FamiliarDonkeyModel.createAnimatedSaddleLayer(donkeyScale, false));
-        context.accept(this.animatedMule, () -> FamiliarDonkeyModel.createAnimatedBodyLayer(muleScale, false));
-        context.accept(this.animatedMuleSaddle, () -> FamiliarDonkeyModel.createAnimatedSaddleLayer(muleScale, false));
-        context.accept(this.animatedHorseBaby,
+        context.registerLayerDefinition(this.animatedMule,
+                () -> FamiliarDonkeyModel.createAnimatedBodyLayer(muleScale, false));
+        context.registerLayerDefinition(this.animatedMuleSaddle,
+                () -> FamiliarDonkeyModel.createAnimatedSaddleLayer(muleScale, false));
+        context.registerLayerDefinition(this.animatedHorseBaby,
                 () -> FamiliarHorseModel.createAnimatedBodyLayer(CubeDeformation.NONE, horseScale, true));
-        context.accept(this.animatedHorseBabySaddle,
+        context.registerLayerDefinition(this.animatedHorseBabySaddle,
                 () -> FamiliarHorseModel.createAnimatedSaddleLayer(horseScale, true));
-        context.accept(this.animatedHorseBabyArmor,
+        context.registerLayerDefinition(this.animatedHorseBabyArmor,
                 () -> FamiliarHorseModel.createAnimatedBodyLayer(armorDeformation, horseScale, true));
-        context.accept(this.animatedDonkeyBaby, () -> FamiliarDonkeyModel.createAnimatedBodyLayer(donkeyScale, true));
-        context.accept(this.animatedDonkeyBabySaddle,
+        context.registerLayerDefinition(this.animatedDonkeyBaby,
+                () -> FamiliarDonkeyModel.createAnimatedBodyLayer(donkeyScale, true));
+        context.registerLayerDefinition(this.animatedDonkeyBabySaddle,
                 () -> FamiliarDonkeyModel.createAnimatedSaddleLayer(donkeyScale, true));
-        context.accept(this.animatedMuleBaby, () -> FamiliarDonkeyModel.createAnimatedBodyLayer(muleScale, true));
-        context.accept(this.animatedMuleBabySaddle,
+        context.registerLayerDefinition(this.animatedMuleBaby,
+                () -> FamiliarDonkeyModel.createAnimatedBodyLayer(muleScale, true));
+        context.registerLayerDefinition(this.animatedMuleBabySaddle,
                 () -> FamiliarDonkeyModel.createAnimatedSaddleLayer(muleScale, true));
     }
 }

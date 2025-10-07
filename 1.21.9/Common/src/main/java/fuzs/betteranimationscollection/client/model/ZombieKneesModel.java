@@ -1,6 +1,5 @@
 package fuzs.betteranimationscollection.client.model;
 
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.ZombieModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.state.ZombieRenderState;
@@ -19,12 +18,6 @@ public class ZombieKneesModel extends ZombieModel<ZombieRenderState> implements 
     public void setupAnim(ZombieRenderState renderState) {
         super.setupAnim(renderState);
         KneesModel.setupAnim(this, renderState);
-    }
-
-    @Override
-    public void copyPropertiesTo(HumanoidModel<ZombieRenderState> model) {
-        super.copyPropertiesTo(model);
-        KneesModel.copyPropertiesTo(this, model);
     }
 
     @Override

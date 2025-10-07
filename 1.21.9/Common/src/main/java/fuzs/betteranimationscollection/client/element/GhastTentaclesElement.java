@@ -1,18 +1,15 @@
 package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.client.model.GhastTentaclesModel;
+import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
 import net.minecraft.client.model.GhastModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.GhastRenderState;
 import net.minecraft.world.entity.monster.Ghast;
 import net.neoforged.neoforge.common.ModConfigSpec;
-
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 public class GhastTentaclesElement extends SingletonModelElement<Ghast, GhastRenderState, GhastModel> {
     public static int maxTentaclesLength;
@@ -39,8 +36,8 @@ public class GhastTentaclesElement extends SingletonModelElement<Ghast, GhastRen
     }
 
     @Override
-    public void onRegisterLayerDefinitions(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> context) {
-        context.accept(this.animatedGhast, GhastTentaclesModel::createAnimatedBodyLayer);
+    public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
+        context.registerLayerDefinition(this.animatedGhast, GhastTentaclesModel::createAnimatedBodyLayer);
     }
 
     @Override

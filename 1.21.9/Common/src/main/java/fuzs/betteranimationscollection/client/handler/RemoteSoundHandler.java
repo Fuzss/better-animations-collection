@@ -47,7 +47,10 @@ public class RemoteSoundHandler {
 
     public void onEndEntityTick(Entity entity) {
         this.soundListener.ensureInitialized();
-        if (!entity.level().isClientSide || !(entity instanceof Mob mob)) return;
+        if (!entity.level().isClientSide() || !(entity instanceof Mob mob)) {
+            return;
+        }
+
         Stream.concat(this.noisyEntities.stream(), this.attackableEntities.stream()).forEach(clazz -> {
             if (clazz.isAssignableFrom(entity.getClass())) {
                 if (mob.ambientSoundTime >= 0) {
@@ -104,8 +107,7 @@ public class RemoteSoundHandler {
             if (entityClazz != null) {
                 // accuracy is 1/8, so we center this and then apply #soundRange
                 Vec3 center = new Vec3(soundIn.getX() + 0.0625, soundIn.getY() + 0.0625, soundIn.getZ() + 0.0625);
-                final double soundDetectionRange = BetterAnimationsCollection.CONFIG.get(
-                        ClientConfig.class).soundDetectionRange;
+                final double soundDetectionRange = BetterAnimationsCollection.CONFIG.get(ClientConfig.class).soundDetectionRange;
                 AABB axisAlignedBB = new AABB(center, center).inflate(soundDetectionRange + 0.0625);
                 List<? extends Mob> entities = level.getEntitiesOfClass(entityClazz, axisAlignedBB);
                 entities.stream()

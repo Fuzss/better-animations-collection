@@ -22,11 +22,7 @@ public class PlayfulDoggyModel extends WolfModel {
     private final ModelPart rightFrontLeg;
     private final ModelPart leftFrontLeg;
     private final ModelPart tail;
-    private final ModelPart realTail;
     private final ModelPart[] realTailParts;
-    private final ModelPart fluffyTail;
-    private final ModelPart realFluffyTail;
-    private final ModelPart[] realFluffyTailParts;
     private final ModelPart upperBody;
 
     public PlayfulDoggyModel(ModelPart modelPart) {
@@ -40,49 +36,48 @@ public class PlayfulDoggyModel extends WolfModel {
         this.rightFrontLeg = modelPart.getChild("right_front_leg");
         this.leftFrontLeg = modelPart.getChild("left_front_leg");
         this.tail = modelPart.getChild("tail");
-        this.fluffyTail = modelPart.getChild("fluffy_tail");
-        ModelPart tail = this.realTail = this.tail.getChild("real_tail");
+        ModelPart tail = this.tail.getChild("real_tail");
         this.realTailParts = new ModelPart[WOLF_TAIL_LENGTH];
         for (int i = 0; i < this.realTailParts.length; i++) {
             this.realTailParts[i] = tail = tail.getChild("real_tail" + i);
-        }
-        ModelPart fluffyTail = this.realFluffyTail = this.fluffyTail.getChild("real_fluffy_tail");
-        this.realFluffyTailParts = new ModelPart[WOLF_TAIL_LENGTH];
-        for (int i = 0; i < this.realFluffyTailParts.length; i++) {
-            this.realFluffyTailParts[i] = fluffyTail = fluffyTail.getChild("real_fluffy_tail" + i);
         }
     }
 
     public static MeshDefinition createAnimatedBodyLayer(CubeDeformation cubeDeformation) {
         MeshDefinition meshDefinition = WolfModel.createMeshDefinition(cubeDeformation);
-        modifyMesh(meshDefinition.getRoot(), cubeDeformation);
+        modifyMesh(meshDefinition.getRoot(), cubeDeformation, PlayfulDoggyElement.fluffyTail);
         return meshDefinition;
     }
 
-    private static void modifyMesh(PartDefinition partDefinition, CubeDeformation cubeDeformation) {
-        PartDefinition partDefinition1 = partDefinition.getChild("tail");
-        PartDefinition partDefinition3 = partDefinition.addOrReplaceChild("fluffy_tail",
-                CubeListBuilder.create(),
-                PartPose.offsetAndRotation(-1.0F, 12.0F, 8.0F, 0.62831855F, 0.0F, 0.0F));
-        CubeListBuilder cubeListBuilder = CubeListBuilder.create()
-                .texOffs(9, 18)
-                .addBox(0.0F, 0.0F, -1.0F, 2.0F, 1.0F, 2.0F, cubeDeformation);
-        PartDefinition partDefinition2 = partDefinition1.addOrReplaceChild("real_tail", cubeListBuilder, PartPose.ZERO);
-        PartDefinition partDefinition4 = partDefinition3.addOrReplaceChild("real_fluffy_tail",
-                cubeListBuilder,
+    private static void modifyMesh(PartDefinition partDefinition, CubeDeformation cubeDeformation, boolean fluffyTail) {
+        PartDefinition partDefinition1;
+        if (fluffyTail) {
+            partDefinition1 = partDefinition.addOrReplaceChild("tail",
+                    CubeListBuilder.create(),
+                    PartPose.offsetAndRotation(-1.0F, 12.0F, 8.0F, 0.62831855F, 0.0F, 0.0F));
+        } else {
+            partDefinition1 = partDefinition.getChild("tail");
+
+        }
+
+        PartDefinition partDefinition2 = partDefinition1.addOrReplaceChild("real_tail",
+                CubeListBuilder.create().texOffs(9, 18).addBox(0.0F, 0.0F, -1.0F, 2.0F, 1.0F, 2.0F, cubeDeformation),
                 PartPose.ZERO);
         for (int i = 0; i < WOLF_TAIL_LENGTH; i++) {
-            partDefinition2 = partDefinition2.addOrReplaceChild("real_tail" + i,
-                    CubeListBuilder.create()
-                            .texOffs(9, Math.min(19 + i, 25))
-                            .addBox(0.0F, 0.0F, -1.0F, 2.0F, 1.0F, 2.0F, cubeDeformation),
-                    PartPose.offset(0.0F, 1.0F, 0.0F));
-            CubeDeformation cubeDeformation1 = cubeDeformation.extend(getTailFluffiness(i));
-            partDefinition4 = partDefinition4.addOrReplaceChild("real_fluffy_tail" + i,
-                    CubeListBuilder.create()
-                            .texOffs(9, Math.min(19 + i, 25))
-                            .addBox(0.0F, 0.0F, -1.0F, 2.0F, 1.0F, 2.0F, cubeDeformation1),
-                    PartPose.offset(0.0F, 1.0F + getTailFluffiness(i), 0.0F));
+            if (fluffyTail) {
+                CubeDeformation fluffyCubeDeformation = cubeDeformation.extend(getTailFluffiness(i));
+                partDefinition2 = partDefinition2.addOrReplaceChild("real_tail" + i,
+                        CubeListBuilder.create()
+                                .texOffs(9, Math.min(19 + i, 25))
+                                .addBox(0.0F, 0.0F, -1.0F, 2.0F, 1.0F, 2.0F, fluffyCubeDeformation),
+                        PartPose.offset(0.0F, 1.0F + getTailFluffiness(i), 0.0F));
+            } else {
+                partDefinition2 = partDefinition2.addOrReplaceChild("real_tail" + i,
+                        CubeListBuilder.create()
+                                .texOffs(9, Math.min(19 + i, 25))
+                                .addBox(0.0F, 0.0F, -1.0F, 2.0F, 1.0F, 2.0F, cubeDeformation),
+                        PartPose.offset(0.0F, 1.0F, 0.0F));
+            }
         }
     }
 
@@ -171,22 +166,5 @@ public class PlayfulDoggyModel extends WolfModel {
                         Mth.sin(amplitude - (float) (i + 1) * PlayfulDoggyElement.animationSpeed * 0.15F) * magnitude;
             }
         }
-
-        this.copyAllTailParts();
-        this.setModelPartVisibilities();
-    }
-
-    private void copyAllTailParts() {
-        this.fluffyTail.copyFrom(this.tail);
-        this.realFluffyTail.copyFrom(this.realTail);
-        for (int i = 0; i < this.realTailParts.length; i++) {
-            this.realFluffyTailParts[i].copyFrom(this.realTailParts[i]);
-        }
-    }
-
-    private void setModelPartVisibilities() {
-        // this also makes all children invisible, so setting just the main tail is enough
-        this.tail.visible = !PlayfulDoggyElement.fluffyTail;
-        this.fluffyTail.visible = PlayfulDoggyElement.fluffyTail;
     }
 }
