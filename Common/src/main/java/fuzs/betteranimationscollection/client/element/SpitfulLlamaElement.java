@@ -2,7 +2,7 @@ package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.client.model.SpitfulLlamaModel;
 import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
-import net.minecraft.client.model.LlamaModel;
+import net.minecraft.client.model.animal.llama.LlamaModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -11,8 +11,8 @@ import net.minecraft.client.renderer.entity.layers.LlamaDecorLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.LlamaRenderState;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.animal.horse.Llama;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.entity.animal.equine.Llama;
+import org.jspecify.annotations.Nullable;
 
 public class SpitfulLlamaElement extends SoundBasedElement<Llama, LlamaRenderState, LlamaModel> {
     private final ModelLayerLocation animatedLlama;

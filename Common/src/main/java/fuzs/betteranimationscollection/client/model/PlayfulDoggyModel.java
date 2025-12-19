@@ -1,7 +1,7 @@
 package fuzs.betteranimationscollection.client.model;
 
 import fuzs.betteranimationscollection.client.element.PlayfulDoggyElement;
-import net.minecraft.client.model.WolfModel;
+import net.minecraft.client.model.animal.wolf.WolfModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;

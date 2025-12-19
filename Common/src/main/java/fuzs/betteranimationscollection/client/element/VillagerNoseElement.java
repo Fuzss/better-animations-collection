@@ -4,15 +4,15 @@ import fuzs.betteranimationscollection.client.handler.RemoteSoundHandler;
 import fuzs.betteranimationscollection.client.model.VillagerNoseModel;
 import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.npc.VillagerModel;
 import net.minecraft.client.renderer.entity.AgeableMobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.VillagerRenderState;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.npc.villager.AbstractVillager;
 
 public class VillagerNoseElement extends SoundBasedElement<AbstractVillager, VillagerRenderState, VillagerModel> {
     private final ModelLayerLocation animatedGenericVillager;

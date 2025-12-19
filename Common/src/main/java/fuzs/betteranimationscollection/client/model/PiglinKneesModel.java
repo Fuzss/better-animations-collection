@@ -1,10 +1,10 @@
 package fuzs.betteranimationscollection.client.model;
 
 import it.unimi.dsi.fastutil.Pair;
-import net.minecraft.client.model.PiglinModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.model.monster.piglin.PiglinModel;
 import net.minecraft.client.renderer.entity.state.PiglinRenderState;
 
 public class PiglinKneesModel extends PiglinModel implements KneesModel {

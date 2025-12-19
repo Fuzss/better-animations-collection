@@ -8,7 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.sounds.SoundEventListener;
 import net.minecraft.client.sounds.WeighedSoundEvents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
@@ -32,7 +32,7 @@ public class RemoteSoundHandler {
     /**
      * map of entities whose model should do something when they make a certain sound
      */
-    private final Map<ResourceLocation, Class<? extends Mob>> ambientSounds = Maps.newConcurrentMap();
+    private final Map<Identifier, Class<? extends Mob>> ambientSounds = Maps.newConcurrentMap();
     /**
      * set of entities whose model should do something when they make a noise this is separate from
      * {@link #ambientSounds} to make sure even when no sound is registered (the user probably wants to disable the
@@ -99,14 +99,16 @@ public class RemoteSoundHandler {
         }
 
         @Override
-        public void onPlaySound(SoundInstance soundIn, WeighedSoundEvents accessor, float range) {
+        public void onPlaySound(SoundInstance soundInstance, WeighedSoundEvents accessor, float range) {
             Level level = Minecraft.getInstance().level;
             // check is actually necessary here, as sounds might be played in some menu when no world has been loaded yet
             if (level == null) return;
-            Class<? extends Mob> entityClazz = RemoteSoundHandler.this.ambientSounds.get(soundIn.getLocation());
+            Class<? extends Mob> entityClazz = RemoteSoundHandler.this.ambientSounds.get(soundInstance.getIdentifier());
             if (entityClazz != null) {
                 // accuracy is 1/8, so we center this and then apply #soundRange
-                Vec3 center = new Vec3(soundIn.getX() + 0.0625, soundIn.getY() + 0.0625, soundIn.getZ() + 0.0625);
+                Vec3 center = new Vec3(soundInstance.getX() + 0.0625,
+                        soundInstance.getY() + 0.0625,
+                        soundInstance.getZ() + 0.0625);
                 final double soundDetectionRange = BetterAnimationsCollection.CONFIG.get(ClientConfig.class).soundDetectionRange;
                 AABB axisAlignedBB = new AABB(center, center).inflate(soundDetectionRange + 0.0625);
                 List<? extends Mob> entities = level.getEntitiesOfClass(entityClazz, axisAlignedBB);

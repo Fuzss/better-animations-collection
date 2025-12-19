@@ -4,7 +4,7 @@ import fuzs.betteranimationscollection.client.model.CatTailModel;
 import fuzs.betteranimationscollection.client.model.OcelotTailModel;
 import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
-import net.minecraft.client.model.CatModel;
+import net.minecraft.client.model.animal.feline.CatModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -12,9 +12,9 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.CatCollarLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.CatRenderState;
-import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.feline.Cat;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class CatTailElement extends SingletonModelElement<Cat, CatRenderState, CatModel> {
     public static int tailLength;

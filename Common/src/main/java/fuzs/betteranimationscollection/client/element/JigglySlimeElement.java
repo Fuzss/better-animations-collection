@@ -4,8 +4,8 @@ import fuzs.betteranimationscollection.client.model.JigglySlimeModel;
 import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import fuzs.puzzleslib.api.client.renderer.v1.RenderStateExtraData;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
-import net.minecraft.client.model.SlimeModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.monster.slime.SlimeModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.entity.state.SlimeRenderState;
 import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.monster.Slime;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class JigglySlimeElement extends SingletonModelElement<Slime, SlimeRenderState, SlimeModel> {
     public static final ContextKey<Float> WALK_ANIMATION_POS_PROPERTY = key("walk_animation_pos");

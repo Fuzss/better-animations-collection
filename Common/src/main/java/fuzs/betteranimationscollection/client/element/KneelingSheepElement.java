@@ -3,7 +3,7 @@ package fuzs.betteranimationscollection.client.element;
 import fuzs.betteranimationscollection.client.model.KneelingSheepFurModel;
 import fuzs.betteranimationscollection.client.model.KneelingSheepModel;
 import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
-import net.minecraft.client.model.SheepModel;
+import net.minecraft.client.model.animal.sheep.SheepModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.layers.SheepWoolLayer;
 import net.minecraft.client.renderer.entity.state.SheepRenderState;
 import net.minecraft.world.entity.animal.sheep.Sheep;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class KneelingSheepElement extends SingletonModelElement<Sheep, SheepRenderState, SheepModel> {
     private final ModelLayerLocation animatedSheep;

@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class SingletonModelElement<T extends LivingEntity, S extends LivingEntityRenderState, M extends EntityModel<? super S>> extends ModelElement {
     protected final Class<T> entityClazz;

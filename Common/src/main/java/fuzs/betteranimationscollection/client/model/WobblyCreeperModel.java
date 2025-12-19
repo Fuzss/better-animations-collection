@@ -2,10 +2,10 @@ package fuzs.betteranimationscollection.client.model;
 
 import fuzs.betteranimationscollection.client.element.WobblyCreeperElement;
 import fuzs.puzzleslib.api.client.renderer.v1.RenderStateExtraData;
-import net.minecraft.client.model.CreeperModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.model.monster.creeper.CreeperModel;
 import net.minecraft.client.renderer.entity.state.CreeperRenderState;
 import net.minecraft.util.Mth;
 

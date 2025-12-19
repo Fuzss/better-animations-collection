@@ -1,0 +1,62 @@
+{
+    "mod": {
+        "id": "betteranimationscollection",
+        "group": "fuzs.betteranimationscollection",
+        "name": "Better Animations Collection",
+        "version": "21.11.0",
+        "authors": [
+            "KodaichiZero",
+            "Fuzs"
+        ],
+        "description": "Changing the in-game models to allow for better animations and subtle effects.",
+        "license": "MPL-2.0"
+    },
+    "dependencies": [
+        {
+            "name": "fabricapi",
+            "type": "required",
+            "platforms": [
+                "fabric"
+            ]
+        },
+        {
+            "name": "forgeconfigapiport",
+            "type": "required",
+            "platforms": [
+                "fabric"
+            ]
+        },
+        {
+            "name": "puzzleslib",
+            "type": "required",
+            "platforms": [
+                "fabric",
+                "neoforge"
+            ]
+        }
+    ],
+    "links": [
+        {
+            "name": "github",
+            "slug": "betteranimationscollection"
+        },
+        {
+            "name": "curseforge",
+            "slug": "better-animations-collection",
+            "id": "323976"
+        },
+        {
+            "name": "modrinth",
+            "slug": "better-animations-collection",
+            "id": "OoOVj3J3"
+        }
+    ],
+    "environments": {
+        "client": "required",
+        "server": "unsupported"
+    },
+    "platforms": [
+        "fabric",
+        "neoforge"
+    ]
+}

@@ -1,9 +1,9 @@
 package fuzs.betteranimationscollection.client.model;
 
-import net.minecraft.client.model.AbstractEquineModel;
 import net.minecraft.client.model.BabyModelTransform;
-import net.minecraft.client.model.EquineSaddleModel;
-import net.minecraft.client.model.HorseModel;
+import net.minecraft.client.model.animal.equine.AbstractEquineModel;
+import net.minecraft.client.model.animal.equine.EquineSaddleModel;
+import net.minecraft.client.model.animal.equine.HorseModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
@@ -169,18 +169,18 @@ public class FamiliarHorseModel extends HorseModel {
         float animationProgress = Mth.cos(ageInTicks * 0.6F + Mth.PI);
         float ageScale = renderState.ageScale;
 
-        rightHindShin.y = rightHindLeg.y +
-                Mth.sin(Mth.HALF_PI + standAnimationAngle + standAnimationInv * -walkAnimationSpeedLeg) * 3.0F *
-                        ageScale;
-        rightHindShin.z = rightHindLeg.z +
-                Mth.cos(-Mth.HALF_PI + standAnimationAngle + standAnimationInv * -walkAnimationSpeedLeg) * 3.0F *
-                        ageScale;
-        leftHindShin.y = leftHindLeg.y +
-                Mth.sin(Mth.HALF_PI + standAnimationAngle + standAnimationInv * walkAnimationSpeedLeg) * 3.0F *
-                        ageScale;
-        leftHindShin.z = leftHindLeg.z +
-                Mth.cos(-Mth.HALF_PI + standAnimationAngle + standAnimationInv * walkAnimationSpeedLeg) * 3.0F *
-                        ageScale;
+        rightHindShin.y = rightHindLeg.y
+                + Mth.sin(Mth.HALF_PI + standAnimationAngle + standAnimationInv * -walkAnimationSpeedLeg) * 3.0F
+                * ageScale;
+        rightHindShin.z = rightHindLeg.z
+                + Mth.cos(-Mth.HALF_PI + standAnimationAngle + standAnimationInv * -walkAnimationSpeedLeg) * 3.0F
+                * ageScale;
+        leftHindShin.y = leftHindLeg.y
+                + Mth.sin(Mth.HALF_PI + standAnimationAngle + standAnimationInv * walkAnimationSpeedLeg) * 3.0F
+                * ageScale;
+        leftHindShin.z = leftHindLeg.z
+                + Mth.cos(-Mth.HALF_PI + standAnimationAngle + standAnimationInv * walkAnimationSpeedLeg) * 3.0F
+                * ageScale;
 
         // similar to vanilla super, but walkAnimationSpeed variable is different
         float rightFrontLegAnimation =
@@ -193,20 +193,20 @@ public class FamiliarHorseModel extends HorseModel {
         leftFrontShin.z = leftFrontLeg.z + Mth.cos(-Mth.HALF_PI + leftFrontLegAnimation) * 3.0F * ageScale;
 
         rightHindLeg.xRot = standAnimationAngle - walkAnimationSpeedLeg * standAnimationInv;
-        rightHindShin.xRot = -0.08726646F * standAnimation +
-                (-walkAnimationSpeedShin - Math.max(0.0F, walkAnimationSpeedShin)) * standAnimationInv;
+        rightHindShin.xRot = -0.08726646F * standAnimation
+                + (-walkAnimationSpeedShin - Math.max(0.0F, walkAnimationSpeedShin)) * standAnimationInv;
         leftHindLeg.xRot = standAnimationAngle + walkAnimationSpeedLeg * standAnimationInv;
-        leftHindShin.xRot = -0.08726646F * standAnimation +
-                (walkAnimationSpeedShin - Math.max(0.0F, -walkAnimationSpeedShin)) * standAnimationInv;
+        leftHindShin.xRot = -0.08726646F * standAnimation
+                + (walkAnimationSpeedShin - Math.max(0.0F, -walkAnimationSpeedShin)) * standAnimationInv;
 
         // x-rotations for leg parts are similar to vanilla
         rightFrontLeg.xRot = rightFrontLegAnimation;
         rightFrontShin.xRot =
-                (rightFrontLeg.xRot + Mth.PI * Math.max(0.0F, 0.2F + animationProgress * 0.2F)) * standAnimation +
-                        (walkAnimationSpeedShin + Math.max(0.0F, walkAnimationSpeedShin)) * standAnimationInv;
+                (rightFrontLeg.xRot + Mth.PI * Math.max(0.0F, 0.2F + animationProgress * 0.2F)) * standAnimation
+                        + (walkAnimationSpeedShin + Math.max(0.0F, walkAnimationSpeedShin)) * standAnimationInv;
         leftFrontLeg.xRot = leftFrontLegAnimation;
         leftFrontShin.xRot =
-                (leftFrontLeg.xRot + Mth.PI * Math.max(0.0F, 0.2F - animationProgress * 0.2F)) * standAnimation +
-                        (-walkAnimationSpeedShin + Math.max(0.0F, -walkAnimationSpeedShin)) * standAnimationInv;
+                (leftFrontLeg.xRot + Mth.PI * Math.max(0.0F, 0.2F - animationProgress * 0.2F)) * standAnimation
+                        + (-walkAnimationSpeedShin + Math.max(0.0F, -walkAnimationSpeedShin)) * standAnimationInv;
     }
 }

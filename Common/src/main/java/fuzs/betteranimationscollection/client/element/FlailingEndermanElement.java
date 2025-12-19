@@ -4,8 +4,8 @@ import fuzs.betteranimationscollection.client.model.FlailingEndermanModel;
 import fuzs.betteranimationscollection.client.renderer.entity.layers.FlailingCarriedBlockLayer;
 import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
-import net.minecraft.client.model.EndermanModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.monster.enderman.EndermanModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.CarriedBlockLayer;
@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.EndermanRenderState;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class FlailingEndermanElement extends SingletonModelElement<EnderMan, EndermanRenderState, EndermanModel<EndermanRenderState>> {
     public static int animationSpeed;
@@ -44,7 +44,7 @@ public class FlailingEndermanElement extends SingletonModelElement<EnderMan, End
     @Override
     protected @Nullable RenderLayer<EndermanRenderState, EndermanModel<EndermanRenderState>> getAnimatedLayer(RenderLayer<EndermanRenderState, EndermanModel<EndermanRenderState>> renderLayer, LivingEntityRenderer<?, EndermanRenderState, EndermanModel<EndermanRenderState>> entityRenderer, EntityRendererProvider.Context context) {
         if (renderLayer instanceof CarriedBlockLayer) {
-            return new FlailingCarriedBlockLayer(entityRenderer, context.getBlockRenderDispatcher());
+            return new FlailingCarriedBlockLayer(entityRenderer);
         } else {
             return super.getAnimatedLayer(renderLayer, entityRenderer, context);
         }

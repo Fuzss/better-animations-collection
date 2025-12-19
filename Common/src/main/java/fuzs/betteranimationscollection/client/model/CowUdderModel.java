@@ -1,9 +1,9 @@
 package fuzs.betteranimationscollection.client.model;
 
 import fuzs.betteranimationscollection.client.element.CowUdderElement;
-import net.minecraft.client.model.ColdCowModel;
-import net.minecraft.client.model.CowModel;
-import net.minecraft.client.model.WarmCowModel;
+import net.minecraft.client.model.animal.cow.ColdCowModel;
+import net.minecraft.client.model.animal.cow.CowModel;
+import net.minecraft.client.model.animal.cow.WarmCowModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
@@ -71,10 +71,11 @@ public class CowUdderModel extends CowModel {
     @Override
     public void setupAnim(LivingEntityRenderState renderState) {
         super.setupAnim(renderState);
-        this.utter.xRot = Mth.sin(renderState.walkAnimationPos * 0.5F) * renderState.walkAnimationSpeed *
-                CowUdderElement.animationSpeed * 0.05F;
-        this.utter.yRot = Mth.cos(renderState.walkAnimationPos) * renderState.walkAnimationSpeed *
-                CowUdderElement.animationSpeed * 0.125F;
+        this.utter.xRot = Mth.sin(renderState.walkAnimationPos * 0.5F) * renderState.walkAnimationSpeed
+                * CowUdderElement.animationSpeed * 0.05F;
+        this.utter.yRot =
+                Mth.cos(renderState.walkAnimationPos) * renderState.walkAnimationSpeed * CowUdderElement.animationSpeed
+                        * 0.125F;
         this.utter.visible = !renderState.isBaby || CowUdderElement.calfUtter;
         for (ModelPart renderer : this.nipples) {
             renderer.visible = CowUdderElement.showNipples;

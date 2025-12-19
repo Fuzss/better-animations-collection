@@ -2,12 +2,12 @@ package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.client.model.SpiderKneesModel;
 import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
-import net.minecraft.client.model.SpiderModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.monster.spider.SpiderModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.world.entity.monster.Spider;
+import net.minecraft.world.entity.monster.spider.Spider;
 
 public class SpiderKneesElement extends SingletonModelElement<Spider, LivingEntityRenderState, SpiderModel> {
     private final ModelLayerLocation animatedSpider;

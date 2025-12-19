@@ -8,7 +8,7 @@ import fuzs.puzzleslib.api.config.v3.ValueCallback;
 import fuzs.puzzleslib.api.config.v3.serialization.ConfigDataSet;
 import fuzs.puzzleslib.api.config.v3.serialization.KeyedValueProvider;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
@@ -32,12 +32,12 @@ public class ClientConfig implements ConfigCore {
     @Override
     public void addToBuilder(ModConfigSpec.Builder builder, ValueCallback callback) {
         builder.push("models");
-        for (Map.Entry<ResourceLocation, ModelElement> entry : ModelElements.getModelElements().entrySet()) {
+        for (Map.Entry<Identifier, ModelElement> entry : ModelElements.getModelElements().entrySet()) {
             callback.accept(builder.comment(entry.getValue().getDescriptionComponent())
                     .define(entry.getKey().getPath(), true), entry.getValue()::setEnabled);
         }
         builder.pop();
-        for (Map.Entry<ResourceLocation, ModelElement> entry : ModelElements.getModelElements().entrySet()) {
+        for (Map.Entry<Identifier, ModelElement> entry : ModelElements.getModelElements().entrySet()) {
             builder.push(entry.getKey().getPath());
             entry.getValue().setupModelConfig(builder, callback);
             builder.pop();

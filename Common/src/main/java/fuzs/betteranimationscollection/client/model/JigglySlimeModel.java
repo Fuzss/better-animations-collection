@@ -2,8 +2,8 @@ package fuzs.betteranimationscollection.client.model;
 
 import fuzs.betteranimationscollection.client.element.JigglySlimeElement;
 import fuzs.puzzleslib.api.client.renderer.v1.RenderStateExtraData;
-import net.minecraft.client.model.SlimeModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.monster.slime.SlimeModel;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.util.Mth;
 

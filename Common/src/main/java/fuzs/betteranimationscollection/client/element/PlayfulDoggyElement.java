@@ -3,7 +3,7 @@ package fuzs.betteranimationscollection.client.element;
 import fuzs.betteranimationscollection.client.model.PlayfulDoggyModel;
 import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
-import net.minecraft.client.model.WolfModel;
+import net.minecraft.client.model.animal.wolf.WolfModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.entity.state.WolfRenderState;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.animal.wolf.Wolf;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class PlayfulDoggyElement extends SingletonModelElement<Wolf, WolfRenderState, WolfModel> {
     public static final float MAX_ROLL_ANIM = 0.15F * Mth.PI;

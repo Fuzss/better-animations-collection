@@ -4,9 +4,9 @@ import fuzs.betteranimationscollection.client.model.WobblyCreeperModel;
 import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import fuzs.puzzleslib.api.client.renderer.v1.RenderStateExtraData;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
-import net.minecraft.client.model.CreeperModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.monster.creeper.CreeperModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.CreeperPowerLayer;
@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.entity.state.CreeperRenderState;
 import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.monster.Creeper;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class WobblyCreeperElement extends SingletonModelElement<Creeper, CreeperRenderState, CreeperModel> {
     public static final ContextKey<WobbleDirection> WOBBLE_DIRECTION_PROPERTY = key("wobble_direction");

@@ -2,7 +2,7 @@ package fuzs.betteranimationscollection.client.model;
 
 import fuzs.betteranimationscollection.client.element.SquidTentaclesElement;
 import fuzs.puzzleslib.api.client.renderer.v1.RenderStateExtraData;
-import net.minecraft.client.model.SquidModel;
+import net.minecraft.client.model.animal.squid.SquidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;

@@ -1,7 +1,7 @@
 package fuzs.betteranimationscollection.client.model;
 
 import fuzs.betteranimationscollection.client.element.OcelotTailElement;
-import net.minecraft.client.model.OcelotModel;
+import net.minecraft.client.model.animal.feline.OcelotModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;

@@ -4,13 +4,13 @@ import fuzs.betteranimationscollection.client.model.SquidTentaclesModel;
 import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import fuzs.puzzleslib.api.client.renderer.v1.RenderStateExtraData;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
-import net.minecraft.client.model.SquidModel;
+import net.minecraft.client.model.animal.squid.SquidModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.SquidRenderState;
 import net.minecraft.util.context.ContextKey;
-import net.minecraft.world.entity.animal.Squid;
+import net.minecraft.world.entity.animal.squid.Squid;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.ModConfigSpec;
 

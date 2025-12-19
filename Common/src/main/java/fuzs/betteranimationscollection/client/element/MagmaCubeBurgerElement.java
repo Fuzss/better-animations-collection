@@ -2,18 +2,18 @@ package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.client.model.MagmaCubeBurgerModel;
 import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
-import net.minecraft.client.model.LavaSlimeModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.monster.slime.MagmaCubeModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.SlimeRenderState;
 import net.minecraft.world.entity.monster.MagmaCube;
 
-public class MagmaCubeBurgerElement extends SingletonModelElement<MagmaCube, SlimeRenderState, LavaSlimeModel> {
+public class MagmaCubeBurgerElement extends SingletonModelElement<MagmaCube, SlimeRenderState, MagmaCubeModel> {
     private final ModelLayerLocation animatedMagmaCube;
 
     public MagmaCubeBurgerElement() {
-        super(MagmaCube.class, SlimeRenderState.class, LavaSlimeModel.class);
+        super(MagmaCube.class, SlimeRenderState.class, MagmaCubeModel.class);
         this.animatedMagmaCube = this.registerModelLayer("animated_magma_cube");
     }
 
@@ -26,12 +26,12 @@ public class MagmaCubeBurgerElement extends SingletonModelElement<MagmaCube, Sli
     }
 
     @Override
-    protected void setAnimatedModel(LivingEntityRenderer<?, SlimeRenderState, LavaSlimeModel> entityRenderer, EntityRendererProvider.Context context) {
+    protected void setAnimatedModel(LivingEntityRenderer<?, SlimeRenderState, MagmaCubeModel> entityRenderer, EntityRendererProvider.Context context) {
         entityRenderer.model = new MagmaCubeBurgerModel(context.bakeLayer(this.animatedMagmaCube));
     }
 
     @Override
     public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
-        context.registerLayerDefinition(this.animatedMagmaCube, LavaSlimeModel::createBodyLayer);
+        context.registerLayerDefinition(this.animatedMagmaCube, MagmaCubeModel::createBodyLayer);
     }
 }

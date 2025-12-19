@@ -1,13 +1,13 @@
 package fuzs.betteranimationscollection.client.model;
 
 import fuzs.betteranimationscollection.client.element.GhastTentaclesElement;
-import net.minecraft.client.model.GhastModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.model.monster.ghast.GhastModel;
 import net.minecraft.client.renderer.entity.state.GhastRenderState;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -59,8 +59,8 @@ public class GhastTentaclesModel extends GhastModel {
         RandomSource randomSource = RandomSource.create(1660L);
         for (int i = 0; i < this.tentacles.length; i++) {
             this.tentacles[i].xRot = speed * Mth.sin(renderState.ageInTicks * speed + (float) i) + 0.4F;
-            int randomLength = randomSource.nextInt(GhastTentaclesElement.maxTentaclesLength / 2) +
-                    GhastTentaclesElement.maxTentaclesLength / 2 + 1;
+            int randomLength = randomSource.nextInt(GhastTentaclesElement.maxTentaclesLength / 2)
+                    + GhastTentaclesElement.maxTentaclesLength / 2 + 1;
             for (int j = 0; j < this.tentacleParts[i].length; j++) {
                 this.tentacleParts[i][j].xRot =
                         speed * Mth.sin(renderState.ageInTicks * speed + (float) i - (float) j / 2.0F);

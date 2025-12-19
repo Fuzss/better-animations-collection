@@ -1,13 +1,13 @@
 package fuzs.betteranimationscollection.client.model;
 
 import fuzs.betteranimationscollection.client.element.FlailingEndermanElement;
-import net.minecraft.client.model.EndermanModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.model.monster.enderman.EndermanModel;
 import net.minecraft.client.renderer.entity.state.EndermanRenderState;
 import net.minecraft.util.Mth;
 
@@ -66,16 +66,18 @@ public class FlailingEndermanModel extends EndermanModel<EndermanRenderState> {
                 this.rightArm.xRot = 0.0F;
                 this.leftArm.xRot = 0.0F;
                 for (int i = 0; i < ENDERMAN_ARM_LENGTH; i++) {
-                    float armPartZRot = Mth.sin(renderState.ageInTicks * animationSpeed * 7 + (float) i * 0.45F) *
-                            ((float) (i + 8) / 8.0F) * animationSpeed;
+                    float armPartZRot =
+                            Mth.sin(renderState.ageInTicks * animationSpeed * 7 + (float) i * 0.45F) * ((float) (i + 8)
+                                    / 8.0F) * animationSpeed;
                     this.rightArmParts[i].zRot = armPartZRot;
                     this.leftArmParts[i].zRot = -armPartZRot;
                 }
             } else {
                 for (int i = 0; i < ENDERMAN_ARM_LENGTH; i++) {
                     int j = i > ENDERMAN_ARM_LENGTH / 2 ? ENDERMAN_ARM_LENGTH - i : i;
-                    float armPartZRot = Mth.sin(renderState.ageInTicks * animationSpeed * 5 + (float) j * 0.45F) *
-                            ((float) (j + 8) / 8.0F) * animationSpeed;
+                    float armPartZRot =
+                            Mth.sin(renderState.ageInTicks * animationSpeed * 5 + (float) j * 0.45F) * ((float) (j + 8)
+                                    / 8.0F) * animationSpeed;
                     this.rightArmParts[i].zRot = this.leftArmParts[i].zRot = i != j ? -armPartZRot : armPartZRot;
                 }
             }

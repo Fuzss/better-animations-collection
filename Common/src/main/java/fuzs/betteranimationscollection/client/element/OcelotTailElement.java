@@ -3,13 +3,13 @@ package fuzs.betteranimationscollection.client.element;
 import fuzs.betteranimationscollection.client.model.OcelotTailModel;
 import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
-import net.minecraft.client.model.OcelotModel;
+import net.minecraft.client.model.animal.feline.OcelotModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.FelineRenderState;
-import net.minecraft.world.entity.animal.Ocelot;
+import net.minecraft.world.entity.animal.feline.Ocelot;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class OcelotTailElement extends SingletonModelElement<Ocelot, FelineRenderState, OcelotModel> {

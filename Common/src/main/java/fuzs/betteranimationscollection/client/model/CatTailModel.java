@@ -1,7 +1,7 @@
 package fuzs.betteranimationscollection.client.model;
 
 import fuzs.betteranimationscollection.client.element.CatTailElement;
-import net.minecraft.client.model.CatModel;
+import net.minecraft.client.model.animal.feline.CatModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.state.CatRenderState;
 

@@ -3,14 +3,14 @@ package fuzs.betteranimationscollection.client.element;
 import fuzs.betteranimationscollection.client.model.SnowGolemStickModel;
 import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import fuzs.puzzleslib.api.client.renderer.v1.RenderStateExtraData;
-import net.minecraft.client.model.SnowGolemModel;
+import net.minecraft.client.model.animal.golem.SnowGolemModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.context.ContextKey;
-import net.minecraft.world.entity.animal.SnowGolem;
+import net.minecraft.world.entity.animal.golem.SnowGolem;
 
 public class SnowGolemStickElement extends SoundBasedElement<SnowGolem, LivingEntityRenderState, SnowGolemModel> {
     public static final ContextKey<Boolean> IS_LEFT_HANDED_PROPERTY = key("is_left_handed");

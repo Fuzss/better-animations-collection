@@ -1,7 +1,7 @@
 package fuzs.betteranimationscollection.client.model;
 
-import net.minecraft.client.model.DonkeyModel;
-import net.minecraft.client.model.EquineSaddleModel;
+import net.minecraft.client.model.animal.equine.DonkeyModel;
+import net.minecraft.client.model.animal.equine.EquineSaddleModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;

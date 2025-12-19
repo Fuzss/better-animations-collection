@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.EntityType;
 
@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public final class ModelElements {
-    private static final Map<ResourceLocation, ModelElement> MODEL_ELEMENTS = new HashMap<>();
+    private static final Map<Identifier, ModelElement> MODEL_ELEMENTS = new HashMap<>();
 
     static {
         registerModelElement("oinky_pig", OinkyPigElement::new);
@@ -60,7 +60,7 @@ public final class ModelElements {
         }
     }
 
-    public static Map<ResourceLocation, ModelElement> getModelElements() {
+    public static Map<Identifier, ModelElement> getModelElements() {
         return Collections.unmodifiableMap(MODEL_ELEMENTS);
     }
 
@@ -81,7 +81,7 @@ public final class ModelElements {
                         minecraft.getAtlasManager(),
                         minecraft.font,
                         minecraft.playerSkinRenderCache());
-                for (Map.Entry<ResourceLocation, ModelElement> modelElementEntry : MODEL_ELEMENTS.entrySet()) {
+                for (Map.Entry<Identifier, ModelElement> modelElementEntry : MODEL_ELEMENTS.entrySet()) {
                     try {
                         modelElementEntry.getValue().onApplyModelAnimations(entityRenderer, context);
                     } catch (Exception exception) {

@@ -5,7 +5,7 @@ import fuzs.betteranimationscollection.client.model.OinkyPigModel;
 import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
 import net.minecraft.client.model.AdultAndBabyModelPair;
-import net.minecraft.client.model.PigModel;
+import net.minecraft.client.model.animal.pig.PigModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.renderer.entity.AgeableMobRenderer;
@@ -17,10 +17,10 @@ import net.minecraft.client.renderer.entity.layers.SimpleEquipmentLayer;
 import net.minecraft.client.renderer.entity.state.PigRenderState;
 import net.minecraft.client.resources.model.EquipmentClientInfo;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.animal.Pig;
-import net.minecraft.world.entity.animal.PigVariant;
+import net.minecraft.world.entity.animal.pig.Pig;
+import net.minecraft.world.entity.animal.pig.PigVariant;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 

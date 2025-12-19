@@ -5,15 +5,15 @@ import fuzs.betteranimationscollection.client.model.CowUdderModel;
 import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
 import fuzs.puzzleslib.api.config.v3.ValueCallback;
 import net.minecraft.client.model.AdultAndBabyModelPair;
-import net.minecraft.client.model.CowModel;
+import net.minecraft.client.model.animal.cow.CowModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.AgeableMobRenderer;
 import net.minecraft.client.renderer.entity.CowRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.CowRenderState;
-import net.minecraft.world.entity.animal.Cow;
-import net.minecraft.world.entity.animal.CowVariant;
+import net.minecraft.world.entity.animal.cow.Cow;
+import net.minecraft.world.entity.animal.cow.CowVariant;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.Map;

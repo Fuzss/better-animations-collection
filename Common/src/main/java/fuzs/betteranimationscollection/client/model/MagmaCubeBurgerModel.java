@@ -1,12 +1,12 @@
 package fuzs.betteranimationscollection.client.model;
 
-import net.minecraft.client.model.LavaSlimeModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.monster.slime.MagmaCubeModel;
 import net.minecraft.client.renderer.entity.state.SlimeRenderState;
 
 import java.util.Arrays;
 
-public class MagmaCubeBurgerModel extends LavaSlimeModel {
+public class MagmaCubeBurgerModel extends MagmaCubeModel {
     private final ModelPart insideCube;
     private final ModelPart[] bodyCubes = new ModelPart[8];
 
