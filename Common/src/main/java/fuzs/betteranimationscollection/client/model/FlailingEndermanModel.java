@@ -39,7 +39,7 @@ public class FlailingEndermanModel extends EndermanModel<EndermanRenderState> {
     private static void modifyMesh(PartDefinition partDefinition) {
         PartDefinition partDefinition1 = partDefinition.addOrReplaceChild("right_arm",
                 CubeListBuilder.create().texOffs(56, 0).addBox(-1.0F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F),
-                PartPose.offset(-3.0F, -13.0F, 0.0F));
+                PartPose.offset(-5.0F, -13.0F, 0.0F));
         for (int i = 0; i < ENDERMAN_ARM_LENGTH; i++) {
             partDefinition1 = partDefinition1.addOrReplaceChild("right_arm_part" + i,
                     CubeListBuilder.create().texOffs(56, 2 + i * 2).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 2.0F, 2.0F),
