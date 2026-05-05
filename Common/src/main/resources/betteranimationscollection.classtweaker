@@ -1,4 +1,4 @@
-accessWidener   v2  named
+classTweaker    v2  official
 accessible  field   net/minecraft/client/renderer/entity/EntityRenderDispatcher equipmentAssets Lnet/minecraft/client/resources/model/EquipmentAssetManager;
 accessible  field   net/minecraft/client/renderer/entity/LivingEntityRenderer   model   Lnet/minecraft/client/model/EntityModel;
 accessible  field   net/minecraft/client/renderer/entity/layers/LlamaDecorLayer adultModel  Lnet/minecraft/client/model/animal/llama/LlamaModel;
