@@ -1,6 +1,6 @@
 package fuzs.betteranimationscollection.neoforge;
 
-import fuzs.betteranimationscollection.BetterAnimationsCollection;
+import fuzs.betteranimationscollection.common.BetterAnimationsCollection;
 import fuzs.puzzleslib.common.api.core.v1.ModConstructor;
 import net.neoforged.fml.common.Mod;
 
