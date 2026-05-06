@@ -2,10 +2,10 @@ package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.client.handler.RemoteSoundHandler;
 import fuzs.betteranimationscollection.client.model.VillagerNoseModel;
-import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
-import net.minecraft.client.model.HumanoidModel;
+import fuzs.puzzleslib.common.api.client.core.v1.context.LayerDefinitionsContext;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshTransformer;
 import net.minecraft.client.model.npc.VillagerModel;
 import net.minecraft.client.renderer.entity.AgeableMobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -17,7 +17,6 @@ import net.minecraft.world.entity.npc.villager.AbstractVillager;
 public class VillagerNoseElement extends SoundBasedElement<AbstractVillager, VillagerRenderState, VillagerModel> {
     private final ModelLayerLocation animatedGenericVillager;
     private final ModelLayerLocation animatedVillager;
-    private final ModelLayerLocation animatedVillagerBaby;
 
     public VillagerNoseElement() {
         super(AbstractVillager.class,
@@ -29,7 +28,6 @@ public class VillagerNoseElement extends SoundBasedElement<AbstractVillager, Vil
                 SoundEvents.WANDERING_TRADER_TRADE);
         this.animatedGenericVillager = this.registerModelLayer("animated_generic_villager");
         this.animatedVillager = this.registerModelLayer("animated_villager");
-        this.animatedVillagerBaby = this.registerModelLayer("animated_villager_baby");
         RemoteSoundHandler.INSTANCE.addAttackableEntity(this.entityClazz);
     }
 
@@ -43,10 +41,9 @@ public class VillagerNoseElement extends SoundBasedElement<AbstractVillager, Vil
 
     @Override
     protected void setAnimatedModel(LivingEntityRenderer<?, VillagerRenderState, VillagerModel> entityRenderer, EntityRendererProvider.Context context) {
-        if (entityRenderer instanceof AgeableMobRenderer<?, ?, ?>) {
-            setAnimatedAgeableModel(entityRenderer,
-                    new VillagerNoseModel(context.bakeLayer(this.animatedVillager)),
-                    new VillagerNoseModel(context.bakeLayer(this.animatedVillagerBaby)));
+        if (entityRenderer instanceof AgeableMobRenderer<?, ?, ?> ageableMobRenderer) {
+            setAnimatedAgeableModel(ageableMobRenderer,
+                    new VillagerNoseModel(context.bakeLayer(this.animatedVillager)));
         } else {
             entityRenderer.model = new VillagerNoseModel(context.bakeLayer(this.animatedGenericVillager));
         }
@@ -55,12 +52,10 @@ public class VillagerNoseElement extends SoundBasedElement<AbstractVillager, Vil
     @Override
     public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
         context.registerLayerDefinition(this.animatedGenericVillager,
-                () -> LayerDefinition.create(VillagerModel.createBodyModel(), 64, 64));
-        context.registerLayerDefinition(this.animatedVillager,
-                () -> LayerDefinition.create(VillagerModel.createBodyModel(), 64, 64));
-        // large baby villager head like Bedrock Edition
-        context.registerLayerDefinition(this.animatedVillagerBaby,
                 () -> LayerDefinition.create(VillagerModel.createBodyModel(), 64, 64)
-                        .apply(HumanoidModel.BABY_TRANSFORMER));
+                        .apply(MeshTransformer.scaling(0.9375F)));
+        context.registerLayerDefinition(this.animatedVillager,
+                () -> LayerDefinition.create(VillagerModel.createBodyModel(), 64, 64)
+                        .apply(MeshTransformer.scaling(0.9375F)));
     }
 }

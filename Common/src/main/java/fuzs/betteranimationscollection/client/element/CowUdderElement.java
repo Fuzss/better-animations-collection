@@ -2,8 +2,8 @@ package fuzs.betteranimationscollection.client.element;
 
 import com.google.common.collect.Maps;
 import fuzs.betteranimationscollection.client.model.CowUdderModel;
-import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
-import fuzs.puzzleslib.api.config.v3.ValueCallback;
+import fuzs.puzzleslib.common.api.client.core.v1.context.LayerDefinitionsContext;
+import fuzs.puzzleslib.common.api.config.v3.ValueCallback;
 import net.minecraft.client.model.AdultAndBabyModelPair;
 import net.minecraft.client.model.animal.cow.CowModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -26,18 +26,12 @@ public class CowUdderElement extends SingletonModelElement<Cow, CowRenderState, 
     private final ModelLayerLocation animatedCow;
     private final ModelLayerLocation animatedColdCow;
     private final ModelLayerLocation animatedWarmCow;
-    private final ModelLayerLocation animatedCowBaby;
-    private final ModelLayerLocation animatedColdCowBaby;
-    private final ModelLayerLocation animatedWarmCowBaby;
 
     public CowUdderElement() {
         super(Cow.class, CowRenderState.class, CowModel.class);
         this.animatedCow = this.registerModelLayer("animated_cow");
         this.animatedColdCow = this.registerModelLayer("animated_cold_cow");
         this.animatedWarmCow = this.registerModelLayer("animated_warm_cow");
-        this.animatedCowBaby = this.registerModelLayer("animated_cow_baby");
-        this.animatedColdCowBaby = this.registerModelLayer("animated_cold_cow_baby");
-        this.animatedWarmCowBaby = this.registerModelLayer("animated_warm_cow_baby");
     }
 
     @Override
@@ -50,24 +44,22 @@ public class CowUdderElement extends SingletonModelElement<Cow, CowRenderState, 
     @Override
     protected void setAnimatedModel(LivingEntityRenderer<?, CowRenderState, CowModel> entityRenderer, EntityRendererProvider.Context context) {
         if (entityRenderer instanceof CowRenderer cowRenderer) {
-            cowRenderer.models = this.bakeModels(context);
-        } else if (entityRenderer instanceof AgeableMobRenderer<?, ?, ?>) {
-            setAnimatedAgeableModel(entityRenderer,
-                    new CowUdderModel(context.bakeLayer(this.animatedCow)),
-                    new CowUdderModel(context.bakeLayer(this.animatedCowBaby)));
+            cowRenderer.models = this.bakeModels(context, cowRenderer.models);
+        } else if (entityRenderer instanceof AgeableMobRenderer<?, ?, ?> ageableMobRenderer) {
+            setAnimatedAgeableModel(ageableMobRenderer, new CowUdderModel(context.bakeLayer(this.animatedCow)));
         }
     }
 
-    private Map<CowVariant.ModelType, AdultAndBabyModelPair<CowModel>> bakeModels(EntityRendererProvider.Context context) {
+    private Map<CowVariant.ModelType, AdultAndBabyModelPair<CowModel>> bakeModels(EntityRendererProvider.Context context, Map<CowVariant.ModelType, AdultAndBabyModelPair<CowModel>> models) {
         return Maps.newEnumMap(Map.of(CowVariant.ModelType.NORMAL,
                 new AdultAndBabyModelPair<>(new CowUdderModel(context.bakeLayer(this.animatedCow)),
-                        new CowUdderModel(context.bakeLayer(this.animatedCowBaby))),
+                        models.get(CowVariant.ModelType.NORMAL).babyModel()),
                 CowVariant.ModelType.WARM,
                 new AdultAndBabyModelPair<>(new CowUdderModel(context.bakeLayer(this.animatedWarmCow)),
-                        new CowUdderModel(context.bakeLayer(this.animatedWarmCowBaby))),
+                        models.get(CowVariant.ModelType.WARM).babyModel()),
                 CowVariant.ModelType.COLD,
                 new AdultAndBabyModelPair<>(new CowUdderModel(context.bakeLayer(this.animatedColdCow)),
-                        new CowUdderModel(context.bakeLayer(this.animatedColdCowBaby)))));
+                        models.get(CowVariant.ModelType.COLD).babyModel())));
     }
 
     @Override
@@ -75,12 +67,6 @@ public class CowUdderElement extends SingletonModelElement<Cow, CowRenderState, 
         context.registerLayerDefinition(this.animatedCow, CowUdderModel::createAnimatedBodyLayer);
         context.registerLayerDefinition(this.animatedColdCow, CowUdderModel::createAnimatedColdBodyLayer);
         context.registerLayerDefinition(this.animatedWarmCow, CowUdderModel::createAnimatedWarmBodyLayer);
-        context.registerLayerDefinition(this.animatedCowBaby,
-                () -> CowUdderModel.createAnimatedBodyLayer().apply(CowUdderModel.BABY_TRANSFORMER));
-        context.registerLayerDefinition(this.animatedColdCowBaby,
-                () -> CowUdderModel.createAnimatedColdBodyLayer().apply(CowUdderModel.BABY_TRANSFORMER));
-        context.registerLayerDefinition(this.animatedWarmCowBaby,
-                () -> CowUdderModel.createAnimatedWarmBodyLayer().apply(CowUdderModel.BABY_TRANSFORMER));
     }
 
     @Override

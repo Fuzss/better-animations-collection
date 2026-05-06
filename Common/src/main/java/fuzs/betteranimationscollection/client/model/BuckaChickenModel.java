@@ -2,9 +2,9 @@ package fuzs.betteranimationscollection.client.model;
 
 import fuzs.betteranimationscollection.client.element.BuckaChickenElement;
 import fuzs.betteranimationscollection.client.element.SoundBasedElement;
-import fuzs.puzzleslib.api.client.renderer.v1.RenderStateExtraData;
+import fuzs.puzzleslib.common.api.client.renderer.v1.RenderStateExtraData;
 import net.minecraft.client.model.BabyModelTransform;
-import net.minecraft.client.model.animal.chicken.ChickenModel;
+import net.minecraft.client.model.animal.chicken.AdultChickenModel;
 import net.minecraft.client.model.animal.chicken.ColdChickenModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -14,7 +14,7 @@ import net.minecraft.util.Mth;
 
 import java.util.Set;
 
-public class BuckaChickenModel extends ChickenModel {
+public class BuckaChickenModel extends AdultChickenModel {
     public static final MeshTransformer BABY_TRANSFORMER = new BabyModelTransform(Set.of("head"));
 
     private final ModelPart head;
@@ -35,7 +35,7 @@ public class BuckaChickenModel extends ChickenModel {
     }
 
     public static LayerDefinition createAnimatedBodyLayer() {
-        LayerDefinition layerDefinition = ChickenModel.createBodyLayer();
+        LayerDefinition layerDefinition = AdultChickenModel.createBodyLayer();
         MeshDefinition meshDefinition = layerDefinition.mesh;
         modifyMesh(meshDefinition.getRoot(), BuckaChickenElement.slimBill);
         return layerDefinition;

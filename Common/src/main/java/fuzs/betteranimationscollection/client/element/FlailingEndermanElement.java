@@ -2,8 +2,8 @@ package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.client.model.FlailingEndermanModel;
 import fuzs.betteranimationscollection.client.renderer.entity.layers.FlailingCarriedBlockLayer;
-import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
-import fuzs.puzzleslib.api.config.v3.ValueCallback;
+import fuzs.puzzleslib.common.api.client.core.v1.context.LayerDefinitionsContext;
+import fuzs.puzzleslib.common.api.config.v3.ValueCallback;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.monster.enderman.EndermanModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

@@ -47,19 +47,17 @@ public class FamiliarHorseModel extends HorseModel {
         this.leftFrontShin = modelPart.getChild("left_front_shin");
     }
 
-    public static LayerDefinition createAnimatedBodyLayer(CubeDeformation cubeDeformation, float scale, boolean isBaby) {
+    public static LayerDefinition createAnimatedBodyLayer(CubeDeformation cubeDeformation, float scale) {
         MeshDefinition meshDefinition = createAnimatedBodyMesh(cubeDeformation);
-        return LayerDefinition.create(meshDefinition, 64, 64)
-                .apply(isBaby ? BABY_TRANSFORMER : MeshTransformer.IDENTITY)
-                .apply(MeshTransformer.scaling(scale));
+        return LayerDefinition.create(meshDefinition, 64, 64).apply(MeshTransformer.scaling(scale));
     }
 
-    public static LayerDefinition createAnimatedSaddleLayer(float scale, boolean isBaby) {
-        return EquineSaddleModel.createFullScaleSaddleLayer(isBaby).apply((MeshDefinition meshDefinition) -> {
+    public static LayerDefinition createAnimatedSaddleLayer(float scale) {
+        return EquineSaddleModel.createSaddleLayer().apply((MeshDefinition meshDefinition) -> {
             modifyHeadMesh(meshDefinition.getRoot(), CubeDeformation.NONE);
             FamiliarEquineSaddleModel.modifyMesh(meshDefinition.getRoot());
             return meshDefinition;
-        }).apply(isBaby ? BABY_TRANSFORMER : MeshTransformer.IDENTITY).apply(MeshTransformer.scaling(scale));
+        }).apply(MeshTransformer.scaling(scale));
     }
 
     static MeshDefinition createAnimatedBodyMesh(CubeDeformation cubeDeformation) {

@@ -2,11 +2,12 @@ package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.client.model.CatTailModel;
 import fuzs.betteranimationscollection.client.model.OcelotTailModel;
-import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
-import fuzs.puzzleslib.api.config.v3.ValueCallback;
-import net.minecraft.client.model.animal.feline.CatModel;
+import fuzs.puzzleslib.common.api.client.core.v1.context.LayerDefinitionsContext;
+import fuzs.puzzleslib.common.api.config.v3.ValueCallback;
+import net.minecraft.client.model.animal.feline.AbstractFelineModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.renderer.entity.AgeableMobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.CatCollarLayer;
@@ -16,21 +17,19 @@ import net.minecraft.world.entity.animal.feline.Cat;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jspecify.annotations.Nullable;
 
-public class CatTailElement extends SingletonModelElement<Cat, CatRenderState, CatModel> {
+public class CatTailElement extends SingletonModelElement<Cat, CatRenderState, AbstractFelineModel<CatRenderState>> {
     public static int tailLength;
     public static int animationSpeed;
 
     private final ModelLayerLocation animatedCat;
     private final ModelLayerLocation animatedCatCollar;
-    private final ModelLayerLocation animatedCatBaby;
-    private final ModelLayerLocation animatedCatBabyCollar;
 
     public CatTailElement() {
-        super(Cat.class, CatRenderState.class, CatModel.class);
+        super(Cat.class,
+                CatRenderState.class,
+                (Class<AbstractFelineModel<CatRenderState>>) (Class<?>) AbstractFelineModel.class);
         this.animatedCat = this.registerModelLayer("animated_cat");
         this.animatedCatCollar = this.registerModelLayer("animated_cat", "collar");
-        this.animatedCatBaby = this.registerModelLayer("animated_cat_baby");
-        this.animatedCatBabyCollar = this.registerModelLayer("animated_cat_baby", "collar");
     }
 
     @Override
@@ -42,17 +41,16 @@ public class CatTailElement extends SingletonModelElement<Cat, CatRenderState, C
     }
 
     @Override
-    protected void setAnimatedModel(LivingEntityRenderer<?, CatRenderState, CatModel> entityRenderer, EntityRendererProvider.Context context) {
-        setAnimatedAgeableModel(entityRenderer,
-                new CatTailModel(context.bakeLayer(this.animatedCat)),
-                new CatTailModel(context.bakeLayer(this.animatedCatBaby)));
+    protected void setAnimatedModel(LivingEntityRenderer<?, CatRenderState, AbstractFelineModel<CatRenderState>> entityRenderer, EntityRendererProvider.Context context) {
+        if (entityRenderer instanceof AgeableMobRenderer<?, ?, ?> ageableMobRenderer) {
+            setAnimatedAgeableModel(ageableMobRenderer, new CatTailModel(context.bakeLayer(this.animatedCat)));
+        }
     }
 
     @Override
-    protected @Nullable RenderLayer<CatRenderState, CatModel> getAnimatedLayer(RenderLayer<CatRenderState, CatModel> renderLayer, LivingEntityRenderer<?, CatRenderState, CatModel> entityRenderer, EntityRendererProvider.Context context) {
+    protected @Nullable RenderLayer<CatRenderState, AbstractFelineModel<CatRenderState>> getAnimatedLayer(RenderLayer<CatRenderState, AbstractFelineModel<CatRenderState>> renderLayer, LivingEntityRenderer<?, CatRenderState, AbstractFelineModel<CatRenderState>> entityRenderer, EntityRendererProvider.Context context) {
         if (renderLayer instanceof CatCollarLayer catCollarLayer) {
             catCollarLayer.adultModel = new CatTailModel(context.bakeLayer(this.animatedCatCollar));
-            catCollarLayer.babyModel = new CatTailModel(context.bakeLayer(this.animatedCatBabyCollar));
             return catCollarLayer;
         } else {
             return super.getAnimatedLayer(renderLayer, entityRenderer, context);
@@ -65,11 +63,6 @@ public class CatTailElement extends SingletonModelElement<Cat, CatRenderState, C
                 () -> OcelotTailModel.createAnimatedBodyMesh(CubeDeformation.NONE));
         context.registerLayerDefinition(this.animatedCatCollar,
                 () -> OcelotTailModel.createAnimatedBodyMesh(new CubeDeformation(0.01F)));
-        context.registerLayerDefinition(this.animatedCatBaby,
-                () -> OcelotTailModel.createAnimatedBodyMesh(CubeDeformation.NONE).apply(CatModel.BABY_TRANSFORMER));
-        context.registerLayerDefinition(this.animatedCatBabyCollar,
-                () -> OcelotTailModel.createAnimatedBodyMesh(new CubeDeformation(0.01F))
-                        .apply(CatModel.BABY_TRANSFORMER));
     }
 
     @Override

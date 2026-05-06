@@ -1,11 +1,12 @@
 package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.client.model.SquidTentaclesModel;
-import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
-import fuzs.puzzleslib.api.client.renderer.v1.RenderStateExtraData;
-import fuzs.puzzleslib.api.config.v3.ValueCallback;
+import fuzs.puzzleslib.common.api.client.core.v1.context.LayerDefinitionsContext;
+import fuzs.puzzleslib.common.api.client.renderer.v1.RenderStateExtraData;
+import fuzs.puzzleslib.common.api.config.v3.ValueCallback;
 import net.minecraft.client.model.animal.squid.SquidModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.renderer.entity.AgeableMobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.SquidRenderState;
@@ -20,12 +21,10 @@ public class SquidTentaclesElement extends SingletonModelElement<Squid, SquidRen
     public static int tentaclesLength;
 
     private final ModelLayerLocation animatedSquid;
-    private final ModelLayerLocation animatedSquidBaby;
 
     public SquidTentaclesElement() {
         super(Squid.class, SquidRenderState.class, SquidModel.class);
         this.animatedSquid = this.registerModelLayer("animated_squid");
-        this.animatedSquidBaby = this.registerModelLayer("animated_squid_baby");
     }
 
     @Override
@@ -37,16 +36,14 @@ public class SquidTentaclesElement extends SingletonModelElement<Squid, SquidRen
 
     @Override
     protected void setAnimatedModel(LivingEntityRenderer<?, SquidRenderState, SquidModel> entityRenderer, EntityRendererProvider.Context context) {
-        setAnimatedAgeableModel(entityRenderer,
-                new SquidTentaclesModel(context.bakeLayer(this.animatedSquid)),
-                new SquidTentaclesModel(context.bakeLayer(this.animatedSquidBaby)));
+        if (entityRenderer instanceof AgeableMobRenderer<?, ?, ?> ageableMobRenderer) {
+            setAnimatedAgeableModel(ageableMobRenderer, new SquidTentaclesModel(context.bakeLayer(this.animatedSquid)));
+        }
     }
 
     @Override
     public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
         context.registerLayerDefinition(this.animatedSquid, SquidTentaclesModel::createAnimatedBodyLayer);
-        context.registerLayerDefinition(this.animatedSquidBaby,
-                () -> SquidTentaclesModel.createAnimatedBodyLayer().apply(SquidModel.BABY_TRANSFORMER));
     }
 
     @Override

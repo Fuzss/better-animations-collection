@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.CarriedBlockLayer;
 import net.minecraft.client.renderer.entity.state.EndermanRenderState;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.block.state.BlockState;
 
 public class FlailingCarriedBlockLayer extends CarriedBlockLayer {
 
@@ -19,10 +18,9 @@ public class FlailingCarriedBlockLayer extends CarriedBlockLayer {
 
     @Override
     public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, EndermanRenderState renderState, float yRot, float xRot) {
-        BlockState blockState = renderState.carriedBlock;
-        if (blockState != null) {
+        if (!renderState.carriedBlock.isEmpty()) {
             poseStack.pushPose();
-            double flailAmount = this.getFlailAmount(renderState);
+            float flailAmount = this.getFlailAmount(renderState);
             poseStack.translate(-flailAmount * 0.0575F, 0.0F, 0.0F);
             super.submit(poseStack, nodeCollector, packedLight, renderState, yRot, xRot);
             poseStack.popPose();

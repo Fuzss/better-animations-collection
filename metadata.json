@@ -1,9 +1,10 @@
 {
+    "minecraft": "26.1.2",
     "mod": {
         "id": "betteranimationscollection",
         "group": "fuzs.betteranimationscollection",
         "name": "Better Animations Collection",
-        "version": "21.11.1",
+        "version": "26.1.0",
         "authors": [
             "KodaichiZero",
             "Fuzs"
@@ -43,7 +44,7 @@
         },
         {
             "name": "github",
-            "slug": "betteranimationscollection"
+            "slug": "better-animations-collection"
         },
         {
             "name": "modrinth",

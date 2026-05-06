@@ -1,11 +1,11 @@
 package fuzs.betteranimationscollection.client.model;
 
 import fuzs.betteranimationscollection.client.element.CatTailElement;
-import net.minecraft.client.model.animal.feline.CatModel;
+import net.minecraft.client.model.animal.feline.AdultCatModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.state.CatRenderState;
 
-public class CatTailModel extends CatModel {
+public class CatTailModel extends AdultCatModel {
     private final ModelPart tail;
     private final ModelPart[] tailParts;
 

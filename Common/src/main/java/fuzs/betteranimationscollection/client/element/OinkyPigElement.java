@@ -2,8 +2,8 @@ package fuzs.betteranimationscollection.client.element;
 
 import com.google.common.collect.Maps;
 import fuzs.betteranimationscollection.client.model.OinkyPigModel;
-import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
-import fuzs.puzzleslib.api.config.v3.ValueCallback;
+import fuzs.puzzleslib.common.api.client.core.v1.context.LayerDefinitionsContext;
+import fuzs.puzzleslib.common.api.config.v3.ValueCallback;
 import net.minecraft.client.model.AdultAndBabyModelPair;
 import net.minecraft.client.model.animal.pig.PigModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.entity.state.PigRenderState;
 import net.minecraft.client.resources.model.EquipmentClientInfo;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.animal.pig.Pig;
+import net.minecraft.world.entity.animal.pig.PigSoundVariants;
 import net.minecraft.world.entity.animal.pig.PigVariant;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jspecify.annotations.Nullable;
@@ -31,18 +32,15 @@ public class OinkyPigElement extends SoundBasedElement<Pig, PigRenderState, PigM
     private final ModelLayerLocation animatedPig;
     private final ModelLayerLocation animatedColdPig;
     private final ModelLayerLocation animatedPigSaddle;
-    private final ModelLayerLocation animatedPigBaby;
-    private final ModelLayerLocation animatedColdPigBaby;
-    private final ModelLayerLocation animatedPigBabySaddle;
 
     public OinkyPigElement() {
-        super(Pig.class, PigRenderState.class, PigModel.class, SoundEvents.PIG_AMBIENT);
+        super(Pig.class,
+                PigRenderState.class,
+                PigModel.class,
+                SoundEvents.PIG_SOUNDS.get(PigSoundVariants.SoundSet.CLASSIC).adultSounds().ambientSound().value());
         this.animatedPig = this.registerModelLayer("animated_pig");
         this.animatedColdPig = this.registerModelLayer("animated_cold_pig");
         this.animatedPigSaddle = this.registerModelLayer("animated_pig", "saddle");
-        this.animatedPigBaby = this.registerModelLayer("animated_pig_baby");
-        this.animatedColdPigBaby = this.registerModelLayer("animated_cold_pig_baby");
-        this.animatedPigBabySaddle = this.registerModelLayer("animated_pig_baby", "saddle");
     }
 
     @Override
@@ -55,21 +53,19 @@ public class OinkyPigElement extends SoundBasedElement<Pig, PigRenderState, PigM
     @Override
     protected void setAnimatedModel(LivingEntityRenderer<?, PigRenderState, PigModel> entityRenderer, EntityRendererProvider.Context context) {
         if (entityRenderer instanceof PigRenderer pigRenderer) {
-            pigRenderer.models = this.bakeModels(context);
-        } else if (entityRenderer instanceof AgeableMobRenderer<?, ?, ?>) {
-            setAnimatedAgeableModel(entityRenderer,
-                    new OinkyPigModel(context.bakeLayer(this.animatedPig)),
-                    new OinkyPigModel(context.bakeLayer(this.animatedPigBaby)));
+            pigRenderer.models = this.bakeModels(context, pigRenderer.models);
+        } else if (entityRenderer instanceof AgeableMobRenderer<?, ?, ?> ageableMobRenderer) {
+            setAnimatedAgeableModel(ageableMobRenderer, new OinkyPigModel(context.bakeLayer(this.animatedPig)));
         }
     }
 
-    private Map<PigVariant.ModelType, AdultAndBabyModelPair<PigModel>> bakeModels(EntityRendererProvider.Context context) {
+    private Map<PigVariant.ModelType, AdultAndBabyModelPair<PigModel>> bakeModels(EntityRendererProvider.Context context, Map<PigVariant.ModelType, AdultAndBabyModelPair<PigModel>> models) {
         return Maps.newEnumMap(Map.of(PigVariant.ModelType.NORMAL,
                 new AdultAndBabyModelPair<>(new OinkyPigModel(context.bakeLayer(this.animatedPig)),
-                        new OinkyPigModel(context.bakeLayer(this.animatedPigBaby))),
+                        models.get(PigVariant.ModelType.NORMAL).babyModel()),
                 PigVariant.ModelType.COLD,
                 new AdultAndBabyModelPair<>(new OinkyPigModel(context.bakeLayer(this.animatedColdPig)),
-                        new OinkyPigModel(context.bakeLayer(this.animatedColdPigBaby)))));
+                        models.get(PigVariant.ModelType.COLD).babyModel())));
     }
 
     @Override
@@ -78,8 +74,6 @@ public class OinkyPigElement extends SoundBasedElement<Pig, PigRenderState, PigM
                 && equipmentLayer.layer == EquipmentClientInfo.LayerType.PIG_SADDLE) {
             ((SimpleEquipmentLayer<PigRenderState, PigModel, PigModel>) renderLayer).adultModel = new OinkyPigModel(
                     context.bakeLayer(this.animatedPigSaddle));
-            ((SimpleEquipmentLayer<PigRenderState, PigModel, PigModel>) renderLayer).babyModel = new OinkyPigModel(
-                    context.bakeLayer(this.animatedPigBabySaddle));
             return equipmentLayer;
         } else {
             return super.getAnimatedLayer(renderLayer, entityRenderer, context);
@@ -94,13 +88,6 @@ public class OinkyPigElement extends SoundBasedElement<Pig, PigRenderState, PigM
                 () -> OinkyPigModel.createAnimatedColdBodyLayer(CubeDeformation.NONE));
         context.registerLayerDefinition(this.animatedPigSaddle,
                 () -> OinkyPigModel.createAnimatedBodyLayer(new CubeDeformation(0.5F)));
-        context.registerLayerDefinition(this.animatedPigBaby,
-                () -> OinkyPigModel.createAnimatedBodyLayer(CubeDeformation.NONE).apply(PigModel.BABY_TRANSFORMER));
-        context.registerLayerDefinition(this.animatedColdPigBaby,
-                () -> OinkyPigModel.createAnimatedColdBodyLayer(CubeDeformation.NONE).apply(PigModel.BABY_TRANSFORMER));
-        context.registerLayerDefinition(this.animatedPigBabySaddle,
-                () -> OinkyPigModel.createAnimatedBodyLayer(new CubeDeformation(0.5F))
-                        .apply(PigModel.BABY_TRANSFORMER));
     }
 
     @Override

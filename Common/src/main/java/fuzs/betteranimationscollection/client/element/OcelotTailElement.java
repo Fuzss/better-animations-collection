@@ -1,28 +1,27 @@
 package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.client.model.OcelotTailModel;
-import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
-import fuzs.puzzleslib.api.config.v3.ValueCallback;
-import net.minecraft.client.model.animal.feline.OcelotModel;
+import fuzs.puzzleslib.common.api.client.core.v1.context.LayerDefinitionsContext;
+import fuzs.puzzleslib.common.api.config.v3.ValueCallback;
+import net.minecraft.client.model.animal.feline.AdultOcelotModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.renderer.entity.AgeableMobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.FelineRenderState;
 import net.minecraft.world.entity.animal.feline.Ocelot;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-public class OcelotTailElement extends SingletonModelElement<Ocelot, FelineRenderState, OcelotModel> {
+public class OcelotTailElement extends SingletonModelElement<Ocelot, FelineRenderState, AdultOcelotModel> {
     public static int tailLength;
     public static int animationSpeed;
 
     private final ModelLayerLocation animatedOcelot;
-    private final ModelLayerLocation animatedOcelotBaby;
 
     public OcelotTailElement() {
-        super(Ocelot.class, FelineRenderState.class, OcelotModel.class);
+        super(Ocelot.class, FelineRenderState.class, AdultOcelotModel.class);
         this.animatedOcelot = this.registerModelLayer("animated_ocelot");
-        this.animatedOcelotBaby = this.registerModelLayer("animated_ocelot_baby");
     }
 
     @Override
@@ -34,18 +33,16 @@ public class OcelotTailElement extends SingletonModelElement<Ocelot, FelineRende
     }
 
     @Override
-    protected void setAnimatedModel(LivingEntityRenderer<?, FelineRenderState, OcelotModel> entityRenderer, EntityRendererProvider.Context context) {
-        setAnimatedAgeableModel(entityRenderer,
-                new OcelotTailModel(context.bakeLayer(this.animatedOcelot)),
-                new OcelotTailModel(context.bakeLayer(this.animatedOcelotBaby)));
+    protected void setAnimatedModel(LivingEntityRenderer<?, FelineRenderState, AdultOcelotModel> entityRenderer, EntityRendererProvider.Context context) {
+        if (entityRenderer instanceof AgeableMobRenderer<?, ?, ?> ageableMobRenderer) {
+            setAnimatedAgeableModel(ageableMobRenderer, new OcelotTailModel(context.bakeLayer(this.animatedOcelot)));
+        }
     }
 
     @Override
     public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
         context.registerLayerDefinition(this.animatedOcelot,
                 () -> OcelotTailModel.createAnimatedBodyMesh(CubeDeformation.NONE));
-        context.registerLayerDefinition(this.animatedOcelotBaby,
-                () -> OcelotTailModel.createAnimatedBodyMesh(CubeDeformation.NONE).apply(OcelotModel.BABY_TRANSFORMER));
     }
 
     @Override

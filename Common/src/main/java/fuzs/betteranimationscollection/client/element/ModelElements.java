@@ -72,9 +72,9 @@ public final class ModelElements {
                     && entityRendererEntry.getValue() instanceof LivingEntityRenderer<?, ?, ?> entityRenderer
                     && entityRenderer.getModel() != null) {
                 EntityRendererProvider.Context context = new EntityRendererProvider.Context(minecraft.getEntityRenderDispatcher(),
+                        minecraft.blockModelResolver,
                         minecraft.getItemModelResolver(),
                         minecraft.getMapRenderer(),
-                        minecraft.getBlockRenderer(),
                         resourceManager,
                         minecraft.getEntityModels(),
                         minecraft.getEntityRenderDispatcher().equipmentAssets,

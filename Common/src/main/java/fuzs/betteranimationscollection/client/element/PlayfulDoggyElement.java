@@ -1,12 +1,13 @@
 package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.client.model.PlayfulDoggyModel;
-import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
-import fuzs.puzzleslib.api.config.v3.ValueCallback;
+import fuzs.puzzleslib.common.api.client.core.v1.context.LayerDefinitionsContext;
+import fuzs.puzzleslib.common.api.config.v3.ValueCallback;
 import net.minecraft.client.model.animal.wolf.WolfModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.renderer.entity.AgeableMobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
@@ -27,15 +28,11 @@ public class PlayfulDoggyElement extends SingletonModelElement<Wolf, WolfRenderS
 
     private final ModelLayerLocation animatedWolf;
     private final ModelLayerLocation animatedWolfArmor;
-    private final ModelLayerLocation animatedWolfBaby;
-    private final ModelLayerLocation animatedWolfBabyArmor;
 
     public PlayfulDoggyElement() {
         super(Wolf.class, WolfRenderState.class, WolfModel.class);
         this.animatedWolf = this.registerModelLayer("animated_wolf");
         this.animatedWolfArmor = this.registerModelLayer("animated_wolf", "armor");
-        this.animatedWolfBaby = this.registerModelLayer("animated_wolf_baby");
-        this.animatedWolfBabyArmor = this.registerModelLayer("animated_wolf_baby", "armor");
     }
 
     @Override
@@ -48,16 +45,15 @@ public class PlayfulDoggyElement extends SingletonModelElement<Wolf, WolfRenderS
 
     @Override
     protected void setAnimatedModel(LivingEntityRenderer<?, WolfRenderState, WolfModel> entityRenderer, EntityRendererProvider.Context context) {
-        setAnimatedAgeableModel(entityRenderer,
-                new PlayfulDoggyModel(context.bakeLayer(this.animatedWolf)),
-                new PlayfulDoggyModel(context.bakeLayer(this.animatedWolfBaby)));
+        if (entityRenderer instanceof AgeableMobRenderer<?, ?, ?> ageableMobRenderer) {
+            setAnimatedAgeableModel(ageableMobRenderer, new PlayfulDoggyModel(context.bakeLayer(this.animatedWolf)));
+        }
     }
 
     @Override
     protected @Nullable RenderLayer<WolfRenderState, WolfModel> getAnimatedLayer(RenderLayer<WolfRenderState, WolfModel> renderLayer, LivingEntityRenderer<?, WolfRenderState, WolfModel> entityRenderer, EntityRendererProvider.Context context) {
         if (renderLayer instanceof WolfArmorLayer wolfArmorLayer) {
             wolfArmorLayer.adultModel = new PlayfulDoggyModel(context.bakeLayer(this.animatedWolfArmor));
-            wolfArmorLayer.babyModel = new PlayfulDoggyModel(context.bakeLayer(this.animatedWolfBabyArmor));
             return wolfArmorLayer;
         } else {
             return super.getAnimatedLayer(renderLayer, entityRenderer, context);
@@ -72,13 +68,6 @@ public class PlayfulDoggyElement extends SingletonModelElement<Wolf, WolfRenderS
                 () -> LayerDefinition.create(PlayfulDoggyModel.createAnimatedBodyLayer(new CubeDeformation(0.2F)),
                         64,
                         32));
-        context.registerLayerDefinition(this.animatedWolfBaby,
-                () -> LayerDefinition.create(PlayfulDoggyModel.createAnimatedBodyLayer(CubeDeformation.NONE), 64, 32)
-                        .apply(WolfModel.BABY_TRANSFORMER));
-        context.registerLayerDefinition(this.animatedWolfBabyArmor,
-                () -> LayerDefinition.create(PlayfulDoggyModel.createAnimatedBodyLayer(new CubeDeformation(0.2F)),
-                        64,
-                        32).apply(WolfModel.BABY_TRANSFORMER));
     }
 
     public static float getRollAnimScale(WolfRenderState renderState) {

@@ -1,7 +1,7 @@
 package fuzs.betteranimationscollection.client.model;
 
 import fuzs.betteranimationscollection.client.element.PlayfulDoggyElement;
-import net.minecraft.client.model.animal.wolf.WolfModel;
+import net.minecraft.client.model.animal.wolf.AdultWolfModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -11,7 +11,7 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.entity.state.WolfRenderState;
 import net.minecraft.util.Mth;
 
-public class PlayfulDoggyModel extends WolfModel {
+public class PlayfulDoggyModel extends AdultWolfModel {
     public static final int WOLF_TAIL_LENGTH = 7;
 
     private final ModelPart head;
@@ -44,7 +44,7 @@ public class PlayfulDoggyModel extends WolfModel {
     }
 
     public static MeshDefinition createAnimatedBodyLayer(CubeDeformation cubeDeformation) {
-        MeshDefinition meshDefinition = WolfModel.createMeshDefinition(cubeDeformation);
+        MeshDefinition meshDefinition = AdultWolfModel.createBodyLayer(cubeDeformation);
         modifyMesh(meshDefinition.getRoot(), cubeDeformation, PlayfulDoggyElement.fluffyTail);
         return meshDefinition;
     }

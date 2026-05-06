@@ -1,9 +1,9 @@
 package fuzs.betteranimationscollection.client.element;
 
 import fuzs.betteranimationscollection.BetterAnimationsCollection;
-import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
-import fuzs.puzzleslib.api.client.init.v1.ModelLayerFactory;
-import fuzs.puzzleslib.api.config.v3.ValueCallback;
+import fuzs.puzzleslib.common.api.client.core.v1.context.LayerDefinitionsContext;
+import fuzs.puzzleslib.common.api.client.init.v1.ModelLayerFactory;
+import fuzs.puzzleslib.common.api.config.v3.ValueCallback;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.AgeableMobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -67,10 +67,8 @@ public abstract class ModelElement implements ModelLayerFactory {
         }
     }
 
-    protected static <S extends LivingEntityRenderState, M extends EntityModel<? super S>> void setAnimatedAgeableModel(LivingEntityRenderer<?, S, M> entityRenderer, M adultModel, M childModel) {
-        AgeableMobRenderer<?, S, M> ageableRenderer = (AgeableMobRenderer<?, S, M>) entityRenderer;
-        ageableRenderer.model = ageableRenderer.adultModel = adultModel;
-        ageableRenderer.babyModel = childModel;
+    protected static <S extends LivingEntityRenderState, M extends EntityModel<? super S>> void setAnimatedAgeableModel(AgeableMobRenderer<?, ?, ?> ageableRenderer, M adultModel) {
+        ((AgeableMobRenderer<?, S, M>) ageableRenderer).adultModel = adultModel;
     }
 
     public abstract void onRegisterLayerDefinitions(LayerDefinitionsContext context);

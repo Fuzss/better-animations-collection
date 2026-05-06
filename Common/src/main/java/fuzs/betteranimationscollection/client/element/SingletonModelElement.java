@@ -27,12 +27,13 @@ public abstract class SingletonModelElement<T extends LivingEntity, S extends Li
         if (entityRenderer.getModel().getClass() == this.modelClazz) {
             this.setAnimatedModel((LivingEntityRenderer<?, S, M>) entityRenderer, context);
             if (entityRenderer instanceof AgeableMobRenderer<?, ?, ?> ageableMobRenderer) {
-                if (ageableMobRenderer.model.getClass() == this.modelClazz ||
-                        ageableMobRenderer.adultModel.getClass() == this.modelClazz ||
-                        ageableMobRenderer.babyModel.getClass() == this.modelClazz) {
+                if (ageableMobRenderer.model.getClass() == this.modelClazz
+                        || ageableMobRenderer.adultModel.getClass() == this.modelClazz
+                        || ageableMobRenderer.babyModel.getClass() != this.modelClazz) {
                     throw new IllegalStateException("AgeableMobRenderer has invalid models");
                 }
             }
+
             applyLayerAnimation((LivingEntityRenderer<?, S, M>) entityRenderer,
                     context,
                     (RenderLayer<S, M> renderLayer) -> {

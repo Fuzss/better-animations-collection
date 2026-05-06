@@ -36,24 +36,19 @@ public class FamiliarDonkeyModel extends DonkeyModel {
         this.leftFrontShin = modelPart.getChild("left_front_shin");
     }
 
-    public static LayerDefinition createAnimatedBodyLayer(float scale, boolean isBaby) {
+    public static LayerDefinition createAnimatedBodyLayer(float scale) {
         MeshDefinition meshDefinition = FamiliarHorseModel.createAnimatedBodyMesh(CubeDeformation.NONE);
         modifyMesh(meshDefinition.getRoot());
-        return LayerDefinition.create(meshDefinition, 64, 64)
-                .apply(isBaby ? FamiliarHorseModel.BABY_TRANSFORMER : MeshTransformer.IDENTITY)
-                .apply(MeshTransformer.scaling(scale));
+        return LayerDefinition.create(meshDefinition, 64, 64).apply(MeshTransformer.scaling(scale));
     }
 
-    public static LayerDefinition createAnimatedSaddleLayer(float scale, boolean isBaby) {
-        return EquineSaddleModel.createFullScaleSaddleLayer(isBaby)
-                .apply((MeshDefinition meshDefinition) -> {
-                    FamiliarHorseModel.modifyHeadMesh(meshDefinition.getRoot(), CubeDeformation.NONE);
-                    FamiliarEquineSaddleModel.modifyMesh(meshDefinition.getRoot());
-                    modifyMesh(meshDefinition.getRoot());
-                    return meshDefinition;
-                })
-                .apply(isBaby ? FamiliarHorseModel.BABY_TRANSFORMER : MeshTransformer.IDENTITY)
-                .apply(MeshTransformer.scaling(scale));
+    public static LayerDefinition createAnimatedSaddleLayer(float scale) {
+        return EquineSaddleModel.createSaddleLayer().apply((MeshDefinition meshDefinition) -> {
+            FamiliarHorseModel.modifyHeadMesh(meshDefinition.getRoot(), CubeDeformation.NONE);
+            FamiliarEquineSaddleModel.modifyMesh(meshDefinition.getRoot());
+            modifyMesh(meshDefinition.getRoot());
+            return meshDefinition;
+        }).apply(MeshTransformer.scaling(scale));
     }
 
     @Override

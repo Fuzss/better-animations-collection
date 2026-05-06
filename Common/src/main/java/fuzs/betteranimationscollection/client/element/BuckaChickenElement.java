@@ -2,8 +2,8 @@ package fuzs.betteranimationscollection.client.element;
 
 import com.google.common.collect.Maps;
 import fuzs.betteranimationscollection.client.model.BuckaChickenModel;
-import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
-import fuzs.puzzleslib.api.config.v3.ValueCallback;
+import fuzs.puzzleslib.common.api.client.core.v1.context.LayerDefinitionsContext;
+import fuzs.puzzleslib.common.api.config.v3.ValueCallback;
 import net.minecraft.client.model.AdultAndBabyModelPair;
 import net.minecraft.client.model.animal.chicken.ChickenModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.ChickenRenderState;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.animal.chicken.Chicken;
+import net.minecraft.world.entity.animal.chicken.ChickenSoundVariants;
 import net.minecraft.world.entity.animal.chicken.ChickenVariant;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
@@ -30,15 +31,17 @@ public class BuckaChickenElement extends SoundBasedElement<Chicken, ChickenRende
 
     private final ModelLayerLocation animatedChicken;
     private final ModelLayerLocation animatedColdChicken;
-    private final ModelLayerLocation animatedChickenBaby;
-    private final ModelLayerLocation animatedColdChickenBaby;
 
     public BuckaChickenElement() {
-        super(Chicken.class, ChickenRenderState.class, ChickenModel.class, SoundEvents.CHICKEN_AMBIENT);
+        super(Chicken.class,
+                ChickenRenderState.class,
+                ChickenModel.class,
+                SoundEvents.CHICKEN_SOUNDS.get(ChickenSoundVariants.SoundSet.CLASSIC)
+                        .adultSounds()
+                        .ambientSound()
+                        .value());
         this.animatedChicken = this.registerModelLayer("animated_chicken");
         this.animatedColdChicken = this.registerModelLayer("animated_cold_chicken");
-        this.animatedChickenBaby = this.registerModelLayer("animated_chicken_baby");
-        this.animatedColdChickenBaby = this.registerModelLayer("animated_cold_chicken_baby");
     }
 
     @Override
@@ -52,31 +55,25 @@ public class BuckaChickenElement extends SoundBasedElement<Chicken, ChickenRende
     @Override
     protected void setAnimatedModel(LivingEntityRenderer<?, ChickenRenderState, ChickenModel> entityRenderer, EntityRendererProvider.Context context) {
         if (entityRenderer instanceof ChickenRenderer chickenRenderer) {
-            chickenRenderer.models = this.bakeModels(context);
-        } else if (entityRenderer instanceof AgeableMobRenderer<?, ?, ?>) {
-            setAnimatedAgeableModel(entityRenderer,
-                    new BuckaChickenModel(context.bakeLayer(this.animatedChicken)),
-                    new BuckaChickenModel(context.bakeLayer(this.animatedChickenBaby)));
+            chickenRenderer.models = this.bakeModels(context, chickenRenderer.models);
+        } else if (entityRenderer instanceof AgeableMobRenderer<?, ?, ?> ageableMobRenderer) {
+            setAnimatedAgeableModel(ageableMobRenderer, new BuckaChickenModel(context.bakeLayer(this.animatedChicken)));
         }
     }
 
-    private Map<ChickenVariant.ModelType, AdultAndBabyModelPair<ChickenModel>> bakeModels(EntityRendererProvider.Context context) {
+    private Map<ChickenVariant.ModelType, AdultAndBabyModelPair<ChickenModel>> bakeModels(EntityRendererProvider.Context context, Map<ChickenVariant.ModelType, AdultAndBabyModelPair<ChickenModel>> models) {
         return Maps.newEnumMap(Map.of(ChickenVariant.ModelType.NORMAL,
                 new AdultAndBabyModelPair<>(new BuckaChickenModel(context.bakeLayer(this.animatedChicken)),
-                        new BuckaChickenModel(context.bakeLayer(this.animatedChickenBaby))),
+                        models.get(ChickenVariant.ModelType.NORMAL).babyModel()),
                 ChickenVariant.ModelType.COLD,
                 new AdultAndBabyModelPair<>(new BuckaChickenModel(context.bakeLayer(this.animatedColdChicken)),
-                        new BuckaChickenModel(context.bakeLayer(this.animatedColdChickenBaby)))));
+                        models.get(ChickenVariant.ModelType.COLD).babyModel())));
     }
 
     @Override
     public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
         context.registerLayerDefinition(this.animatedChicken, BuckaChickenModel::createAnimatedBodyLayer);
         context.registerLayerDefinition(this.animatedColdChicken, BuckaChickenModel::createAnimatedColdBodyLayer);
-        context.registerLayerDefinition(this.animatedChickenBaby,
-                () -> BuckaChickenModel.createAnimatedBodyLayer().apply(ChickenModel.BABY_TRANSFORMER));
-        context.registerLayerDefinition(this.animatedColdChickenBaby,
-                () -> BuckaChickenModel.createAnimatedColdBodyLayer().apply(ChickenModel.BABY_TRANSFORMER));
     }
 
     @Override

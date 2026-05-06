@@ -26,6 +26,7 @@ public class HumanoidKneesModel extends HumanoidModel<HumanoidRenderState> imple
 
     public static ArmorModelSet<LayerDefinition> createArmorLayerSet(CubeDeformation innerCubeDeformation, CubeDeformation outerCubeDeformation) {
         return createArmorMeshSet(HumanoidKneesModel::createAnimatedMesh,
+                ADULT_ARMOR_PARTS_PER_SLOT,
                 innerCubeDeformation,
                 outerCubeDeformation).map((MeshDefinition meshDefinition) -> LayerDefinition.create(meshDefinition,
                 64,

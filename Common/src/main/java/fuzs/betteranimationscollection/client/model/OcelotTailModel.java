@@ -1,14 +1,14 @@
 package fuzs.betteranimationscollection.client.model;
 
 import fuzs.betteranimationscollection.client.element.OcelotTailElement;
-import net.minecraft.client.model.animal.feline.OcelotModel;
+import net.minecraft.client.model.animal.feline.AdultOcelotModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.renderer.entity.state.FelineRenderState;
 import net.minecraft.util.Mth;
 
-public class OcelotTailModel extends OcelotModel {
+public class OcelotTailModel extends AdultOcelotModel {
     public static final int OCELOT_TAIL_LENGTH = 15;
 
     private final ModelPart tail;
@@ -21,7 +21,7 @@ public class OcelotTailModel extends OcelotModel {
     }
 
     public static LayerDefinition createAnimatedBodyMesh(CubeDeformation cubeDeformation) {
-        MeshDefinition meshDefinition = OcelotModel.createBodyMesh(cubeDeformation);
+        MeshDefinition meshDefinition = AdultOcelotModel.createBodyMesh(cubeDeformation);
         modifyMesh(meshDefinition.getRoot(), cubeDeformation);
         return LayerDefinition.create(meshDefinition, 64, 32);
     }
