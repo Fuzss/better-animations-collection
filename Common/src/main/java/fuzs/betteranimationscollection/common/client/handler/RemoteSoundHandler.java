@@ -2,6 +2,7 @@ package fuzs.betteranimationscollection.common.client.handler;
 
 import fuzs.betteranimationscollection.common.BetterAnimationsCollection;
 import fuzs.betteranimationscollection.common.config.ClientConfig;
+import fuzs.puzzleslib.common.api.event.v1.core.EventResult;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.resources.sounds.SoundInstance;
@@ -41,10 +42,10 @@ public class RemoteSoundHandler {
     private final Set<Class<? extends Mob>> attackableEntities = new HashSet<>();
     private final SoundDetectionListener soundListener = new SoundDetectionListener();
 
-    public void onEndEntityTick(Entity entity) {
+    public EventResult onStartEntityTick(Entity entity) {
         this.soundListener.addListener();
         if (!entity.level().isClientSide() || !(entity instanceof Mob mob)) {
-            return;
+            return EventResult.PASS;
         }
 
         Stream.concat(this.noisyEntities.stream(), this.attackableEntities.stream())
@@ -68,6 +69,8 @@ public class RemoteSoundHandler {
                 }
             }
         }
+
+        return EventResult.PASS;
     }
 
     public void addAmbientSounds(Class<? extends Mob> entityClazz, Collection<SoundEvent> soundEvents) {

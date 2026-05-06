@@ -21,7 +21,7 @@ public class BetterAnimationsCollectionClient implements ClientModConstructor {
     }
 
     private static void registerEventHandlers() {
-        EntityTickEvents.END.register(RemoteSoundHandler.INSTANCE::onEndEntityTick);
+        EntityTickEvents.START.register(RemoteSoundHandler.INSTANCE::onStartEntityTick);
         ExtractEntityRenderStateCallback.EVENT.register((Entity entity, EntityRenderState state, float partialTick) -> {
             ModelElements.forEach((ModelElement modelElement) -> {
                 modelElement.onExtractRenderState(entity, state, partialTick);

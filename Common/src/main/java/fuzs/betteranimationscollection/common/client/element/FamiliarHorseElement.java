@@ -55,7 +55,8 @@ public class FamiliarHorseElement extends ModelElement {
             }
         } else if (entityRenderer.getModel().getClass() == DonkeyModel.class) {
             if (entityRenderer instanceof DonkeyRenderer<?> donkeyRenderer) {
-                if (donkeyRenderer.adultTexture == DonkeyRenderer.Type.MULE.texture) {
+                if (donkeyRenderer.adultTexture == DonkeyRenderer.Type.MULE.texture
+                        && donkeyRenderer.babyTexture == DonkeyRenderer.Type.MULE_BABY.texture) {
                     this.applyMuleAnimations(context, donkeyRenderer);
                 } else {
                     this.applyDonkeyAnimations(context, donkeyRenderer);

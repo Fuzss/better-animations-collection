@@ -19,25 +19,25 @@ public class FamiliarEquineSaddleModel extends EquineSaddleModel {
         this.lowerMouth = headParts.getChild("lower_mouth");
     }
 
-    static void modifyMesh(PartDefinition partDefinition) {
-        PartDefinition partDefinition1 = partDefinition.getChild("head_parts");
-        PartDefinition partDefinition2 = partDefinition1.getChild("upper_mouth");
-        PartDefinition partDefinition3 = partDefinition1.getChild("lower_mouth");
-        partDefinition1.clearChild("left_saddle_mouth");
-        partDefinition1.clearChild("right_saddle_mouth");
-        partDefinition2.addOrReplaceChild("left_saddle_mouth",
+    public static void modifyMesh(PartDefinition partDefinition) {
+        PartDefinition headParts = partDefinition.getChild("head_parts");
+        PartDefinition upperMouth = headParts.getChild("upper_mouth");
+        PartDefinition lowerMouth = headParts.getChild("lower_mouth");
+        headParts.clearChild("left_saddle_mouth");
+        headParts.clearChild("right_saddle_mouth");
+        upperMouth.addOrReplaceChild("left_saddle_mouth",
                 CubeListBuilder.create().texOffs(29, 5).addBox(2.0F, -1.0F, -4.0F, 1.0F, 2.0F, 2.0F),
                 PartPose.ZERO);
-        partDefinition2.addOrReplaceChild("right_saddle_mouth",
+        upperMouth.addOrReplaceChild("right_saddle_mouth",
                 CubeListBuilder.create().texOffs(29, 5).addBox(-3.0F, -1.0F, -4.0F, 1.0F, 2.0F, 2.0F),
                 PartPose.ZERO);
-        partDefinition1.clearChild("mouth_saddle_wrap");
-        partDefinition2.addOrReplaceChild("mouth_saddle_wrap",
+        headParts.clearChild("mouth_saddle_wrap");
+        upperMouth.addOrReplaceChild("mouth_saddle_wrap",
                 CubeListBuilder.create()
                         .texOffs(19, 0)
                         .addBox(-2.0F, -3.125F, -2.0F, 4.0F, 3.0F, 2.0F, new CubeDeformation(0.2F)),
                 PartPose.ZERO);
-        partDefinition3.addOrReplaceChild("lower_mouth_saddle_wrap",
+        lowerMouth.addOrReplaceChild("lower_mouth_saddle_wrap",
                 CubeListBuilder.create()
                         .texOffs(19, 0)
                         .addBox(-2.0F, 0.0F, -2.0F, 4.0F, 2.0F, 2.0F, new CubeDeformation(0.18F)),
@@ -45,8 +45,8 @@ public class FamiliarEquineSaddleModel extends EquineSaddleModel {
     }
 
     @Override
-    public void setupAnim(EquineRenderState renderState) {
-        super.setupAnim(renderState);
-        FamiliarHorseModel.setupMouthAnim(renderState, this.upperMouth, this.lowerMouth);
+    public void setupAnim(EquineRenderState state) {
+        super.setupAnim(state);
+        FamiliarHorseModel.setupMouthAnim(state, this.upperMouth, this.lowerMouth);
     }
 }

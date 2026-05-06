@@ -41,11 +41,11 @@ public class GhastTentaclesModel extends GhastModel {
             float offsetX = (((float) (i % 3) - (float) (i / 3 % 2) * 0.5F + 0.25F) / 2.0F * 2.0F - 1.0F) * 5.0F;
             float offsetY = 24.6F;
             float offsetZ = ((float) (i / 3) / 2.0F * 2.0F - 1.0F) * 5.0F;
-            PartDefinition partDefinition1 = partDefinition.addOrReplaceChild("tentacle" + i,
+            PartDefinition tentacle = partDefinition.addOrReplaceChild("tentacle" + i,
                     CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 1.0F, 2.0F),
                     PartPose.offset(offsetX, offsetY, offsetZ));
             for (int j = 0; j < GHAST_MAX_TENTACLES_LENGTH; j++) {
-                partDefinition1 = partDefinition1.addOrReplaceChild("tentacle_part" + j,
+                tentacle = tentacle.addOrReplaceChild("tentacle_part" + j,
                         CubeListBuilder.create().texOffs(0, 1 + j).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 1.0F, 2.0F),
                         PartPose.offset(0.0F, 1.0F, 0.0F));
             }
@@ -53,17 +53,17 @@ public class GhastTentaclesModel extends GhastModel {
     }
 
     @Override
-    public void setupAnim(GhastRenderState renderState) {
-        super.setupAnim(renderState);
+    public void setupAnim(GhastRenderState state) {
+        super.setupAnim(state);
         float speed = 1.0F / (float) GhastTentaclesElement.animationSpeed;
         RandomSource randomSource = RandomSource.create(1660L);
         for (int i = 0; i < this.tentacles.length; i++) {
-            this.tentacles[i].xRot = speed * Mth.sin(renderState.ageInTicks * speed + (float) i) + 0.4F;
+            this.tentacles[i].xRot = speed * Mth.sin(state.ageInTicks * speed + (float) i) + 0.4F;
             int randomLength = randomSource.nextInt(GhastTentaclesElement.maxTentaclesLength / 2)
                     + GhastTentaclesElement.maxTentaclesLength / 2 + 1;
             for (int j = 0; j < this.tentacleParts[i].length; j++) {
                 this.tentacleParts[i][j].xRot =
-                        speed * Mth.sin(renderState.ageInTicks * speed + (float) i - (float) j / 2.0F);
+                        speed * Mth.sin(state.ageInTicks * speed + (float) i - (float) j / 2.0F);
                 this.tentacleParts[i][j].visible = j < randomLength;
             }
         }

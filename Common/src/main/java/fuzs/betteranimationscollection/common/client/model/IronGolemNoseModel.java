@@ -1,7 +1,5 @@
 package fuzs.betteranimationscollection.common.client.model;
 
-import fuzs.betteranimationscollection.common.client.element.SoundBasedElement;
-import fuzs.puzzleslib.common.api.client.renderer.v1.RenderStateExtraData;
 import net.minecraft.client.model.animal.golem.IronGolemModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -10,7 +8,6 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.entity.state.IronGolemRenderState;
-import net.minecraft.util.Mth;
 
 public class IronGolemNoseModel extends IronGolemModel {
     private final ModelPart nose;
@@ -40,13 +37,6 @@ public class IronGolemNoseModel extends IronGolemModel {
     @Override
     public void setupAnim(IronGolemRenderState state) {
         super.setupAnim(state);
-        float soundTime = RenderStateExtraData.getOrDefault(state, SoundBasedElement.AMBIENT_SOUND_TIME_PROPERTY, 0.0F);
-        float maxSoundTime = 20.0F;
-        if (0.0F < soundTime && soundTime < maxSoundTime) {
-            float rotation = Mth.sin(soundTime * ((3.0F * Mth.PI) / 20.0F));
-            this.nose.zRot = rotation * 0.75F * ((maxSoundTime - soundTime) / 20.0F);
-        } else {
-            this.nose.zRot = 0.0F;
-        }
+        VillagerNoseModel.animateNose(state, this.nose);
     }
 }
