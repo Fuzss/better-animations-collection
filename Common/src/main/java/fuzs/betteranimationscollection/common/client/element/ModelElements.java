@@ -89,7 +89,7 @@ public final class ModelElements {
     private static EntityRendererProvider.Context getEntitiesContext(ResourceManager resourceManager) {
         Minecraft minecraft = Minecraft.getInstance();
         return new EntityRendererProvider.Context(minecraft.getEntityRenderDispatcher(),
-                minecraft.blockModelResolver,
+                minecraft.getEntityRenderDispatcher().blockModelResolver,
                 minecraft.getItemModelResolver(),
                 minecraft.getMapRenderer(),
                 resourceManager,

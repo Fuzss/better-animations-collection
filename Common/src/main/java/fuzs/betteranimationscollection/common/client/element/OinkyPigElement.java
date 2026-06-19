@@ -8,7 +8,6 @@ import net.minecraft.client.model.AdultAndBabyModelPair;
 import net.minecraft.client.model.animal.pig.PigModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.monster.piglin.AdultPiglinModel;
 import net.minecraft.client.renderer.entity.AgeableMobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;

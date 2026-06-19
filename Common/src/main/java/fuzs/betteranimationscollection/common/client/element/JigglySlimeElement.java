@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.layers.SlimeOuterLayer;
 import net.minecraft.client.renderer.entity.state.SlimeRenderState;
 import net.minecraft.util.context.ContextKey;
-import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.world.entity.monster.cubemob.Slime;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jspecify.annotations.Nullable;
 

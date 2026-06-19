@@ -7,7 +7,7 @@ import net.minecraft.client.model.monster.slime.MagmaCubeModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.SlimeRenderState;
-import net.minecraft.world.entity.monster.MagmaCube;
+import net.minecraft.world.entity.monster.cubemob.MagmaCube;
 
 public class MagmaCubeBurgerElement extends SingletonModelElement<MagmaCube, SlimeRenderState, MagmaCubeModel> {
     private final ModelLayerLocation animatedMagmaCube;
