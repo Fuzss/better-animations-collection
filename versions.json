@@ -6,11 +6,17 @@
     "26.1.x": "maintained",
     "26.2.x": "primary"
   },
-  "properties": {
-    "distributions.curseforge.id": "323976",
-    "distributions.curseforge.slug": "better-animations-collection",
-    "distributions.github.slug": "better-animations-collection",
-    "distributions.modrinth.id": "OoOVj3J3",
-    "distributions.modrinth.slug": "better-animations-collection"
+  "distributions": {
+    "curseforge": {
+      "id": "323976",
+      "slug": "better-animations-collection"
+    },
+    "github": {
+      "slug": "better-animations-collection"
+    },
+    "modrinth": {
+      "id": "OoOVj3J3",
+      "slug": "better-animations-collection"
+    }
   }
 }
