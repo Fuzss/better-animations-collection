@@ -1,7 +1,7 @@
 package fuzs.betteranimationscollection.common.client.model;
 
 import fuzs.betteranimationscollection.common.client.element.SoundBasedElement;
-import fuzs.puzzleslib.common.api.client.renderer.v1.RenderStateExtraData;
+import fuzs.puzzleslib.common.api.client.renderer.v2.RenderStateExtraData;
 import net.minecraft.client.model.animal.llama.LlamaModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;

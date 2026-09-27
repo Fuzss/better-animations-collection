@@ -97,6 +97,7 @@ public final class ModelElements {
                 minecraft.getEntityRenderDispatcher().equipmentAssets,
                 minecraft.getAtlasManager(),
                 minecraft.font,
-                minecraft.playerSkinRenderCache());
+                minecraft.playerSkinRenderCache(),
+                minecraft.getPalettedTextureManager());
     }
 }

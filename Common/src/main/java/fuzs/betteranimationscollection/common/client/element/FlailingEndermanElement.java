@@ -11,18 +11,18 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.CarriedBlockLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.EndermanRenderState;
-import net.minecraft.world.entity.monster.EnderMan;
+import net.minecraft.world.entity.monster.Enderman;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jspecify.annotations.Nullable;
 
-public class FlailingEndermanElement extends SingletonModelElement<EnderMan, EndermanRenderState, EndermanModel<EndermanRenderState>> {
+public class FlailingEndermanElement extends SingletonModelElement<Enderman, EndermanRenderState, EndermanModel<EndermanRenderState>> {
     public static int animationSpeed;
     public static boolean whileCarrying;
 
     private final ModelLayerLocation animatedEnderman;
 
     public FlailingEndermanElement() {
-        super(EnderMan.class,
+        super(Enderman.class,
                 EndermanRenderState.class,
                 (Class<EndermanModel<EndermanRenderState>>) (Class<?>) EndermanModel.class);
         this.animatedEnderman = this.registerModelLayer("animated_enderman");

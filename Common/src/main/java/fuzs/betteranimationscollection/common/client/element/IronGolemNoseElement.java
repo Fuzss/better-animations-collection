@@ -3,7 +3,7 @@ package fuzs.betteranimationscollection.common.client.element;
 import fuzs.betteranimationscollection.common.client.handler.RemoteSoundHandler;
 import fuzs.betteranimationscollection.common.client.model.IronGolemNoseModel;
 import fuzs.puzzleslib.common.api.client.core.v1.context.LayerDefinitionsContext;
-import fuzs.puzzleslib.common.api.client.renderer.v1.RenderStateExtraData;
+import fuzs.puzzleslib.common.api.client.renderer.v2.RenderStateExtraData;
 import net.minecraft.client.model.animal.golem.IronGolemModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

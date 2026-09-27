@@ -2,11 +2,11 @@ package fuzs.betteranimationscollection.common.client.element;
 
 import com.google.common.base.Predicates;
 import fuzs.betteranimationscollection.common.client.handler.RemoteSoundHandler;
-import fuzs.puzzleslib.common.api.client.renderer.v1.RenderStateExtraData;
+import fuzs.puzzleslib.common.api.client.renderer.v2.RenderStateExtraData;
 import fuzs.puzzleslib.common.api.config.v3.ValueCallback;
 import fuzs.puzzleslib.common.api.config.v3.serialization.ConfigDataSet;
 import fuzs.puzzleslib.common.api.config.v3.serialization.KeyedValueProvider;
-import fuzs.puzzleslib.common.api.data.v2.tags.AbstractTagAppender;
+import fuzs.puzzleslib.common.api.data.v3.tags.AbstractTagAppender;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.core.registries.BuiltInRegistries;

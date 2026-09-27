@@ -2,7 +2,7 @@ package fuzs.betteranimationscollection.common.client.element;
 
 import fuzs.betteranimationscollection.common.client.model.SquidTentaclesModel;
 import fuzs.puzzleslib.common.api.client.core.v1.context.LayerDefinitionsContext;
-import fuzs.puzzleslib.common.api.client.renderer.v1.RenderStateExtraData;
+import fuzs.puzzleslib.common.api.client.renderer.v2.RenderStateExtraData;
 import fuzs.puzzleslib.common.api.config.v3.ValueCallback;
 import net.minecraft.client.model.animal.squid.SquidModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;

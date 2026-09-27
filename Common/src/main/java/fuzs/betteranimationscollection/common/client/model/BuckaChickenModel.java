@@ -2,7 +2,7 @@ package fuzs.betteranimationscollection.common.client.model;
 
 import fuzs.betteranimationscollection.common.client.element.BuckaChickenElement;
 import fuzs.betteranimationscollection.common.client.element.SoundBasedElement;
-import fuzs.puzzleslib.common.api.client.renderer.v1.RenderStateExtraData;
+import fuzs.puzzleslib.common.api.client.renderer.v2.RenderStateExtraData;
 import net.minecraft.client.model.animal.chicken.AdultChickenModel;
 import net.minecraft.client.model.animal.chicken.ColdChickenModel;
 import net.minecraft.client.model.geom.ModelPart;

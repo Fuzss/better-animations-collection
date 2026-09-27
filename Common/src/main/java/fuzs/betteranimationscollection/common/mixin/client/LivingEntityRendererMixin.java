@@ -31,7 +31,7 @@ abstract class LivingEntityRendererMixin<T extends LivingEntity, S extends Livin
             float rollAnimScale = PlayfulDoggyElement.getRollAnimScale(wolfRenderState);
             if (rollAnimScale != 0.0F) {
                 poseStack.translate(0.25F * rollAnimScale, 0.23F * rollAnimScale, 0.0F);
-                poseStack.mulPose(Axis.ZP.rotationDegrees(180.0F * rollAnimScale * PlayfulDoggyElement.MAX_ROLL_ANIM));
+                poseStack.rotate(Axis.ZP.rotationDegrees(180.0F * rollAnimScale * PlayfulDoggyElement.MAX_ROLL_ANIM));
             }
         }
     }
